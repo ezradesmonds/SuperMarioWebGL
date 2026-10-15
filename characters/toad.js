@@ -1,9 +1,5 @@
 // Karakter 2: TOAD (Super Mario Series) - High-Fidelity Pure WebGL Model
-// Pemenuhan Ketentuan:
-// 1. Ellipsoid: Kepala bulat, Mushroom Cap besar + 5 bintik merah bulat (Flush Surface Patches), celana putih bulat, telapak tangan & jari, sepatu coklat
-// 2. Cylinder: Lengan dan kaki
-// 3. Quadric Non-Ellipsoid/Cylinder: Cone / Frustum (Torso/Badan Toad & Rompi Biru terbuka depan) & Torus (Lipatan bawah mushroom cap)
-// 4. Curve (3D Cubic Bezier Tube): Lis emas tepi rompi biru (kiri, kanan, bawah), kurva mulut tersenyum, dan alur mushroom cap
+// Dibangun dari ellipsoid, silinder, frustum, torus, dan kurva Bezier 3D.
 
 function createToad(gl) {
     const C_SKIN   = [0.99, 0.82, 0.67];
@@ -18,19 +14,19 @@ function createToad(gl) {
 
     const root = new SceneNode("ToadRoot");
 
-    // PARENT UTAMA: Torso / Badan menggunakan QUADRIC NON-ELLIPSOID/CYLINDER: CONE FRUSTUM
+    // Badan utama memakai frustum kerucut dan menjadi parent bagian tubuh lainnya.
     const torsoFrustumMesh = Primitives.createConeFrustum(gl, 0.39, 0.29, 0.56, 28, 6, true);
     const body = new SceneNode("ToadTorsoFrustum", torsoFrustumMesh, C_SKIN, 22);
     body.setTransform([0, 0.78, 0]);
     root.add(body);
 
-    // ROMPI BIRU TERBUKA DI DEPAN (Open Cone Frustum sehingga dada warna kulit asli terlihat mulus!)
+    // Rompi biru berbentuk frustum terbuka di depan agar bagian dada tetap terlihat.
     const vestMesh = Primitives.createOpenVestFrustum(gl, 0.42, 0.32, 0.55, 0.44, 32);
     const vestNode = new SceneNode("ToadBlueVestFrustum", vestMesh, C_BLUE, 38);
     vestNode.setTransform([0, 0.01, 0]);
     body.add(vestNode);
 
-    // Penutup Bahu Rompi Biru Kiri & Kanan
+    // Ellipsoid biru membentuk bagian bahu rompi.
     const strapMesh = Primitives.createEllipsoid(gl, 0.11, 0.06, 0.24);
     for (const side of [-1, 1]) {
         const strap = new SceneNode("VestShoulderStrap", strapMesh, C_BLUE, 38);
@@ -38,7 +34,7 @@ function createToad(gl) {
         body.add(strap);
     }
 
-    // Lis emas mengikuti tepat dua tepi bukaan depan rompi biru.
+    // Tabung Bezier emas mengikuti kedua tepi bukaan depan rompi.
     for (const side of [-1, 1]) {
         const vestEdgeGoldCurve = Primitives.createBezierTube(
             gl,
@@ -51,7 +47,7 @@ function createToad(gl) {
         vestNode.add(new SceneNode("VestGoldTrimBezier", vestEdgeGoldCurve, C_GOLD, 65));
     }
 
-    // Lis tepi atas mengitari sisi dan belakang, lalu menyambung ke lis depan.
+    // Tabung Bezier emas meneruskan lis atas melewati sisi hingga bagian belakang rompi.
     const backAngles = [Math.PI / 2 + 0.77, Math.PI, Math.PI * 1.5, Math.PI * 2, Math.PI * 2.5 - 0.77];
     const backRadius = 0.32, backY = 0.275;
     for (let i = 0; i < backAngles.length - 1; i++) {
@@ -65,13 +61,13 @@ function createToad(gl) {
         vestNode.add(new SceneNode("VestBackTopGoldTrim", Primitives.createBezierTube(gl, p0, p1, p2, p3, 0.027, 0.027), C_GOLD, 65));
     }
 
-    // Celana Puffy Putih Bulat Khas Toad (Ellipsoid)
+    // Celana putih dibuat dari ellipsoid.
     const pantsMesh = Primitives.createEllipsoid(gl, 0.47, 0.32, 0.45);
     const pants = new SceneNode("ToadWhitePants", pantsMesh, C_WHITE, 25);
     pants.setTransform([0, -0.30, 0]);
     body.add(pants);
 
-    // KEPALA BULAT & WAJAH CERIA TOAD (Dinaikkan dan Mushroom Cap diatur agar mata & dahi 100% terlihat jelas!)
+    // Pivot kepala menjadi parent kepala dan topi agar keduanya ikut bergerak bersama.
     const headPivot = new SceneNode("ToadHeadPivot");
     headPivot.setTransform([0, 0.32, 0]);
     body.add(headPivot);
@@ -81,7 +77,7 @@ function createToad(gl) {
     head.setTransform([0, 0.24, 0]);
     headPivot.add(head);
 
-    // Mata Hitam Oval Vertikal + Kilau Putih Besar (Terlihat utuh dan cerah seperti foto asli!)
+    // Mata berupa ellipsoid hitam dengan kilau ellipsoid putih.
     const eyeBlackMesh = Primitives.createEllipsoid(gl, 0.055, 0.115, 0.045);
     const eyeShineMesh = Primitives.createEllipsoid(gl, 0.026, 0.045, 0.03);
     for (const side of [-1, 1]) {
@@ -95,7 +91,7 @@ function createToad(gl) {
 
     }
 
-    // CURVE 3: Mulut Senyum Manis Toad (3D Cubic Bezier Curve)
+    // Kurva Bezier 3D membentuk senyum.
     const smileMesh = Primitives.createBezierTube(
         gl,
         [-0.14, -0.17, 0.38],
@@ -106,7 +102,7 @@ function createToad(gl) {
     );
     head.add(new SceneNode("ToadSmileCurve", smileMesh, C_MOUTH, 20));
 
-    // MUSHROOM CAP BESAR KHAS TOAD (Duduk di atas dahi dengan 5 Bintik Merah FLUSH SURFACE PATCH!)
+    // Kubah topi jamur dan lima bintik merahnya memakai ellipsoid/patch permukaan.
     const capGroup = new SceneNode("MushroomCapGroup");
     capGroup.setTransform([0, 0.64, -0.04], [-0.08, 0, 0]);
     head.add(capGroup);
@@ -116,13 +112,13 @@ function createToad(gl) {
     const capMain = new SceneNode("MushroomCapMain", capMainMesh, C_WHITE, 45);
     capGroup.add(capMain);
 
-    // Quadric Torus untuk lipatan bawah topi jamur yang lembut
+    // Torus membentuk lis bawah topi jamur.
     const capUnderRimMesh = Primitives.createTorus(gl, 0.46, 0.12);
     const capUnderRim = new SceneNode("MushroomUnderTorus", capUnderRimMesh, [0.92, 0.93, 0.96], 30);
     capUnderRim.setTransform([0, -0.38, 0.02], [Math.PI / 2, 0, 0]);
     capGroup.add(capUnderRim);
 
-    // CURVE 4: Detail Cincin Alur Bawah Mushroom Cap (3D Cubic Bezier Curve)
+    // Kurva Bezier 3D menambahkan detail alur pada tepi topi.
     const capSeamCurve = Primitives.createBezierTube(
         gl,
         [-0.42, -0.38, 0.28],
@@ -133,7 +129,7 @@ function createToad(gl) {
     );
     capGroup.add(new SceneNode("CapSeamBezier", capSeamCurve, [0.86, 0.87, 0.90], 20));
 
-    // 5 BINTIK MERAH BULAT BESAR MENYATU RATA DENGAN PERMUKAAN TOPI (Flush Ellipsoid Surface Patches!)
+    // Patch ellipsoid merah ditempel mengikuti permukaan kubah topi.
     const spotDirs = [
         { dir: [0, 0.08, 0.99],   rad: 0.46 }, // Bintik Merah Depan Tengah (Ikonik!)
         { dir: [-0.96, 0.08, 0.12], rad: 0.44 }, // Bintik Merah Samping Kiri
@@ -146,7 +142,7 @@ function createToad(gl) {
         capMain.add(new SceneNode("FlushRedSpotPatch", patchMesh, C_RED, 50));
     }
 
-    // LENGAN KIRI & KANAN (Direntangkan ceria ke samping seperti pose asli Toad!)
+    // Lengan memakai dua ruas silinder dengan pivot siku dan pergelangan.
     const armCylMesh  = Primitives.createCylinder(gl, 0.09, 0.23);
     const elbowMesh   = Primitives.createEllipsoid(gl, 0.095, 0.095, 0.095);
     const palmMesh    = Primitives.createEllipsoid(gl, 0.12, 0.10, 0.13);
@@ -193,7 +189,7 @@ function createToad(gl) {
     const leftArm  = createArm(-1);
     const rightArm = createArm(1);
 
-    // KAKI & SEPATU COKLAT BULAT KHAS TOAD (Cylinder Kaki + Ellipsoid Sepatu + Sol)
+    // Kaki memakai silinder; sepatu dan solnya memakai ellipsoid.
     const legCylMesh = Primitives.createCylinder(gl, 0.13, 0.20);
     const shoeMesh   = Primitives.createEllipsoid(gl, 0.26, 0.18, 0.35);
     const soleMesh   = Primitives.createEllipsoid(gl, 0.25, 0.05, 0.34);
@@ -221,7 +217,7 @@ function createToad(gl) {
     const leftLeg  = createLeg(-1);
     const rightLeg = createLeg(1);
 
-    // Fungsi Animasi Hierarkis Toad
+    // Animasi menggerakkan badan dan turunannya melalui pivot hierarkis.
     root.animate = function(t, mode) {
         root.resetAnim();
         if (mode === "walk") {
