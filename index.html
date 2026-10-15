@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dunia Mario — Yoshi, Toad, dan Bowser Jr.</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { min-height: 100vh; background: #77d7f2; color: #fff; font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; }
+        #canvas-container { height: min(78vh, 850px); min-height: 440px; position: relative; background: #59aaf1; }
+        canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+        .controls-hint { position: absolute; bottom: 14px; left: 14px; max-width: calc(100% - 28px); padding: 9px 12px; border-radius: 8px; background: #12351de8; font-size: .78rem; line-height: 1.5; pointer-events: none; }
+        .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; padding: 14px; }
+        .toolbar-label { color: #183624; font-size: .8rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-right: 4px; }
+        .group { display: flex; flex-wrap: wrap; gap: 7px; }
+        button { padding: 9px 12px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: #183624; font-size: .9rem; font-weight: 700; cursor: pointer; }
+        button:hover, button:focus-visible { outline: 2px solid #183624; outline-offset: 2px; }
+        button.active { border-bottom-color: #183624; font-weight: 900; }
+        main { max-width: 1040px; margin: 0 auto; padding: 28px 20px 48px; color: #183624; }
+        h1 { margin-bottom: 8px; color: #173f28; font-size: clamp(1.5rem, 3vw, 2.2rem); }
+        .intro { margin-bottom: 20px; color: #31533d; }
+        .detail { padding: 20px; border: 2px solid #d6b94f; border-radius: 12px; background: #fff8dc; line-height: 1.65; }
+        .detail h2 { margin-bottom: 10px; color: #9c4a2d; }
+        .detail h3 { margin: 16px 0 4px; color: #285d3d; }
+        .detail ul { padding-left: 22px; }
+        @media (max-width: 600px) { #canvas-container { height: 64vh; min-height: 380px; } .toolbar { gap: 8px; } .toolbar-label { width: 100%; text-align: center; } button { padding: 8px 11px; font-size: .82rem; } }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="glcanvas" aria-label="Dunia Mario tiga dimensi"></canvas>
+    </div>
+    <nav class="toolbar" aria-label="Pilihan karakter dan animasi">
+        <span class="toolbar-label">Karakter</span>
+        <div class="group" aria-label="Pilih karakter">
+            <button id="btn-all" class="active" onclick="setViewMode('all')" aria-pressed="true">Semua Karakter</button>
+            <button id="btn-yoshi" onclick="setViewMode('yoshi')" aria-pressed="false">Yoshi</button>
+            <button id="btn-toad" onclick="setViewMode('toad')" aria-pressed="false">Toad</button>
+            <button id="btn-bowserjr" onclick="setViewMode('bowserjr')" aria-pressed="false">Bowser Jr.</button>
+        </div>
+        <span class="toolbar-label">Gerak</span>
+        <div class="group" aria-label="Pilih animasi">
+            <button id="anim-walk" onclick="setAnimMode('walk')" aria-pressed="false">Berjalan</button>
+            <button id="anim-idle" class="active" onclick="setAnimMode('idle')" aria-pressed="true">Idle / Diam</button>
+        </div>
+    </nav>
+    <script src="js/math3d.js"></script>
+    <script src="js/primitives.js"></script>
+    <script src="js/sceneNode.js"></script>
+    <script src="characters/yoshi.js"></script>
+    <script src="characters/toad.js"></script>
+    <script src="characters/bowserjr.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
