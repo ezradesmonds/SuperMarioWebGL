@@ -1,5 +1,12 @@
-// Karakter 2: TOAD (Super Mario Series) - High-Fidelity Pure WebGL Model
-// Dibangun dari ellipsoid, silinder, frustum, torus, dan kurva Bezier 3D.
+﻿// model Toad dibuat dari bentuk-bentuk 3D sederhana menggunakan Pure WebGL.
+// kepala, topi, tangan, celana, dan sepatu memakai ellipsoid; lengan serta kaki memakai silinder.
+// badan dan rompi memakai frustum kerucut, yaitu objek quadric selain ellipsoid dan silinder.
+// senyum, detail topi, dan lis emas rompi dibuat dari kurva Bezier 3D berbentuk tabung.
+// warna dan bentuk disusun agar tampil seperti Toad; environment dibuat di file terpisah.
+// posisi, rotasi, dan skala bagian model diatur melalui transformasi pada SceneNode.
+// rotasi terhadap sumbu sembarang belum tersedia di sini; SceneNode hanya memakai sumbu X, Y, dan Z.
+// badan menjadi induk bagi rompi, celana, kepala, bahu, dan pinggul.
+// bagian anak mengikuti gerak induknya, seperti susunan cabang tubuh di bawah ini.
 
 function createToad(gl) {
     const C_SKIN   = [0.99, 0.82, 0.67];
@@ -14,19 +21,20 @@ function createToad(gl) {
 
     const root = new SceneNode("ToadRoot");
 
-    // Badan utama memakai frustum kerucut dan menjadi parent bagian tubuh lainnya.
+    // badan berbentuk frustum kerucut dan menjadi induk bagi bagian tubuh lainnya.
     const torsoFrustumMesh = Primitives.createConeFrustum(gl, 0.39, 0.29, 0.56, 28, 6, true);
     const body = new SceneNode("ToadTorsoFrustum", torsoFrustumMesh, C_SKIN, 22);
     body.setTransform([0, 0.78, 0]);
     root.add(body);
 
-    // Rompi biru berbentuk frustum terbuka di depan agar bagian dada tetap terlihat.
+    // rompi biru terbuka di depan supaya bagian dada tetap terlihat.
     const vestMesh = Primitives.createOpenVestFrustum(gl, 0.42, 0.32, 0.55, 0.44, 32);
     const vestNode = new SceneNode("ToadBlueVestFrustum", vestMesh, C_BLUE, 38);
     vestNode.setTransform([0, 0.01, 0]);
+    // lis emas menjadi anak rompi agar ikut bergerak bersamanya.
     body.add(vestNode);
 
-    // Ellipsoid biru membentuk bagian bahu rompi.
+    // ellipsoid biru ini membentuk bagian bahu rompi.
     const strapMesh = Primitives.createEllipsoid(gl, 0.11, 0.06, 0.24);
     for (const side of [-1, 1]) {
         const strap = new SceneNode("VestShoulderStrap", strapMesh, C_BLUE, 38);
@@ -34,7 +42,7 @@ function createToad(gl) {
         body.add(strap);
     }
 
-    // Tabung Bezier emas mengikuti kedua tepi bukaan depan rompi.
+    // lis emas dari kurva Bezier mengikuti kedua tepi depan rompi.
     for (const side of [-1, 1]) {
         const vestEdgeGoldCurve = Primitives.createBezierTube(
             gl,
@@ -47,7 +55,7 @@ function createToad(gl) {
         vestNode.add(new SceneNode("VestGoldTrimBezier", vestEdgeGoldCurve, C_GOLD, 65));
     }
 
-    // Tabung Bezier emas meneruskan lis atas melewati sisi hingga bagian belakang rompi.
+    // border emas ini meneruskan garis tepi atas melewati sisi hingga belakang rompi.
     const backAngles = [Math.PI / 2 + 0.77, Math.PI, Math.PI * 1.5, Math.PI * 2, Math.PI * 2.5 - 0.77];
     const backRadius = 0.32, backY = 0.275;
     for (let i = 0; i < backAngles.length - 1; i++) {
@@ -61,15 +69,16 @@ function createToad(gl) {
         vestNode.add(new SceneNode("VestBackTopGoldTrim", Primitives.createBezierTube(gl, p0, p1, p2, p3, 0.027, 0.027), C_GOLD, 65));
     }
 
-    // Celana putih dibuat dari ellipsoid.
-    const pantsMesh = Primitives.createEllipsoid(gl, 0.47, 0.32, 0.45);
+    // celana putih dibuat dari bentuk ellipsoid.
+    const pantsMesh = Primitives.createEllipsoid(gl, 0.47, 0.27, 0.45);
     const pants = new SceneNode("ToadWhitePants", pantsMesh, C_WHITE, 25);
-    pants.setTransform([0, -0.30, 0]);
+    pants.setTransform([0, -0.24, 0]);
     body.add(pants);
 
-    // Pivot kepala menjadi parent kepala dan topi agar keduanya ikut bergerak bersama.
+    // pivot ini menghubungkan kepala dan topi agar keduanya bergerak bersama.
     const headPivot = new SceneNode("ToadHeadPivot");
     headPivot.setTransform([0, 0.32, 0]);
+    // kepala berada di bawah pivot kepala, sedangkan mata dan senyum menjadi anak kepala.
     body.add(headPivot);
 
     const headMesh = Primitives.createEllipsoid(gl, 0.45, 0.41, 0.44);
@@ -77,7 +86,7 @@ function createToad(gl) {
     head.setTransform([0, 0.24, 0]);
     headPivot.add(head);
 
-    // Mata berupa ellipsoid hitam dengan kilau ellipsoid putih.
+    // mata hitam dan pantulan cahayanya sama-sama memakai ellipsoid.
     const eyeBlackMesh = Primitives.createEllipsoid(gl, 0.055, 0.115, 0.045);
     const eyeShineMesh = Primitives.createEllipsoid(gl, 0.026, 0.045, 0.03);
     for (const side of [-1, 1]) {
@@ -91,7 +100,7 @@ function createToad(gl) {
 
     }
 
-    // Kurva Bezier 3D membentuk senyum.
+    // kurva Bezier 3D membentuk garis senyum Toad.
     const smileMesh = Primitives.createBezierTube(
         gl,
         [-0.14, -0.17, 0.38],
@@ -102,9 +111,10 @@ function createToad(gl) {
     );
     head.add(new SceneNode("ToadSmileCurve", smileMesh, C_MOUTH, 20));
 
-    // Kubah topi jamur dan lima bintik merahnya memakai ellipsoid/patch permukaan.
+    // kubah topi memakai ellipsoid; lima bintik merah mengikuti permukaan kubah.
     const capGroup = new SceneNode("MushroomCapGroup");
     capGroup.setTransform([0, 0.64, -0.04], [-0.08, 0, 0]);
+    // topi menjadi anak kepala; tepian, garis detail, dan bintik menempel pada grup topi.
     head.add(capGroup);
 
     const capRx = 0.90, capRy = 0.62, capRz = 0.88;
@@ -112,13 +122,13 @@ function createToad(gl) {
     const capMain = new SceneNode("MushroomCapMain", capMainMesh, C_WHITE, 45);
     capGroup.add(capMain);
 
-    // Torus membentuk lis bawah topi jamur.
+    // torus membentuk tepian lembut di bagian bawah topi.
     const capUnderRimMesh = Primitives.createTorus(gl, 0.46, 0.12);
     const capUnderRim = new SceneNode("MushroomUnderTorus", capUnderRimMesh, [0.92, 0.93, 0.96], 30);
     capUnderRim.setTransform([0, -0.38, 0.02], [Math.PI / 2, 0, 0]);
     capGroup.add(capUnderRim);
 
-    // Kurva Bezier 3D menambahkan detail alur pada tepi topi.
+    // kurva Bezier menambahkan garis detail di tepi topi.
     const capSeamCurve = Primitives.createBezierTube(
         gl,
         [-0.42, -0.38, 0.28],
@@ -129,7 +139,7 @@ function createToad(gl) {
     );
     capGroup.add(new SceneNode("CapSeamBezier", capSeamCurve, [0.86, 0.87, 0.90], 20));
 
-    // Patch ellipsoid merah ditempel mengikuti permukaan kubah topi.
+    // bintik merah dibuat sebagai patch ellipsoid yang menempel pada kubah.
     const spotDirs = [
         { dir: [0, 0.08, 0.99],   rad: 0.46 }, // Bintik Merah Depan Tengah (Ikonik!)
         { dir: [-0.96, 0.08, 0.12], rad: 0.44 }, // Bintik Merah Samping Kiri
@@ -142,13 +152,14 @@ function createToad(gl) {
         capMain.add(new SceneNode("FlushRedSpotPatch", patchMesh, C_RED, 50));
     }
 
-    // Lengan memakai dua ruas silinder dengan pivot siku dan pergelangan.
+    // setiap lengan terdiri dari dua silinder yang disambungkan di siku dan pergelangan.
     const armCylMesh  = Primitives.createCylinder(gl, 0.09, 0.23);
     const elbowMesh   = Primitives.createEllipsoid(gl, 0.095, 0.095, 0.095);
     const palmMesh    = Primitives.createEllipsoid(gl, 0.12, 0.10, 0.13);
     const fingerMesh  = Primitives.createEllipsoid(gl, 0.038, 0.038, 0.10);
 
     function createArm(side) {
+        // susunan lengan: bahu → lengan atas → siku → lengan bawah → pergelangan → telapak → jari.
         const shoulder = new SceneNode(side < 0 ? "LeftShoulder" : "RightShoulder");
         shoulder.setTransform([side * 0.30, 0.18, 0.18], [0.10, 0, side * 0.50]);
         body.add(shoulder);
@@ -189,12 +200,13 @@ function createToad(gl) {
     const leftArm  = createArm(-1);
     const rightArm = createArm(1);
 
-    // Kaki memakai silinder; sepatu dan solnya memakai ellipsoid.
+    // kaki memakai silinder, sedangkan sepatu dan solnya memakai ellipsoid.
     const legCylMesh = Primitives.createCylinder(gl, 0.13, 0.20);
     const shoeMesh   = Primitives.createEllipsoid(gl, 0.26, 0.18, 0.35);
     const soleMesh   = Primitives.createEllipsoid(gl, 0.25, 0.05, 0.34);
 
     function createLeg(side) {
+        // susunan kaki: pinggul → kaki → sepatu → sol.
         const hip = new SceneNode(side < 0 ? "LeftHip" : "RightHip");
         hip.setTransform([side * 0.24, -0.42, 0.02]);
         body.add(hip);
@@ -217,7 +229,7 @@ function createToad(gl) {
     const leftLeg  = createLeg(-1);
     const rightLeg = createLeg(1);
 
-    // Animasi menggerakkan badan dan turunannya melalui pivot hierarkis.
+    // animasi badan diteruskan ke bagian tubuh yang terhubung melalui susunan induk-anak.
     root.animate = function(t, mode) {
         root.resetAnim();
         if (mode === "walk") {
@@ -237,7 +249,7 @@ function createToad(gl) {
             leftLeg.hip.animRot  = [-swing * 0.70, 0, 0];
             rightLeg.hip.animRot = [swing * 0.70, 0, 0];
         } else if (mode === "action") {
-            // Melompat Gembira & Melambaikan Kedua Tangan ke Atas!
+            // toad melompat sambil mengangkat dan melambaikan kedua tangannya.
             const jump = Math.max(0, Math.sin(t * 4.5));
             body.animPos = [0, jump * 0.48, 0];
             body.animRot = [-jump * 0.10, Math.sin(t * 2.2) * 0.20, 0];
@@ -252,7 +264,7 @@ function createToad(gl) {
             leftLeg.hip.animRot  = [jump * 0.45, 0, -jump * 0.12];
             rightLeg.hip.animRot = [-jump * 0.35, 0, jump * 0.12];
         } else {
-            // Idle Ceria (persis pose berdiri merentangkan tangan di gambar referensi PDF!)
+            // saat diam, Toad bernapas pelan dan sedikit menggerakkan kepala serta tangan.
             const breath = Math.sin(t * 2.8);
             body.animPos = [0, breath * 0.025, 0];
             headPivot.animRot = [breath * 0.03, Math.sin(t * 1.5) * 0.10, Math.cos(t * 2.8) * 0.04];

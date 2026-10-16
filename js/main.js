@@ -193,7 +193,7 @@ function setViewMode(mode) {
 
 function setAnimMode(mode) {
     animMode = mode;
-    document.querySelectorAll("#anim-walk, #anim-idle").forEach(b => {
+    document.querySelectorAll("#anim-idle").forEach(b => {
         const active = b.id === "anim-" + mode;
         b.classList.toggle("active", active);
         b.setAttribute("aria-pressed", active);

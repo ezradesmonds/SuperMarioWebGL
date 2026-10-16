@@ -27,7 +27,7 @@ function createBowserJr(gl) {
     const body = new SceneNode("BowserJrBody", bodyMesh, C_YELLOW, 32);
     body.setTransform([0, 0.88, 0], [0.12, 0, 0]);
     root.add(body);
-
+``
     // Perut Plastron Krem Bergaris (Terlihat jelas di bagian depan perut seperti gambar referensi!)
     const plastronMesh = Primitives.createEllipsoid(gl, 0.45, 0.47, 0.34);
     const plastron = new SceneNode("PlastronBelly", plastronMesh, C_BELLY_TAN, 24);
