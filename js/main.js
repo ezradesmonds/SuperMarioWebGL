@@ -1,6 +1,7 @@
 // Pure WebGL 1.0 Main Application, Shader Pipeline, Camera Controls, and UI State
 let gl, shaderProgram;
 let yoshiNode, toadNode, bowserJrNode;
+let environmentNode;
 
 let viewMode = "all";    // 'all', 'yoshi', 'toad', 'bowserjr'
 let animMode = "idle";    // 'walk', 'idle'
@@ -164,6 +165,7 @@ function initWebGL() {
     yoshiNode    = createYoshi(gl);
     toadNode     = createToad(gl);
     bowserJrNode = createBowserJr(gl);
+    environmentNode = createMarioEnvironment(gl);
 
     setupMouseControls(canvas);
     setViewMode("all");
