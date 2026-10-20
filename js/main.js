@@ -168,26 +168,54 @@ function initWebGL() {
     environmentNode = createMarioEnvironment(gl);
 
     setupMouseControls(canvas);
-    setViewMode("all");
+    setViewMode("env");
     requestAnimationFrame(renderLoop);
 }
 
+
 function setViewMode(mode) {
     viewMode = mode;
-    document.querySelectorAll("#btn-all, #btn-yoshi, #btn-toad, #btn-bowserjr").forEach(b => {
+
+    // Update tombol aktif
+    document.querySelectorAll(
+        "#btn-env, #btn-all, #btn-yoshi, #btn-toad, #btn-bowserjr"
+    ).forEach(b => {
         const active = b.id === "btn-" + mode;
+
         b.classList.toggle("active", active);
         b.setAttribute("aria-pressed", active);
     });
 
-    if (mode === "all") {
+    // MODE ENVIRONMENT
+    if (mode === "env") {
+        camDist = 11.5;
+        camTarget = [0, 1.3, -0.4];
+        camYaw = 0.0;
+        camPitch = 0.24;
+    }
+
+    // MODE SEMUA KARAKTER
+    else if (mode === "all") {
         camDist = 6.2;
         camTarget = [0, 1.05, 0];
         camYaw = 0.0;
         camPitch = 0.18;
-    } else {
+    }
+
+    // MODE INDIVIDUAL
+    else {
         camDist = 3.6;
-        camTarget = mode === "yoshi" ? [-2.1, 1.0, 0.15] : mode === "bowserjr" ? [2.1, 1.0, 0.15] : [0, 1.0, 0];
+
+        if (mode === "yoshi") {
+            camTarget = [-2.1, 1.0, 0.15];
+        }
+        else if (mode === "toad") {
+            camTarget = [0, 1.0, 0];
+        }
+        else if (mode === "bowserjr") {
+            camTarget = [2.1, 1.0, 0.15];
+        }
+
         camYaw = 0.22;
         camPitch = 0.12;
     }
@@ -269,6 +297,27 @@ function renderLoop(timestamp) {
 
     const identity = Mat4.identity();
 
+// ======================================================
+// RENDER MARIO ENVIRONMENT
+// ======================================================
+
+    if (viewMode === "env" && environmentNode) {
+
+        // Animasi environment
+        environmentNode.animate(
+            accumTime,
+            animMode
+        );
+
+        // Render environment
+        environmentNode.draw(
+            gl,
+            shaderProgram,
+            identity,
+            false
+        );
+
+
     // Update animasi hierarkis masing-masing karakter
     yoshiNode.animate(accumTime, animMode);
     toadNode.animate(accumTime, animMode);
@@ -278,9 +327,43 @@ function renderLoop(timestamp) {
     toadNode.setTransform([0.0, 0, 0.0], [0, 0, 0]);
     bowserJrNode.setTransform([2.1, 0, 0.15], [0, -0.20, 0]);
 
-    if (viewMode === "all" || viewMode === "yoshi") yoshiNode.draw(gl, shaderProgram, identity, false);
-    if (viewMode === "all" || viewMode === "toad") toadNode.draw(gl, shaderProgram, identity, false);
-    if (viewMode === "all" || viewMode === "bowserjr") bowserJrNode.draw(gl, shaderProgram, identity, false);
+    
+    // ======================================================
+    // RENDER CHARACTERS
+    // ======================================================
+
+    // YOSHI
+    if (
+        viewMode === "env" ||
+        viewMode === "all" ||
+        viewMode === "yoshi"
+    ) {
+        yoshiNode.draw(
+            gl, shaderProgram, identity, false
+        );
+    }
+
+    // TOAD
+    if (
+        viewMode === "env" ||
+        viewMode === "all" ||
+        viewMode === "toad"
+    ) {
+        toadNode.draw(
+            gl, shaderProgram, identity, false
+        );
+    }
+
+    // BOWSER JR
+    if (
+        viewMode === "env" ||
+        viewMode === "all" ||
+        viewMode === "bowserjr"
+    ) {
+        bowserJrNode.draw(
+            gl, shaderProgram, identity, false
+        );
+    }
 
     requestAnimationFrame(renderLoop);
 }
