@@ -1,6 +1,9 @@
 // Pure WebGL Parametric Quadrics, Surface Patches & 3D Bezier Curve Mesh Generators
 const Primitives = {
     createMeshBuffer: function(gl, data) {
+        if (data.positions.length / 3 > 65536) {
+            throw new Error('Mesh exceeds WebGL 1.0 Uint16 vertex limit; split into smaller meshes.');
+        }
         const posBuf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data.positions), gl.STATIC_DRAW);
@@ -15,11 +18,39 @@ const Primitives = {
 
         return {
             position: posBuf,
+            cpuPositions: new Float32Array(data.positions),
+            cpuNormals: new Float32Array(data.normals),
+            cpuIndices: new Uint16Array(data.indices),
             normal: normBuf,
             indices: idxBuf,
             count: data.indices.length,
             isCurve: !!data.isCurve
         };
+    },
+
+    // Beveled box with analytic normals; every face remains a genuine 3D surface.
+    createRoundedBox: function(gl, width, height, depth, radius=0.08) {
+        const half=[width/2,height/2,depth/2];
+        const r=Math.min(radius,...half)*0.98;
+        const samples=h=>[-h,-h+r*0.15,-h+r*0.5,-h+r,0,h-r,h-r*0.5,h-r*0.15,h];
+        const data={positions:[],normals:[],indices:[]};
+        for(let axis=0;axis<3;axis++)for(const sign of [-1,1]) {
+            const u=(axis+1)%3,v=(axis+2)%3,us=samples(half[u]),vs=samples(half[v]);
+            const offset=data.positions.length/3;
+            for(const a of us)for(const b of vs) {
+                const point=[0,0,0];point[axis]=sign*half[axis];point[u]=a;point[v]=b;
+                const core=point.map((q,i)=>Math.max(-half[i]+r,Math.min(half[i]-r,q)));
+                const delta=point.map((q,i)=>q-core[i]);const len=Math.hypot(...delta)||1;
+                data.positions.push(...core.map((q,i)=>q+delta[i]/len*r));
+                data.normals.push(...delta.map(q=>q/len));
+            }
+            for(let a=0;a<us.length-1;a++)for(let b=0;b<vs.length-1;b++) {
+                const i=offset+a*vs.length+b,j=i+vs.length;
+                if(sign>0)data.indices.push(i,j,i+1,j,j+1,i+1);
+                else data.indices.push(i,i+1,j,j,i+1,j+1);
+            }
+        }
+        return this.createMeshBuffer(gl,data);
     },
 
     // 1. OBJECT TYPE A: ELLIPSOID (rx, ry, rz)
