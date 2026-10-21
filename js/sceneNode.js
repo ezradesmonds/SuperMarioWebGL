@@ -51,6 +51,8 @@ class SceneNode {
     }
 
     draw(gl, shader, parentMatrix, showCurveHighlight = false) {
+        // Batched scenery retains its hierarchy/metadata, but empty leaves need no matrices.
+        if (!this.mesh && this.children.length === 0) return;
         let localMatrix = Mat4.clone(parentMatrix);
 
         // Apply node translation (base + animation)
@@ -83,23 +85,22 @@ class SceneNode {
             geomMatrix = Mat4.rotateZ(geomMatrix, this.geomRot[2]);
             geomMatrix = Mat4.scale(geomMatrix, this.geomScale[0], this.geomScale[1], this.geomScale[2]);
 
-            const normalMatrix = Mat4.normalFromMat4(geomMatrix);
+            const normalMatrix = shader.depthOnly ? null : Mat4.normalFromMat4(geomMatrix);
 
             gl.uniformMatrix4fv(shader.uModelMatrix, false, geomMatrix);
-            gl.uniformMatrix3fv(shader.uNormalMatrix, false, normalMatrix);
-
-            let drawColor = this.color;
-            if (showCurveHighlight && this.mesh.isCurve) {
-                drawColor = [0.0, 1.0, 0.9]; // Cyan highlight for Bezier curves
+            if (!shader.depthOnly) {
+                gl.uniformMatrix3fv(shader.uNormalMatrix, false, normalMatrix);
+                let drawColor = this.color;
+                if (showCurveHighlight && this.mesh.isCurve) drawColor = [0.0, 1.0, 0.9];
+                gl.uniform3fv(shader.uColor, drawColor);
+                gl.uniform1f(shader.uShininess, this.shininess);
+                gl.uniform1f(shader.uChecker, this.checker ? 1 : 0);
+                gl.uniform1f(shader.uMaterialKind, this.materialKind || 0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh.normal);
+                gl.vertexAttribPointer(shader.aNormal, 3, gl.FLOAT, false, 0, 0);
             }
-            gl.uniform3fv(shader.uColor, drawColor);
-            gl.uniform1f(shader.uShininess, this.shininess);
-
             gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh.position);
             gl.vertexAttribPointer(shader.aPosition, 3, gl.FLOAT, false, 0, 0);
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh.normal);
-            gl.vertexAttribPointer(shader.aNormal, 3, gl.FLOAT, false, 0, 0);
 
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.mesh.indices);
             if (showCurveHighlight && this.mesh.isCurve) {
