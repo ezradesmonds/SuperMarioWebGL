@@ -15,6 +15,8 @@ class SceneNode {
         this.animPos = [0, 0, 0];
         this.animRot = [0, 0, 0];
         this.animScale = [1, 1, 1];
+        this.animAxis = [1, 0, 1];
+        this.animAxisAngle = 0;
 
         // Mesh-only local scale/offset so children don't get skewed by parent's non-uniform scale
         this.geomScale = [1, 1, 1];
@@ -47,6 +49,7 @@ class SceneNode {
         this.animPos = [0, 0, 0];
         this.animRot = [0, 0, 0];
         this.animScale = [1, 1, 1];
+        this.animAxisAngle = 0;
         for (const c of this.children) c.resetAnim();
     }
 
@@ -67,6 +70,7 @@ class SceneNode {
         localMatrix = Mat4.rotateX(localMatrix, this.rotation[0] + this.animRot[0]);
         localMatrix = Mat4.rotateY(localMatrix, this.rotation[1] + this.animRot[1]);
         localMatrix = Mat4.rotateZ(localMatrix, this.rotation[2] + this.animRot[2]);
+        localMatrix = Mat4.rotateAxis(localMatrix, this.animAxis, this.animAxisAngle);
 
         // Apply node uniform/structural scale
         localMatrix = Mat4.scale(

@@ -5,7 +5,7 @@ let environmentNode, sunShadow;
 let lightingMode = "day";
 
 let viewMode = "all";    // 'all', 'yoshi', 'toad', 'bowserjr'
-let animMode = "idle";    // 'walk', 'idle'
+let animMode = "idle";    // 'walk' (combined movement), 'action', 'idle'
 
 // Camera Orbit State
 let camYaw = 0.0;
@@ -380,6 +380,18 @@ function setupMouseControls(canvas) {
 let accumTime = 0;
 let lastTimestamp = 0;
 
+// One simple movement set. Joint rotation is handled by each character's walk pose.
+function applyWalkMovement(character, t) {
+    // Translation: move forward/backward along Z, staying on the main platform.
+    character.position[2] += Math.sin(t * 0.9) * 0.65;
+    // Scaling: the entire hierarchy grows/shrinks by at most 6 percent.
+    const size = 1 + Math.sin(t * 2.0) * 0.06;
+    character.animScale = [size, size, size];
+    // Arbitrary-axis rotation: a gentle sway about the diagonal axis (1, 0, 1).
+    character.animAxis = [1, 0, 1];
+    character.animAxisAngle = Math.sin(t * 4.5) * 0.09;
+}
+
 function renderLoop(timestamp) {
     const dt=lastTimestamp?Math.min(0.05,(timestamp-lastTimestamp)*0.001):0;
     lastTimestamp=timestamp;accumTime+=dt;
@@ -397,8 +409,9 @@ function renderLoop(timestamp) {
             character.restFootY = characterFootY(character);
             character.animate(accumTime, animation);
         }
+        if (animMode === 'walk') applyWalkMovement(character, accumTime);
         const currentFootY = characterFootY(character);
-        const bottom = animMode === 'idle' ? currentFootY : Math.min(currentFootY, character.restFootY);
+        const bottom = animMode === 'action' ? Math.min(currentFootY, character.restFootY) : currentFootY;
         character.position[1] = (viewMode === 'env' ? environmentNode.surfaceY : 0) - bottom;
     }
 
@@ -427,7 +440,10 @@ function renderLoop(timestamp) {
     gl.uniform1i(shaderProgram.uShadowMap,0);gl.uniform1f(shaderProgram.uShadowTexel,1/sunShadow.size);
     gl.uniform1f(shaderProgram.uShadowEnabled,sunShadow.enabled?1:0);
     gl.uniform3fv(shaderProgram.uShadowLift,[yoshiNode,toadNode,bowserJrNode].map(c=>Math.max(0,characterFootY(c)+c.position[1])));
-    const footprints=[[-2.8,0.25,0,0.57],[0,0.15,0,0.50],[2.8,0.25,0,0.58]];
+    const footprints=[yoshiNode,toadNode,bowserJrNode].map((c,i)=>[
+        c.position[0],c.position[2]+0.10,viewMode==='env'?environmentNode.surfaceY:0,
+        [0.57,0.50,0.58][i]*c.animScale[0]
+    ]);
     gl.uniform4fv(shaderProgram.uContactShadows,new Float32Array(footprints.flat()));
     const identity=Mat4.identity();for(const root of roots)root.draw(gl,shaderProgram,identity);
     requestAnimationFrame(renderLoop);
@@ -447,6 +463,7 @@ function characterFootY(root) {
     function visit(n, parent) {
         let m = Mat4.translate(parent, n === root ? 0 : n.position[0] + n.animPos[0], n === root ? 0 : n.position[1] + n.animPos[1], n === root ? 0 : n.position[2] + n.animPos[2]);
         for (const [i, rotate] of [Mat4.rotateX,Mat4.rotateY,Mat4.rotateZ].entries()) m=rotate.call(Mat4,m,n.rotation[i]+n.animRot[i]);
+        m=Mat4.rotateAxis(m,n.animAxis,n.animAxisAngle);
         m=Mat4.scale(m,...n.scale.map((v,i)=>v*n.animScale[i]));
         if(n.mesh && /sole|footellipsoid|brownshoe|boot/i.test(n.name)) {
             let g=Mat4.translate(m,...n.geomOffset);

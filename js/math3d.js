@@ -74,6 +74,20 @@ const Mat4 = {
         r[4] = -s; r[5] = c;
         return this.multiply(m, r);
     },
+    // Rodrigues' rotation formula: rotate around any axis, not just X/Y/Z.
+    rotateAxis: function(m, axis, rad) {
+        const length = Math.hypot(...axis);
+        if (length < 0.000001 || rad === 0) return m;
+        const [x, y, z] = axis.map(v => v / length);
+        const c = Math.cos(rad), s = Math.sin(rad), t = 1 - c;
+        const r = new Float32Array([
+            t*x*x+c, t*x*y+s*z, t*x*z-s*y, 0,
+            t*x*y-s*z, t*y*y+c, t*y*z+s*x, 0,
+            t*x*z+s*y, t*y*z-s*x, t*z*z+c, 0,
+            0, 0, 0, 1
+        ]);
+        return this.multiply(m, r);
+    },
     perspective: function(fovy, aspect, near, far) {
         const f = 1.0 / Math.tan(fovy / 2);
         const nf = 1 / (near - far);

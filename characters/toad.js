@@ -4,7 +4,7 @@
 // senyum, detail topi, dan lis emas rompi dibuat dari kurva Bezier 3D berbentuk tabung.
 // warna dan bentuk disusun agar tampil seperti Toad; environment dibuat di file terpisah.
 // posisi, rotasi, dan skala bagian model diatur melalui transformasi pada SceneNode.
-// rotasi terhadap sumbu sembarang belum tersedia di sini; SceneNode hanya memakai sumbu X, Y, dan Z.
+// SceneNode mendukung rotasi X/Y/Z serta axis-angle untuk goyangan pada sumbu diagonal.
 // badan menjadi induk bagi rompi, celana, kepala, bahu, dan pinggul.
 // bagian anak mengikuti gerak induknya, seperti susunan cabang tubuh di bawah ini.
 
