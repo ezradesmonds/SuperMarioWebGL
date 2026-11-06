@@ -22,7 +22,6 @@ const VS_SOURCE = `
     uniform mat4 uModelMatrix;
     uniform mat3 uNormalMatrix;
     uniform mat4 uLightMatrix;
-    uniform mediump float uTime;
     uniform mediump float uMaterialKind;
 
     varying vec3 vNormal;
@@ -31,11 +30,6 @@ const VS_SOURCE = `
 
     void main() {
         vec4 worldPos = uModelMatrix * vec4(aPosition, 1.0);
-        if(uMaterialKind>5.5 && uMaterialKind<6.5) {
-            float bend=clamp(worldPos.y+2.375,0.0,0.4);
-            worldPos.x+=sin(uTime*1.6+worldPos.x*1.7+worldPos.z)*bend*0.15;
-            worldPos.z+=cos(uTime*1.1+worldPos.z)*bend*0.08;
-        }
         vWorldPos = worldPos.xyz;
         vShadowCoord = uLightMatrix * (worldPos + vec4(normalize(uNormalMatrix * aNormal)*0.055,0.0));
         vNormal = normalize(uNormalMatrix * aNormal);
@@ -59,7 +53,6 @@ const FS_SOURCE = `
     uniform vec3 uCameraPos;
     uniform float uChecker;
     uniform mediump float uMaterialKind;
-    uniform mediump float uTime;
     uniform vec4 uContactShadows[12];
     uniform vec3 uShadowLift;
     uniform sampler2D uShadowMap;
@@ -139,19 +132,19 @@ const FS_SOURCE = `
             finalColor += material*vec3(1.0,0.53,0.15)*max(dot(N,normalize(delta)),0.0)*falloff*0.30;
         }
         if(uMaterialKind > 1.5 && uMaterialKind < 2.5) {
-            float ripple=sin(vWorldPos.z*9.0+uTime*2.0+sin(vWorldPos.x*7.0))*0.5+0.5;
+            float ripple=sin(vWorldPos.z*9.0+sin(vWorldPos.x*7.0))*0.5+0.5;
             float glint=pow(max(dot(N,H1),0.0),50.0);
             finalColor=mix(finalColor,vec3(0.42,0.89,0.97),ripple*0.18)+vec3(0.7,0.92,1.0)*glint*0.32;
         }
         if(uMaterialKind > 2.5 && uMaterialKind < 3.5) {
-            finalColor=material*vec3(1.12,1.04,0.86)*(1.0+sin(uTime*2.0)*0.035);
+            finalColor=material*vec3(1.12,1.04,0.86);
         }
         if(uMaterialKind > 3.5 && uMaterialKind < 4.5) {
             float grain=sin(vWorldPos.x*43.0)*sin(vWorldPos.z*37.0);
             finalColor *= 1.0+grain*0.025;
         }
         if(uMaterialKind > 4.5 && uMaterialKind < 5.5) {
-            float flow=sin(vWorldPos.x*38.0+sin(vWorldPos.y*4.0+uTime*4.5))*0.5+0.5;
+            float flow=sin(vWorldPos.x*38.0+sin(vWorldPos.y*4.0))*0.5+0.5;
             float foam=pow(flow,12.0);
             finalColor=mix(vec3(0.20,0.65,0.81),vec3(0.80,0.97,1.0),foam*0.78+0.16);
         }
@@ -169,7 +162,7 @@ const CHAR_DESCRIPTIONS = {
         <ul>
             <li>Yoshi, Toad, dan Bowser Jr. berdampingan di platform rumput utama.</li>
             <li>Platform bertingkat dengan tanah checkerboard, pipa hijau, blok tanda tanya, dan bata.</li>
-            <li>Bukit, awan bermata, jamur, bunga, semak, dan koin berputar.</li>
+            <li>Bukit, awan bermata, jamur, dan semak.</li>
             <li>Pilih Idle, Berjalan, atau Aksi untuk animasi asli karakter.</li>
         </ul>
     `,
@@ -250,7 +243,6 @@ function initWebGL() {
         uCameraPos: gl.getUniformLocation(prog, "uCameraPos"),
         uChecker: gl.getUniformLocation(prog, "uChecker"),
         uMaterialKind: gl.getUniformLocation(prog, "uMaterialKind"),
-        uTime: gl.getUniformLocation(prog, "uTime"),
         uContactShadows: gl.getUniformLocation(prog, "uContactShadows[0]"),
         uShadowLift: gl.getUniformLocation(prog, "uShadowLift"),
         uLightMatrix: gl.getUniformLocation(prog,"uLightMatrix"),
@@ -417,7 +409,7 @@ function renderLoop(timestamp) {
 
 
     const roots=[];
-    if(viewMode==='env'){environmentNode.animate(accumTime,animMode);roots.push(environmentNode);}
+    if(viewMode==='env')roots.push(environmentNode);
     for(const [mode,character] of [['yoshi',yoshiNode],['toad',toadNode],['bowserjr',bowserJrNode]])
         if(viewMode==='env'||viewMode==='all'||viewMode===mode)roots.push(character);
     gl.disableVertexAttribArray(shaderProgram.aNormal);
@@ -434,7 +426,7 @@ function renderLoop(timestamp) {
     gl.uniformMatrix4fv(shaderProgram.uProjectionMatrix,false,projection);
     gl.uniformMatrix4fv(shaderProgram.uViewMatrix,false,Mat4.lookAt(eye,camTarget,[0,1,0]));
     gl.uniformMatrix4fv(shaderProgram.uLightMatrix,false,sunShadow.matrix);
-    gl.uniform3fv(shaderProgram.uCameraPos,eye);gl.uniform1f(shaderProgram.uTime,accumTime);
+    gl.uniform3fv(shaderProgram.uCameraPos,eye);
     gl.uniform1f(shaderProgram.uGolden,lightingMode==='golden'?1:0);
     gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,sunShadow.texture);
     gl.uniform1i(shaderProgram.uShadowMap,0);gl.uniform1f(shaderProgram.uShadowTexel,1/sunShadow.size);

@@ -1,4 +1,4 @@
-// Mushroom Kingdom: shared meshes, geometric scenery, and hierarchical animation.
+// Mushroom Kingdom: shared meshes, geometric scenery, and static scenery.
 function createMarioEnvironment(gl) {
     const root = new SceneNode('MushroomKingdom');
     const grass = [0.30,0.67,0.12], edge = [0.18,0.57,0.10];
@@ -8,7 +8,6 @@ function createMarioEnvironment(gl) {
     const cylinder = Primitives.createCylinder(gl,1,1,32,1,true);
     const detailSphere=Primitives.createEllipsoid(gl,1,1,1,8,12);
     const hillSphere=Primitives.createEllipsoid(gl,1,1,1,28,36);
-    const clouds = [], blocks = [], coins = [], plants = [], butterflies = [], flags = [], windmills = [], sparkles = [];
     const shadowFootprints = [];
     const meadowTop = -2.5 + 0.25 / 2;
     const platformFootprints = [];
@@ -17,7 +16,7 @@ function createMarioEnvironment(gl) {
         return parent.add(new SceneNode(name,mesh,color,24).setTransform(pos,rot,scale));
     }
     function ball(parent,name,color,pos,scale) {
-        const small=/^(Petal|FlowerHeart|Eye|HillSpeck|GrassBlade|GardenLeaf|ButterflyBody|WingDot|DoorKnob|PotFlower|WaterSpray|CascadeFoam|RedFruit|CornerRivet)$/.test(name);
+        const small=/^(Eye|HillSpeck|GrassBlade|GardenLeaf|DoorKnob|WaterSpray|CascadeFoam|RedFruit|CornerRivet)$/.test(name);
         return node(parent,name,small?detailSphere:sphere,color,pos,scale);
     }
     function cube(parent,name,color,pos,scale) { return node(parent,name,box,color,pos,scale); }
@@ -94,7 +93,7 @@ function createMarioEnvironment(gl) {
     }
     pipe(-4.2,0,-1.55,1.15); pipe(-7,0.65,-5.7,1.35); pipe(2.6,1.05,-6.6,1.2); pipe(7.3,2,-9,0.95);
     function question(x,y,z) {
-        const q=node(root,'QuestionBlock',Primitives.createRoundedBox(gl,1,1,1,0.055),[0.98,0.65,0.04],[x,y,z],[0.72,0.72,0.72]); blocks.push(q);
+        const q=node(root,'QuestionBlock',Primitives.createRoundedBox(gl,1,1,1,0.055),[0.98,0.65,0.04],[x,y,z],[0.72,0.72,0.72]);
         cube(q,'GoldInset',[1,0.77,0.075],[0,0,0.507],[0.90,0.90,0.025]);
         // Extruded pixel question mark, front and back (no image texture).
         const glyph=['01110','11011','00011','00110','00100','00000','00100'];
@@ -138,29 +137,17 @@ function createMarioEnvironment(gl) {
     hill(4,-21,3.5,7,[0.39,0.76,0.37],true); hill(11,-19,3,8,[0.39,0.78,0.31],true);
     hill(0,-27,4,9,[0.49,0.81,0.53],false); hill(16,-25,4,7,[0.53,0.83,0.49],false);
     for(const [x,y,z,s] of [[-10,7,-15,1.5],[-5,8.5,-21,1.3],[1,6.6,-18,1],[8,8.5,-22,1.3],[13,6,-14,1.5],[-15,5,-26,2],[0,5,-30,2]]) {
-        const p=node(root,'Cloud',null,white,[x,y,z],[s,s,s]); clouds.push(p);
+        const p=node(root,'Cloud',null,white,[x,y,z],[s,s,s]);
         ball(p,'Puff',white,[0,0.15,0],[0.65,0.60,0.45]);
         ball(p,'Puff',white,[-0.5,-0.06,0],[0.48,0.38,0.4]);
         ball(p,'Puff',white,[0.5,-0.06,0],[0.48,0.38,0.4]); eyes(p,0.27,0.43,0.13);
     }
-    function flower(x,z,color,y=0) {
-        const f=node(root,'Flower',null,white,[x,y,z]); plants.push(f);
-        node(f,'Stem',cylinder,green,[0,0.14,0],[0.022,0.28,0.022]);
-        for(let i=0;i<5;i++){ const a=i*Math.PI*2/5;ball(f,'Petal',color,[Math.cos(a)*0.09,0.30+Math.sin(a)*0.09,0],[0.065,0.065,0.035]); }
-        ball(f,'FlowerHeart',[1,0.73,0.04],[0,0.30,0.035],[0.055,0.055,0.03]);
-    }
-    for(const x of [-4.9,-3.7,-1.3,1.4,3.7,4.9])flower(x,2.1,x<0?white:[1,0.36,0.48]);
     for(const [x,z] of [[-4.8,0.5],[-3.8,1.9],[3.8,1.8],[4.8,-0.5]]) {
         ball(root,'Pebble',[0.54,0.61,0.43],[x,0.065,z],[0.14,0.08,0.11]);
         for(let i=0;i<3;i++) {
             const tuft=ball(root,'GrassBlade',edge,[x+0.16+i*0.06,0.10,z-0.1],[0.025,0.14,0.035]);
             tuft.rotation[2]=(i-1)*0.35;
         }
-    }
-    for(let i=0;i<7;i++) {
-        const c=node(root,'RotatingCoin',null,white,[-3+i,2.0+Math.sin(i*0.5)*0.45,-10]);coins.push(c);
-        node(c,'GoldDisc',cylinder,[1,0.72,0.035],[0,0,0],[0.20,0.065,0.20],[Math.PI/2,0,0]);
-        cube(c,'CoinEmboss',[1,0.88,0.18],[0,0,0.045],[0.035,0.23,0.025]);
     }
     // An outer loop of landmarks leaves the character stage and orbit sightlines open.
     // Foreground islands stay low; these become the background at 180 degrees.
@@ -188,13 +175,13 @@ function createMarioEnvironment(gl) {
         root.children[root.children.length-1].rotation[1]=Math.atan2(-x,-z);
     }
     for(const [x,y,z,size] of [[-16,6,8,1.3],[-9,7.5,19,1.6],[2,7.8,23,1.5],[13,6.5,18,1.8],[19,8,4,1.3],[-22,8,-3,1.8]]) {
-        const c=node(root,'Cloud',null,white,[x,y,z],[size,size,size],[0,Math.atan2(-x,-z),0]);clouds.push(c);
+        const c=node(root,'Cloud',null,white,[x,y,z],[size,size,size],[0,Math.atan2(-x,-z),0]);
         ball(c,'CloudPuff',white,[0,0.1,0],[0.68,0.57,0.45]);
         ball(c,'CloudPuff',white,[-0.5,-0.07,0],[0.46,0.34,0.39]);
         ball(c,'CloudPuff',white,[0.5,-0.07,0],[0.46,0.34,0.39]);eyes(c,0.28,0.43,0.13);
     }
 
-    // A curving stream at meadow level: a geometric ribbon, with shader ripples.
+    // A static curving stream at meadow level, built as a geometric ribbon.
     const riverData={positions:[],normals:[],indices:[]};
     const riverX=z=>-12.8+Math.sin(z*0.19)*1.65;
     for(let i=0;i<=64;i++) {
@@ -240,7 +227,6 @@ function createMarioEnvironment(gl) {
     // Low garden patches are kept outside each character's animation footprint.
     const gardenSpots=[[-4.9,-1.7,0],[4.8,-1.6,0],[-4.8,1.9,0],[4.0,2.0,0],[-7.9,5.2,-0.8],[7.3,5.8,-0.65],[-5.7,19.5,-0.35],[4.7,19.7,0.7],[-11.4,1.2,0.15],[12.4,2.1,0.5]];
     for(const [x,z,y] of gardenSpots) {
-        for(let i=0;i<3;i++)flower(x+(i-1)*0.22,z+(i%2)*0.18,i%2?white:[1,0.45,0.22],y);
         for(let i=0;i<3;i++) {
             const leaf=ball(root,'GardenLeaf',green,[x-0.28+i*0.12,y+0.13,z-0.18],[0.055,0.19,0.06]);leaf.rotation[2]=(i-1)*0.45;
         }
@@ -250,32 +236,11 @@ function createMarioEnvironment(gl) {
         const a=i*Math.PI*2/14;
         ball(root,'SteppingStone',[0.69,0.69,0.48],[Math.cos(a)*8.8,-2.29,Math.sin(a)*7.6],[0.38,0.10,0.27]);
     }
-    function coinArc(cx,y,cz,angle) {
-        for(let i=0;i<5;i++) {
-            const d=(i-2)*0.48;
-            const c=node(root,'GardenCoin',null,white,[cx+Math.cos(angle)*d,y+Math.sin(i*Math.PI/4)*0.45,cz+Math.sin(angle)*d]);coins.push(c);
-            node(c,'Coin',cylinder,[1,0.71,0.035],[0,0,0],[0.18,0.065,0.18],[Math.PI/2,0,0]);
-            cube(c,'CoinStripe',[1,0.93,0.34],[0,0,0.04],[0.035,0.21,0.025]);
-        }
-    }
-    coinArc(-7.8,0.6,4.5,0);coinArc(6.8,1.0,5.0,0.3);coinArc(0,1.45,21.2,0);
-    // Animated butterflies: tiny hinged wings and slow looping flights.
-    for(const [x,y,z] of [[-4.5,0.8,1.6],[4.6,0.9,-1.7],[-7.4,0.1,5.4],[6,1.5,20]]) {
-        const b=node(root,'Butterfly',null,white,[x,y,z]);
-        ball(b,'ButterflyBody',black,[0,0,0],[0.025,0.08,0.025]);
-        const wings=[];
-        for(const side of [-1,1]) {
-            const hinge=node(b,'WingHinge',null,white,[0,0,0]);
-            ball(hinge,'Wing',[0.98,0.54,0.16],[side*0.09,0.025,0],[0.10,0.13,0.025]);
-            ball(hinge,'WingDot',white,[side*0.11,0.07,0.025],[0.023,0.03,0.01]);wings.push(hinge);
-        }
-        butterflies.push({node:b,wings});
-    }
     function flag(x,y,z) {
         const p=node(root,'CheckpointFlag',null,white,[x,y,z]);
         node(p,'FlagPole',cylinder,[0.84,0.86,0.78],[0,1.1,0],[0.035,2.2,0.035]);
         ball(p,'FlagFinial',[1,0.75,0.16],[0,2.24,0],[0.09,0.09,0.09]);
-        const cloth=cube(p,'FlagCloth',[0.93,0.18,0.15],[0.32,1.87,0],[0.6,0.40,0.035]);flags.push(cloth);
+        const cloth=cube(p,'FlagCloth',[0.93,0.18,0.15],[0.32,1.87,0],[0.6,0.40,0.035]);
         ball(cloth,'FlagEmblem',white,[0,0,0.55],[0.17,0.24,0.06]);
     }
     flag(-0.9,0.25,21.5);flag(11.7,0.5,-0.5);
@@ -303,10 +268,6 @@ function createMarioEnvironment(gl) {
             cube(house,'WindowMullion',white,[side*0.49,0.73,0.555],[0.025,0.28,0.018]);
         }
         rounded(house,'Doorstep',[0.69,0.60,0.43],[0,0.035,0.81],[0.6,0.07,0.34],0.03);
-        for(const side of [-1,1]) {
-            node(house,'FlowerPot',cylinder,[0.71,0.32,0.17],[side*0.48,0.12,0.78],[0.10,0.24,0.10]);
-            ball(house,'PotFlower',[1,0.68,0.18],[side*0.48,0.28,0.78],[0.12,0.08,0.10]);
-        }
     }
     cottage(-12.3,meadowTop,-12.8,1.15,[0.92,0.14,0.16]);
     cottage(-15.2,meadowTop,-10.1,0.85,[0.16,0.63,0.75]);
@@ -328,7 +289,7 @@ function createMarioEnvironment(gl) {
     const mill=node(root,'GardenWindmill',null,white,[-11,meadowTop,18]);
     node(mill,'MillTower',Primitives.createConeFrustum(gl,0.74,0.44,2.6,24,1,true),[0.94,0.84,0.61],[0,1.3,0]);
     node(mill,'MillRoof',Primitives.createConeFrustum(gl,0.67,0,0.82,24,1,true),[0.20,0.55,0.58],[0,3.0,0]);
-    const rotor=node(mill,'WindmillRotor',null,white,[0,2.12,0.59]);windmills.push(rotor);
+    const rotor=node(mill,'WindmillRotor',null,white,[0,2.12,0.59]);
     for(let i=0;i<4;i++) {
         const blade=node(rotor,'SailPivot',null,white,[0,0,0],[1,1,1],[0,0,i*Math.PI/2]);
         rounded(blade,'WoodSailFrame',[0.48,0.30,0.16],[0,0.63,0],[0.10,1.26,0.07],0.025);
@@ -354,7 +315,7 @@ function createMarioEnvironment(gl) {
     for(let i=0;i<7;i++)ball(root,'CascadeFoam',white,[-9.42+i*0.14,meadowTop+0.09,-9.37+(i%2)*0.10],[0.14,0.055,0.11]);
     for(let i=0;i<10;i++) {
         const drop=ball(root,'WaterSpray',[0.74,0.95,1],[-9+(i%3-1)*0.23,meadowTop+0.2,-9.27],[0.025,0.05,0.025]);
-        sparkles.push(drop);
+
     }
     // Low meadow details use shared meshes and stay clear of every platform footprint.
     let seed=7421;
@@ -372,7 +333,6 @@ function createMarioEnvironment(gl) {
             tuft.indices.push(k,k+1,k+2);
         }
         node(root,'MeadowTuft',Primitives.createMeshBuffer(gl,tuft),[0.24,0.54,0.11],[0,0,0]).materialKind=6;
-        if(i%5===0)flower(x,z,i%2?[1,0.84,0.23]:[0.83,0.57,1],meadowTop);
     }
     // A distant, low silhouette prevents the meadow ending at a hard straight horizon.
     for(let i=0;i<18;i++) {
@@ -395,32 +355,12 @@ function createMarioEnvironment(gl) {
         }
     }
 
-    root.animate=function(t) {
-        clouds.forEach((c,i)=>{c.animPos=[Math.sin(t*0.12+i)*0.65,Math.sin(t*0.3+i)*0.045,0];});
-        blocks.forEach((b,i)=>{b.animPos=[0,Math.sin(t*1.6+i)*0.055,0];});
-        coins.forEach((c,i)=>{c.animRot=[0,t*2+i,0];});
-        butterflies.forEach((b,i)=>{
-            b.node.animPos=[Math.sin(t*0.7+i)*0.35,Math.sin(t*1.6+i)*0.12,Math.cos(t*0.7+i)*0.25];
-            b.node.animRot=[0,-t*0.7-i,0];
-            b.wings.forEach((w,j)=>{w.animRot=[0,(j?1:-1)*Math.sin(t*12+i)*0.75,0];});
-        });
-        windmills.forEach(w=>{w.animRot=[0,0,-t*0.38];});
-        sparkles.forEach((s,i)=>{
-            const phase=(t*0.7+i/10)%1;
-            s.animPos=[Math.sin(i*2.4)*phase*0.20,Math.sin(phase*Math.PI)*0.25,-phase*0.18];
-            s.animScale=[1-phase*0.7,1-phase*0.7,1-phase*0.7];
-        });
-        flags.forEach((f,i)=>{f.animRot=[Math.sin(t*2+i)*0.07,Math.sin(t*2.4+i)*0.16,0];});
-        plants.forEach((p,i)=>{p.animRot=[0,0,Math.sin(t*1.3+i)*0.08];});
-    };
-    // Bake only static geometry by material. Animated subtrees remain hierarchical.
-    // Splitting at 60k vertices keeps every batch safe for WebGL 1.0 Uint16 indices.
-    const dynamicNodes = new Set([...clouds,...blocks,...coins,...plants,...flags,...windmills,...sparkles,...butterflies.map(b=>b.node)]);
+    // All scenery is static; bake the complete hierarchy by material.
+    // Split at 60k vertices to stay within WebGL 1.0 Uint16 indices.
     function batchScenery(group) {
         const batches = new Map();
         let sourceDraws=0, sourceTriangles=0;
         function bake(n,parentMatrix) {
-            if(n!==group && dynamicNodes.has(n))return;
             let m=parentMatrix;
             if(n!==group) {
                 m=Mat4.translate(m,...n.position);
@@ -471,8 +411,6 @@ function createMarioEnvironment(gl) {
         return {sourceDraws,batchDraws,sourceTriangles,batchTriangles};
     }
     const stats=[batchScenery(root)];
-    // Child details are static relative to these animated pivots, so they can be batched too.
-    for(const group of [...clouds,...blocks,...plants,...windmills])stats.push(batchScenery(group));
     root.staticBatchStats=stats.reduce((sum,s)=>{
         for(const key of Object.keys(sum))sum[key]+=s[key];
         return sum;
