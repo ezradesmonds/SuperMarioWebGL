@@ -10,6 +10,8 @@ function createMarioEnvironment(gl) {
     const hillSphere=Primitives.createEllipsoid(gl,1,1,1,28,36);
     const shadowFootprints = [];
     const meadowTop = -2.5 + 0.25 / 2;
+    root.groundY = meadowTop;
+    root.walkCenterZ = 6.3; // Circle center; radius 2 keeps the whole route in front of the platform.
     const platformFootprints = [];
     root.shadowFootprints = shadowFootprints;
     function node(parent,name,mesh,color,pos,scale=[1,1,1],rot=[0,0,0]) {

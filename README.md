@@ -7,13 +7,13 @@ Proyek ini dibuat menggunakan **100% Pure WebGL 1.0 (Tanpa Three.js)** dan memen
 2. Buka langsung file **`index.html`** menggunakan browser modern (Chrome, Edge, Brave, atau Firefox) — tidak memerlukan instalasi library eksternal atau web server karena seluruh script ditulis dalam Vanilla JavaScript murni.
 
 ## Pemenuhan Ketentuan Proyek & Karakter
-Klik **Jalan Maju–Mundur** untuk menjalankan satu set animasi sederhana pada ketiga karakter:
+Klik **Jalan Melingkar** untuk menjalankan satu set animasi sederhana pada ketiga karakter:
 - **Rotate**: tangan dan kaki berayun melalui rotasi sendi pada file masing-masing karakter.
-- **Scaling**: ukuran seluruh karakter membesar–mengecil hingga 6%.
+- **Scaling**: kelopak mata memanjang dan mengecil pada sumbu Y untuk berkedip setiap tiga detik.
 - **Rotate Arbitrary Axis**: karakter bergoyang sekitar 5 derajat pada sumbu diagonal `(1, 0, 1)`, menggunakan rumus Rodrigues di `Mat4.rotateAxis()`.
 - **Hierarchical Transformation**: bagian tubuh mengikuti transformasi induknya melalui `SceneNode`.
 
-Perpindahan maju–mundur sepanjang sumbu Z, scaling, dan goyangan diatur bersama oleh `applyWalkMovement()` di `js/main.js`. Tinggi karakter disesuaikan terhadap posisi kaki agar tetap menapak. Pilih **Idle / Diam** untuk kembali ke animasi diam atau **Aksi** untuk aksi khusus karakter.
+Scaling kelopak diatur oleh `animateBlink()` di `js/sceneNode.js`. Kelopak ketiga karakter memakai patch ellipsoid bagian depan, bukan ellipsoid utuh. Scaling Y bertumpu di tepi atas; kelopak disembunyikan ketika mata terbuka penuh agar tidak menyisakan garis. Kelopak menjadi anak mata sehingga mengikuti gerakan kepala. Jalur lingkaran mengelilingi satu titik dengan jarak antarkarakter 120 derajat, arah hadap mengikuti jalur, dan goyangan diatur bersama oleh `applyWalkMovement()` di `js/main.js`. Tinggi karakter disesuaikan terhadap posisi kaki agar tetap menapak. Pilih **Idle / Diam** untuk kembali ke animasi diam atau **Aksi** untuk aksi khusus karakter.
 
 ### 1. Yoshi (`characters/yoshi.js`)
 - **Ellipsoid**: Kepala, moncong bulat besar khas Yoshi, badan oval hijau, perut putih, mata besar menonjol, sepatu boots oranye, sol kuning, jari tangan, dan telur Yoshi polkadot hijau.

@@ -187,6 +187,7 @@ function createBowserJr(gl) {
         const shine = new SceneNode("JrEyeShine", shineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.018, 0.03, 0.048]);
         eye.add(shine);
+        addBlinkEyelid(gl, root, eye, C_GREEN_HEAD, [0.085, 0.105, 0.13]);
     }
 
     // CURVE 3 & 4: ALIS MERAH TEBAL MENYALA KHAS BOWSER JR. (3D Cubic Bezier Curve Tube)
@@ -327,6 +328,7 @@ function createBowserJr(gl) {
     // Fungsi Animasi Hierarkis Bowser Jr.
     root.animate = function(t, mode) {
         root.resetAnim();
+        animateBlink(root, t);
         fireballGroup.scale = [0.001, 0.001, 0.001];
 
         if (mode === "walk") {

@@ -97,6 +97,7 @@ function createToad(gl) {
         const shine = new SceneNode("ToadEyeShine", eyeShineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.012, 0.04, 0.035]);
         eye.add(shine);
+        addBlinkEyelid(gl, root, eye, C_SKIN, [0.065, 0.125, 0.11]);
 
     }
 
@@ -232,6 +233,7 @@ function createToad(gl) {
     // animasi badan diteruskan ke bagian tubuh yang terhubung melalui susunan induk-anak.
     root.animate = function(t, mode) {
         root.resetAnim();
+        animateBlink(root, t);
         if (mode === "walk") {
             const swing = Math.sin(t * 5.5);
             const bounce = Math.abs(Math.cos(t * 5.5));

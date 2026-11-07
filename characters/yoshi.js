@@ -183,6 +183,7 @@ function createYoshi(gl) {
         const pupil = new SceneNode("Pupil", pupilMesh, C_BLACK, 85);
         pupil.setTransform([side * -0.035, 0.02, 0.12], [0, side * 0.15, 0]);
         whiteEye.add(pupil);
+        addBlinkEyelid(gl, root, whiteEye, C_GREEN, [0.20, 0.35, 0.29]);
 
         const shine = new SceneNode("EyeShine", shineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.01, 0.07, 0.05]);
@@ -289,6 +290,7 @@ function createYoshi(gl) {
     // Fungsi Animasi Hierarkis Yoshi
     root.animate = function(t, mode) {
         root.resetAnim();
+        animateBlink(root, t);
         tonguePivot.scale = [0.2, 0.2, 0.15];
 
         if (mode === "walk") {

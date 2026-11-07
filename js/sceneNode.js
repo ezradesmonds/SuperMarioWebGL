@@ -5,6 +5,7 @@ class SceneNode {
         this.mesh = mesh;
         this.color = color;
         this.shininess = shininess;
+        this.visible = true;
 
         // Base local transform (structural placement relative to parent)
         this.position = [0, 0, 0];
@@ -54,6 +55,7 @@ class SceneNode {
     }
 
     draw(gl, shader, parentMatrix, showCurveHighlight = false) {
+        if (!this.visible) return;
         // Batched scenery retains its hierarchy/metadata, but empty leaves need no matrices.
         if (!this.mesh && this.children.length === 0) return;
         let localMatrix = Mat4.clone(parentMatrix);
@@ -118,5 +120,31 @@ class SceneNode {
         for (const child of this.children) {
             child.draw(gl, shader, localMatrix, showCurveHighlight);
         }
+    }
+}
+
+// Thin front ellipsoid surface, with no solid back half. The top edge is the scale pivot.
+function addBlinkEyelid(gl, root, eye, color, radii) {
+    const [rx, ry, rz] = radii;
+    const patch = Primitives.createEllipsoidPatch(gl, rx, ry, rz, [0, 0, 1], Math.PI / 2, 16, 32, 0.003);
+    const lid = new SceneNode('BlinkEyelid', patch, color, 22);
+    const top = ry + 0.002;
+    // Move the curved patch inward relative to its own depth.
+    lid.setTransform([0, top, -rz * 0.15]);
+    lid.setGeomTransform([1, 1, 1], [0, -top, 0]);
+    lid.animScale = [1, 0.001, 1];
+    lid.visible = false;
+    eye.add(lid);
+    if (!root.eyelids) root.eyelids = [];
+    root.eyelids.push(lid);
+}
+
+function animateBlink(root, t) {
+    // One 0.32-second blink every three seconds. Scale only the eyelid, not the eye.
+    const phase = t % 3;
+    const closed = phase < 0.32 ? Math.sin(Math.PI * phase / 0.32) ** 2 : 0;
+    for (const lid of root.eyelids || []) {
+        lid.visible = closed > 0.001;
+        lid.animScale = [1, Math.max(0.001, closed), 1];
     }
 }
