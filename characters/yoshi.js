@@ -31,19 +31,6 @@ function createYoshi(gl) {
     belly.setTransform([0, -0.01, 0.22], [-0.04, 0, 0]);
     body.add(belly);
 
-    // CURVE 1: Kontur Tepi Perut Putih (3D Cubic Bezier Tube Kiri & Kanan)
-    for (const side of [-1, 1]) {
-        const bellyCurve = Primitives.createBezierTube(
-            gl,
-            [side * 0.22, 0.48, 0.32],
-            [side * 0.42, 0.16, 0.38],
-            [side * 0.40, -0.24, 0.36],
-            [side * 0.18, -0.50, 0.26],
-            0.025, 0.025
-        );
-        body.add(new SceneNode("BellyContourBezier", bellyCurve, C_WHITE, 22));
-    }
-
     // SADDLE / PELANA MERAH DI PUNGGUNG ATAS (Dome + Quadric Torus Rim + Bezier Arch)
     const saddleNode = new SceneNode("YoshiSaddle");
     saddleNode.setTransform([0, 0.12, -0.40], [-1.32, 0, 0]);
