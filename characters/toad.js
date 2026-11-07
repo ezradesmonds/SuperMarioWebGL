@@ -188,11 +188,13 @@ function createToad(gl) {
 
         for (let f = -1.5; f <= 1.5; f += 1.0) {
             const finger = new SceneNode("Finger", fingerMesh, C_SKIN, 25);
-            finger.setTransform([f * 0.042, -0.05, 0.08], [0.2, f * 0.18, 0]);
+            // Jari mengikuti arah telapak ke bawah, bukan menunjuk ke depan.
+            finger.setTransform([f * 0.042, -0.115, 0.01], [Math.PI / 2 - 0.10, 0, f * 0.10]);
             hand.add(finger);
         }
         const thumb = new SceneNode("Thumb", fingerMesh, C_SKIN, 25);
-        thumb.setTransform([side * -0.09, -0.01, 0.05], [0, side * -0.6, 0]);
+        thumb.setTransform([side * -0.11, -0.025, 0.02], [Math.PI / 2 - 0.25, 0, side * -0.65]);
+        thumb.setGeomTransform([0.9, 0.9, 0.8]);
         hand.add(thumb);
 
         return { shoulder, elbow, wrist };

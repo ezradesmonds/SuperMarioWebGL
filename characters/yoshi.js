@@ -232,11 +232,13 @@ function createYoshi(gl) {
 
         for (let f = -1; f <= 1; f++) {
             const finger = new SceneNode("Finger", fingerMesh, C_GREEN, 30);
-            finger.setTransform([f * 0.075, -0.02, 0.12], [0.2, f * 0.18, 0]);
+            // The finger mesh is long along Z; rotate it toward -Y, along the hanging palm.
+            finger.setTransform([f * 0.075, -0.14, 0.015], [Math.PI / 2 - 0.10, 0, f * 0.12]);
             hand.add(finger);
         }
         const thumb = new SceneNode("Thumb", fingerMesh, C_GREEN, 30);
-        thumb.setTransform([side * -0.10, 0.02, 0.06], [0, side * -0.5, 0]);
+        thumb.setTransform([side * -0.13, -0.035, 0.025], [Math.PI / 2 - 0.25, 0, side * -0.65]);
+        thumb.setGeomTransform([0.9, 0.9, 0.8]);
         hand.add(thumb);
 
         return { shoulder, elbow, hand };
