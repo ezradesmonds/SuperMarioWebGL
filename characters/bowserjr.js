@@ -47,41 +47,44 @@ function createBowserJr(gl) {
         body.add(new SceneNode("BellyRibBezier", ribCurve, C_RIB_LINE, 15));
     }
 
-    // BIB / BANDANA PUTIH SEGITIGA DI LEHER & DADA ATAS (Rapi menempel di dada atas, tidak menutupi perut!)
+    // Plain white cloth bib with a pointed bottom, raised toward the neck.
+    // The cloth follows the curved chest surface instead of forming a solid cone.
     const bibGroup = new SceneNode("BibBandanaGroup");
-    bibGroup.setTransform([0, 0.34, 0.24], [0.35, 0, 0]);
+    const bibRaise = 0.12;
+    bibGroup.setTransform([0, bibRaise, 0]);
     body.add(bibGroup);
-
-    const bibCollarMesh = Primitives.createEllipsoid(gl, 0.42, 0.16, 0.34);
-    const bibCollar = new SceneNode("WhiteBibCollar", bibCollarMesh, C_WHITE, 30);
-    bibGroup.add(bibCollar);
-
-    const bibTipMesh = Primitives.createConeFrustum(gl, 0.34, 0.06, 0.26, 24, 4, true);
-    const bibTip = new SceneNode("WhiteBibTriangleTip", bibTipMesh, C_WHITE, 30);
-    bibTip.setTransform([0, -0.10, 0.10], [Math.PI, 0, 0], [1.0, 1.0, 0.65]);
-    bibGroup.add(bibTip);
-
-    // CURVE 1: Lukisan Mulut/Gigi Monster Merah pada Bib/Bandana (Menempel rata di permukaan bib!)
-    const bibMouthCurve = Primitives.createBezierTube(
-        gl,
-        [-0.26, -0.01, 0.30],
-        [-0.12, -0.12, 0.35],
-        [0.12, -0.12, 0.35],
-        [0.26, -0.01, 0.30],
-        0.022, 0.022
-    );
-    bibGroup.add(new SceneNode("BibMonsterMouthBezier", bibMouthCurve, C_RED_HAIR, 30));
-
-    const bibTeethCurve = Primitives.createBezierTube(
-        gl,
-        [-0.20, -0.05, 0.32],
-        [-0.06, 0.03, 0.36],
-        [0.06, 0.03, 0.36],
-        [0.20, -0.05, 0.32],
-        0.018, 0.018
-    );
-    bibGroup.add(new SceneNode("BibMonsterTeethBezier", bibTeethCurve, C_RED_HAIR, 30));
-
+    function chestZ(x, y) {
+        y += bibRaise; // Sample the chest at the cloth's raised position.
+        const torso = 0.50 * Math.sqrt(Math.max(0, 1 - (x/0.58)**2 - (y/0.60)**2));
+        const belly = 0.27 + 0.34 * Math.sqrt(Math.max(0, 1 - (x/0.45)**2 - ((y+0.08)/0.47)**2));
+        return Math.max(torso, belly);
+    }
+    function bibPaint(name, outline, color, lift) {
+        const data = {positions: [], normals: [], indices: []};
+        const center = outline.reduce((sum,p)=>[sum[0]+p[0]/outline.length,sum[1]+p[1]/outline.length],[0,0]);
+        const rings = 8, slices = outline.length;
+        // Subdivide each polygon radially so the printed details hug the chest.
+        for(let ring=0;ring<=rings;ring++) {
+            const t=ring/rings;
+            for(const edge of outline) {
+                const x=center[0]+(edge[0]-center[0])*t, y=center[1]+(edge[1]-center[1])*t;
+                const z=chestZ(x,y)+lift;
+                const dx=(chestZ(x+0.001,y)-chestZ(x-0.001,y))/0.002;
+                const dy=(chestZ(x,y+0.001)-chestZ(x,y-0.001))/0.002;
+                data.positions.push(x,y,z);data.normals.push(...Vec3.normalize([-dx,-dy,1]));
+            }
+        }
+        for(let ring=0;ring<rings;ring++)for(let edge=0;edge<slices;edge++) {
+            const a=ring*slices+edge,b=ring*slices+(edge+1)%slices,c=a+slices,d=b+slices;
+            data.indices.push(a,c,b,b,c,d);
+        }
+        const painted=new SceneNode(name,Primitives.createMeshBuffer(gl,data),color,8);
+        bibGroup.add(painted);return painted;
+    }
+    bibPaint('WhitePointedBib',[
+        [-0.40,0.40],[-0.44,0.288],[-0.40,0.106],[-0.28,-0.055],
+        [0,-0.18],[0.28,-0.055],[0.40,0.106],[0.44,0.288],[0.40,0.40],[0,0.351]
+    ],C_WHITE,0.045);
     // CANGKANG BERDURI (KOOPA SHELL) DI PUNGGUNG (Dome + Torus Rim + Quadric Cones untuk Duri!)
     const shellGroup = new SceneNode("SpikedShellGroup");
     shellGroup.setTransform([0, 0.06, -0.36], [-1.42, 0, 0]);
