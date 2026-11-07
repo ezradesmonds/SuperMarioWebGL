@@ -153,19 +153,20 @@ function createToad(gl) {
         capMain.add(new SceneNode("FlushRedSpotPatch", patchMesh, C_RED, 50));
     }
 
-    // setiap lengan terdiri dari dua silinder yang disambungkan di siku dan pergelangan.
+    // Lengan atas berupa frustum yang mengecil ke bahu; lengan bawah tetap silinder.
+    const upperArmMesh = Primitives.createConeFrustum(gl, 0.09, 0.034, 0.23);
     const armCylMesh  = Primitives.createCylinder(gl, 0.09, 0.23);
     const elbowMesh   = Primitives.createEllipsoid(gl, 0.095, 0.095, 0.095);
-    const palmMesh    = Primitives.createEllipsoid(gl, 0.12, 0.10, 0.13);
+    const palmMesh    = Primitives.createEllipsoid(gl, 0.12, 0.10, 0.08);
     const fingerMesh  = Primitives.createEllipsoid(gl, 0.038, 0.038, 0.10);
 
     function createArm(side) {
         // susunan lengan: bahu → lengan atas → siku → lengan bawah → pergelangan → telapak → jari.
         const shoulder = new SceneNode(side < 0 ? "LeftShoulder" : "RightShoulder");
-        shoulder.setTransform([side * 0.30, 0.18, 0.18], [0.10, 0, side * 0.50]);
+        shoulder.setTransform([side * 0.30, 0.23, 0.18], [0.10, 0, side * 0.50]);
         body.add(shoulder);
 
-        const upperArm = new SceneNode("UpperArmCylinder", armCylMesh, C_SKIN, 25);
+        const upperArm = new SceneNode("UpperArmFrustum", upperArmMesh, C_SKIN, 25);
         upperArm.setTransform([0, -0.105, 0]);
         shoulder.add(upperArm);
 
@@ -183,7 +184,7 @@ function createToad(gl) {
         lowerArm.add(wrist);
 
         const hand = new SceneNode("PalmEllipsoid", palmMesh, C_SKIN, 25);
-        hand.setTransform([0, -0.04, 0.02]);
+        hand.setTransform([0, -0.04, 0.02], [0, side * Math.PI / 2, 0]);
         wrist.add(hand);
 
         for (let f = -1.5; f <= 1.5; f += 1.0) {

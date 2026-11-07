@@ -389,6 +389,11 @@ function applyWalkMovement(character, t, index = 0) {
 }
 
 function renderLoop(timestamp) {
+    if (window.Trailer && window.Trailer.active) {
+        window.Trailer.frame(timestamp);
+        requestAnimationFrame(renderLoop);
+        return;
+    }
     const dt=lastTimestamp?Math.min(0.05,(timestamp-lastTimestamp)*0.001):0;
     lastTimestamp=timestamp;accumTime+=dt;
     const canvas=gl.canvas,ratio=Math.min(window.devicePixelRatio||1,1.5);
@@ -422,6 +427,13 @@ function renderLoop(timestamp) {
     if(viewMode==='env')roots.push(environmentNode);
     for(const [mode,character] of [['yoshi',yoshiNode],['toad',toadNode],['bowserjr',bowserJrNode]])
         if(viewMode==='env'||viewMode==='all'||viewMode===mode)roots.push(character);
+    renderWorld(roots, standingY);
+    requestAnimationFrame(renderLoop);
+}
+
+// Shared renderer for the interactive world and the standalone trailer.
+function renderWorld(roots, standingY) {
+    const canvas = gl.canvas;
     gl.disableVertexAttribArray(shaderProgram.aNormal);
     sunShadow.render(roots);
     gl.viewport(0,0,canvas.width,canvas.height);
@@ -448,7 +460,6 @@ function renderLoop(timestamp) {
     ]);
     gl.uniform4fv(shaderProgram.uContactShadows,new Float32Array(footprints.flat()));
     const identity=Mat4.identity();for(const root of roots)root.draw(gl,shaderProgram,identity);
-    requestAnimationFrame(renderLoop);
 }
 
 function setLightingMode(mode) {

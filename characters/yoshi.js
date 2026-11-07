@@ -191,14 +191,15 @@ function createYoshi(gl) {
     }
 
     // TANGAN KIRI & KANAN (Cylinder Lengan + Ellipsoid Tangan & 4 Jari)
-    const upperArmMesh = Primitives.createCylinder(gl, 0.11, 0.36);
+    // Upper end (+Y) narrows toward the shoulder; lower end (-Y) is wider at the elbow.
+    const upperArmMesh = Primitives.createConeFrustum(gl, 0.12, 0.045, 0.36);
     const lowerArmMesh = Primitives.createCylinder(gl, 0.10, 0.32);
-    const handMesh     = Primitives.createEllipsoid(gl, 0.14, 0.12, 0.16);
+    const handMesh     = Primitives.createEllipsoid(gl, 0.14, 0.12, 0.08);
     const fingerMesh   = Primitives.createEllipsoid(gl, 0.048, 0.048, 0.13);
 
     function createArm(side) {
         const shoulder = new SceneNode(side < 0 ? "LeftShoulder" : "RightShoulder");
-        shoulder.setTransform([side * 0.44, 0.24, 0.10], [0.25, side * -0.15, side * 0.38]);
+        shoulder.setTransform([side * 0.44, 0.32, 0.10], [0.25, side * -0.15, side * 0.38]);
         body.add(shoulder);
 
         const upperArm = new SceneNode("UpperArm", upperArmMesh, C_GREEN, 30);
@@ -214,7 +215,7 @@ function createYoshi(gl) {
         elbow.add(forearm);
 
         const hand = new SceneNode("Hand", handMesh, C_GREEN, 30);
-        hand.setTransform([0, -0.16, 0.04]);
+        hand.setTransform([0, -0.16, 0], [0, side * Math.PI / 2, 0]);
         forearm.add(hand);
 
         for (let f = -1; f <= 1; f++) {

@@ -200,7 +200,9 @@ function createBowserJr(gl) {
             [side * 0.40, 0.39, 0.26],
             0.042, 0.020
         );
-        head.add(new SceneNode("FieryEyebrowBezier", browCurveMesh, C_RED_HAIR, 40));
+        const eyebrow = new SceneNode("FieryEyebrowBezier", browCurveMesh, C_RED_HAIR, 40);
+        eyebrow.setTransform([0, 0.15, -0.20]);
+        head.add(eyebrow);
     }
 
     // 2 TANDUK KECIL DI SAMPING KEPALA (QUADRIC CONE + TORUS BASE)
@@ -251,17 +253,18 @@ function createBowserJr(gl) {
     fireballGroup.add(fireTailCone);
 
     // LENGAN KIRI & KANAN + GELANG BESI BERDURI (Cylinder Lengan + Quadric Torus Cuff + Cone Studs + Ellipsoid Kepalan Tangan)
-    const armCylMesh    = Primitives.createCylinder(gl, 0.13, 0.34);
+    // +Y connects to the shoulder; keep that end narrower than the wrist end.
+    const upperArmMesh = Primitives.createConeFrustum(gl, 0.13, 0.049, 0.34);
     const cuffTorusMesh = Primitives.createTorus(gl, 0.14, 0.05);
     const studConeMesh  = Primitives.createConeFrustum(gl, 0.038, 0.004, 0.075, 12, 2, true);
     const fistMesh      = Primitives.createEllipsoid(gl, 0.20, 0.18, 0.20);
 
     function createArm(side) {
         const shoulder = new SceneNode(side < 0 ? "LeftShoulder" : "RightShoulder");
-        shoulder.setTransform([side * 0.47, 0.12, 0.20], [0.20, 0, side * 0.58]);
+        shoulder.setTransform([side * 0.47, 0.30, 0.20], [0.20, 0, side * 0.58]);
         body.add(shoulder);
 
-        const arm = new SceneNode("ArmCylinder", armCylMesh, C_YELLOW, 30);
+        const arm = new SceneNode("UpperArmFrustum", upperArmMesh, C_YELLOW, 30);
         arm.setTransform([0, -0.16, 0]);
         shoulder.add(arm);
 
