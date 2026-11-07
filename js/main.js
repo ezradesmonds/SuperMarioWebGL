@@ -4,8 +4,8 @@ let yoshiNode, toadNode, bowserJrNode;
 let environmentNode, sunShadow;
 let lightingMode = "day";
 
-let viewMode = "all";    // 'all', 'yoshi', 'toad', 'bowserjr'
-let animMode = "idle";    // 'walk' (combined movement), 'action', 'idle'
+let viewMode = "env";    // 'all', 'yoshi', 'toad', 'bowserjr'
+let animMode = "walk";    // 'walk' (combined movement), 'action', 'idle'
 
 // Camera Orbit State
 let camYaw = 0.0;
@@ -257,6 +257,7 @@ function initWebGL() {
 
     sunShadow=createSunShadowPipeline(gl);
     setupMouseControls(canvas);
+    setupCharacterShortcuts();
     setViewMode("env");
     requestAnimationFrame(renderLoop);
 }
@@ -278,7 +279,7 @@ function setViewMode(mode) {
     // MODE ENVIRONMENT
     if (mode === "env") {
         camDist = 17.5;
-        camTarget = [0, 1.5, -2.0];
+        camTarget = animMode === "walk" ? [0, -0.25, 2.0] : [0, 1.5, -2.0];
         camYaw = 0.13;
         camPitch = 0.29;
     }
@@ -316,6 +317,20 @@ function setAnimMode(mode) {
         const active = b.id === "anim-" + mode;
         b.classList.toggle("active", active);
         b.setAttribute("aria-pressed", active);
+    });
+}
+
+// Available anywhere on the page, without clicking the canvas first.
+function setupCharacterShortcuts() {
+    const modes = { '0': 'env', '1': 'bowserjr', '2': 'toad', '3': 'yoshi' };
+    window.addEventListener('keydown', event => {
+        if (event.ctrlKey || event.altKey || event.metaKey) return;
+        const target = event.target;
+        if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+        if (Object.prototype.hasOwnProperty.call(modes, event.key)) {
+            setViewMode(modes[event.key]);
+            event.preventDefault();
+        }
     });
 }
 
@@ -366,9 +381,10 @@ let accumTime = 0;
 let lastTimestamp = 0;
 
 // One simple movement set. Joint rotation is handled by each character's walk pose.
-function applyWalkMovement(character, t, index = 0) {
-    // Three equally spaced characters orbit one shared center in the XZ plane.
-    const angle = t * 0.45 + index * Math.PI * 2 / 3;
+function applyWalkMovement(character, t, followerIndex = 0) {
+    // Toad leads, Bowser Jr. follows, and Yoshi follows Bowser Jr.
+    // Each follower is 120 degrees behind the character it is chasing.
+    const angle = t * 0.45 - followerIndex * Math.PI * 2 / 3;
     const radius = 2.0;
     const centerZ = viewMode === 'env' ? environmentNode.walkCenterZ : 0;
     character.position[0] = Math.cos(angle) * radius;
@@ -401,14 +417,15 @@ function renderLoop(timestamp) {
         ? (walkingOnGround ? environmentNode.groundY : environmentNode.surfaceY)
         : 0;
     // Ground idle feet and prevent animated soles penetrating the stage; preserve upward jumps.
-    for (const [index, character] of [yoshiNode, toadNode, bowserJrNode].entries()) {
+    const chaseOrder = [toadNode, bowserJrNode, yoshiNode];
+    for (const character of [yoshiNode, toadNode, bowserJrNode]) {
         if (character.restFootY === undefined) {
             const animation = poseMode;
             character.animate(0, 'idle');
             character.restFootY = characterFootY(character);
             character.animate(accumTime, animation);
         }
-        if (animMode === 'walk') applyWalkMovement(character, accumTime, index);
+        if (animMode === 'walk') applyWalkMovement(character, accumTime, chaseOrder.indexOf(character));
         const currentFootY = characterFootY(character);
         const bottom = animMode !== 'idle' && character === toadNode
             ? Math.min(currentFootY, character.restFootY) : currentFootY;
@@ -420,6 +437,11 @@ function renderLoop(timestamp) {
     if(viewMode==='env')roots.push(environmentNode);
     for(const [mode,character] of [['yoshi',yoshiNode],['toad',toadNode],['bowserjr',bowserJrNode]])
         if(viewMode==='env'||viewMode==='all'||viewMode===mode)roots.push(character);
+    // Keep a moving individual character centered after selecting it with 1/2/3.
+    const focused = { yoshi: yoshiNode, toad: toadNode, bowserjr: bowserJrNode }[viewMode];
+    if (focused && animMode === 'walk') {
+        camTarget = [focused.position[0], focused.position[1] + 1.15, focused.position[2]];
+    }
     renderWorld(roots, standingY);
     requestAnimationFrame(renderLoop);
 }
