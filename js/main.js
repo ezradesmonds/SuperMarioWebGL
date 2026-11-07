@@ -394,7 +394,8 @@ function renderLoop(timestamp) {
     const canvas=gl.canvas,ratio=Math.min(window.devicePixelRatio||1,1.5);
     const width=Math.round(canvas.clientWidth*ratio),height=Math.round(canvas.clientHeight*ratio);
     if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
-    yoshiNode.animate(accumTime,animMode);toadNode.animate(accumTime,animMode);bowserJrNode.animate(accumTime,animMode);
+    const poseMode = animMode === 'walk' ? 'combined' : animMode;
+    yoshiNode.animate(accumTime,poseMode);toadNode.animate(accumTime,poseMode);bowserJrNode.animate(accumTime,poseMode);
     yoshiNode.setTransform([-2.8,0,0.15],[0,0.15,0]);
     toadNode.setTransform([0,0,0]);bowserJrNode.setTransform([2.8,0,0.15],[0,-0.20,0]);
     const walkingOnGround = viewMode === 'env' && animMode === 'walk';
@@ -404,14 +405,15 @@ function renderLoop(timestamp) {
     // Ground idle feet and prevent animated soles penetrating the stage; preserve upward jumps.
     for (const [index, character] of [yoshiNode, toadNode, bowserJrNode].entries()) {
         if (character.restFootY === undefined) {
-            const animation = animMode;
+            const animation = poseMode;
             character.animate(0, 'idle');
             character.restFootY = characterFootY(character);
             character.animate(accumTime, animation);
         }
         if (animMode === 'walk') applyWalkMovement(character, accumTime, index);
         const currentFootY = characterFootY(character);
-        const bottom = animMode === 'action' ? Math.min(currentFootY, character.restFootY) : currentFootY;
+        const bottom = animMode !== 'idle' && character === toadNode
+            ? Math.min(currentFootY, character.restFootY) : currentFootY;
         character.position[1] = standingY - bottom;
     }
 

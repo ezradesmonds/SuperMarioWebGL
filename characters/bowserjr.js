@@ -327,6 +327,8 @@ function createBowserJr(gl) {
 
     // Fungsi Animasi Hierarkis Bowser Jr.
     root.animate = function(t, mode) {
+        const combined = mode === "combined";
+        if (combined) mode = "action";
         root.resetAnim();
         animateBlink(root, t);
         fireballGroup.scale = [0.001, 0.001, 0.001];
@@ -349,21 +351,22 @@ function createBowserJr(gl) {
 
             tailPivot.animRot = [0, swing * 0.38, 0];
         } else if (mode === "action") {
-            // Menyerang (Tinju Bergantian) + Menyemburkan Bola Api & Melompat!
-            const jump = Math.max(0, Math.sin(t * 4.2));
+            // Aksi khas Bowser Jr.: menyemburkan bola api dengan tangan diam.
             const punch = Math.sin(t * 9.0);
 
-            body.animPos = [0, jump * 0.34, 0];
-            body.animRot = [0.12 * punch, punch * 0.26, 0];
+            // Keep torso rotation neutral so this action can accompany the walking motion.
 
             headPivot.animRot = [-0.08, -punch * 0.22, 0];
             hairGroup.animRot = [0.22 * Math.abs(punch), 0, 0];
 
-            leftArm.shoulder.animRot  = [-0.75 + punch * 0.65, 0.3, -0.25];
-            rightArm.shoulder.animRot = [-0.75 - punch * 0.65, -0.3, 0.25];
 
-            leftLeg.hip.animRot  = [-0.55 * jump, 0, -0.12];
-            rightLeg.hip.animRot = [0.35 * jump, 0, 0.12];
+            leftLeg.hip.animRot  = [0, 0, -0.12];
+            rightLeg.hip.animRot = [0, 0, 0.12];
+            if (combined) {
+                const swing = Math.sin(t * 5.0);
+                leftLeg.hip.animRot = [-swing * 0.80, 0, 0];
+                rightLeg.hip.animRot = [swing * 0.80, 0, 0];
+            }
             tailPivot.animRot = [0.18, Math.sin(t * 12) * 0.45, 0];
 
             // Semburan Bola Api
@@ -381,6 +384,12 @@ function createBowserJr(gl) {
             leftArm.shoulder.animRot  = [-0.25 + breath * 0.07, 0.15, -0.12];
             rightArm.shoulder.animRot = [0.20 - breath * 0.07, -0.15, 0.12];
             tailPivot.animRot = [0, Math.sin(t * 3.5) * 0.24, 0];
+        }
+        // Swing opposite arms only in the combined circular-walk mode.
+        if (combined) {
+            const swing = Math.sin(t * 5);
+            leftArm.shoulder.animRot = [swing * 0.7, 0, 0];
+            rightArm.shoulder.animRot = [-swing * 0.7, 0, 0];
         }
     };
 

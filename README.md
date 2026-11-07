@@ -7,7 +7,7 @@ Proyek ini dibuat menggunakan **100% Pure WebGL 1.0 (Tanpa Three.js)** dan memen
 2. Buka langsung file **`index.html`** menggunakan browser modern (Chrome, Edge, Brave, atau Firefox) — tidak memerlukan instalasi library eksternal atau web server karena seluruh script ditulis dalam Vanilla JavaScript murni.
 
 ## Pemenuhan Ketentuan Proyek & Karakter
-Klik **Jalan Melingkar** untuk menjalankan satu set animasi sederhana pada ketiga karakter:
+Klik **Jalan + Aksi** untuk menggabungkan jalur melingkar dengan aksi khas: Yoshi menjulurkan lidah, Bowser Jr. menyemburkan bola api, dan Toad melompat. Pada mode gabungan, tangan ketiga karakter berayun bergantian. Pada Aksi terpisah, tangan Bowser Jr. dan Toad tetap pada pose dasar. Empat transformasi yang dipakai:
 - **Rotate**: tangan dan kaki berayun melalui rotasi sendi pada file masing-masing karakter.
 - **Scaling**: kelopak mata memanjang dan mengecil pada sumbu Y untuk berkedip setiap tiga detik.
 - **Rotate Arbitrary Axis**: karakter bergoyang sekitar 5 derajat pada sumbu diagonal `(1, 0, 1)`, menggunakan rumus Rodrigues di `Mat4.rotateAxis()`.
@@ -40,4 +40,4 @@ Scaling kelopak diatur oleh `animateBlink()` di `js/sceneNode.js`. Kelopak ketig
   - **Cone**: 2 tanduk kepala, 4 duri putih tajam pada cangkang hijau (shell spikes), gigi taring mulut, 6 kuku kaki tajam, stud duri pada gelang besi, dan ekor.
   - **Torus**: Tepi cincin putih cangkang Koopa, cincin dasar duri, dan gelang besi hitam.
 - **Curve (3D Cubic Bezier Curve Tube)**: Alis merah tebal menyala, 3 helai rambut kuncir merah (ponytail), lukisan gigi/mulut merah pada bib/masker putih, garis segmen perut, dan senyum menyeringai.
-- **Transformasi Hierarkis & Animasi**: Berjalan gagah, mengangkat tangan/menyerang (tinju), dan melompat dengan badan sebagai *parent* utama.
+- **Transformasi Hierarkis & Animasi**: Berjalan gagah, mengangkat tangan/menyerang (tinju) serta menyemburkan bola api sambil berdiri dengan badan sebagai *parent* utama.

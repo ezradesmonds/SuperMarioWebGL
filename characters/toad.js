@@ -232,6 +232,8 @@ function createToad(gl) {
 
     // animasi badan diteruskan ke bagian tubuh yang terhubung melalui susunan induk-anak.
     root.animate = function(t, mode) {
+        const combined = mode === "combined";
+        if (combined) mode = "action";
         root.resetAnim();
         animateBlink(root, t);
         if (mode === "walk") {
@@ -251,17 +253,13 @@ function createToad(gl) {
             leftLeg.hip.animRot  = [-swing * 0.70, 0, 0];
             rightLeg.hip.animRot = [swing * 0.70, 0, 0];
         } else if (mode === "action") {
-            // toad melompat sambil mengangkat dan melambaikan kedua tangannya.
+            // Toad melompat dengan tangan tetap pada pose dasar.
             const jump = Math.max(0, Math.sin(t * 4.5));
             body.animPos = [0, jump * 0.48, 0];
-            body.animRot = [-jump * 0.10, Math.sin(t * 2.2) * 0.20, 0];
+            // Keep torso rotation neutral so this action can accompany the walking motion.
 
             headPivot.animRot = [-0.10 * jump, Math.sin(t * 4.5) * 0.14, Math.sin(t * 9.0) * 0.08];
 
-            leftArm.shoulder.animRot  = [0, 0, -0.35 + Math.sin(t * 12) * 0.20];
-            rightArm.shoulder.animRot = [0, 0, 0.35 - Math.sin(t * 12) * 0.20];
-            leftArm.elbow.animRot = [-0.18, 0, 0];
-            rightArm.elbow.animRot = [-0.18, 0, 0];
 
             leftLeg.hip.animRot  = [jump * 0.45, 0, -jump * 0.12];
             rightLeg.hip.animRot = [-jump * 0.35, 0, jump * 0.12];
@@ -274,6 +272,12 @@ function createToad(gl) {
             rightArm.shoulder.animRot = [0, 0, 0.35 - Math.sin(t * 3.5) * 0.08];
             leftArm.elbow.animRot = [Math.sin(t * 2.8) * 0.04, 0, 0];
             rightArm.elbow.animRot = [-Math.sin(t * 2.8) * 0.04, 0, 0];
+        }
+        // Swing opposite arms only in the combined circular-walk mode.
+        if (combined) {
+            const swing = Math.sin(t * 5.5);
+            leftArm.shoulder.animRot = [swing * 0.55, 0, 0];
+            rightArm.shoulder.animRot = [-swing * 0.55, 0, 0];
         }
     };
 

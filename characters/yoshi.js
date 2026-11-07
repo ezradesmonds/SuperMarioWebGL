@@ -289,6 +289,8 @@ function createYoshi(gl) {
 
     // Fungsi Animasi Hierarkis Yoshi
     root.animate = function(t, mode) {
+        const combined = mode === "combined";
+        if (combined) mode = "action";
         root.resetAnim();
         animateBlink(root, t);
         tonguePivot.scale = [0.2, 0.2, 0.15];
@@ -313,24 +315,27 @@ function createYoshi(gl) {
 
             tailPivot.animRot = [Math.sin(t * 9) * 0.08, swing * 0.42, 0];
         } else if (mode === "action") {
-            // Aksi Spesial Yoshi: Menjulurkan Lidah Bezier 3D & Melompat Gembira bersama Telur!
+            // Aksi khas Yoshi: menjulurkan lidah sambil berdiri.
             const cycle = (t * 2.2) % (Math.PI * 2);
             const tongueExtend = Math.max(0, Math.sin(cycle));
             tonguePivot.scale = [1.0, 1.0, 0.15 + tongueExtend * 1.35];
 
-            const hop = Math.max(0, Math.sin(t * 4.2));
-            body.animPos = [0, hop * 0.32, 0];
-            body.animRot = [-0.10 + tongueExtend * 0.18, Math.sin(t * 2.1) * 0.15, 0];
+            // Keep torso rotation neutral so this action can accompany the walking motion.
 
+            // Keep the walking legs while the upper body performs Yoshi's action.
+            if (combined) {
+                const swing = Math.sin(t * 4.5);
+                leftLeg.hip.animRot = [-swing * 0.75, 0, 0];
+                rightLeg.hip.animRot = [swing * 0.75, 0, 0];
+                leftLeg.ankle.animRot = [Math.max(0, swing) * 0.35, 0, 0];
+                rightLeg.ankle.animRot = [Math.max(0, -swing) * 0.35, 0, 0];
+            }
             head.animRot = [tongueExtend * 0.15, 0, 0];
-            leftArm.shoulder.animRot  = [-0.45 - hop * 0.4, 0, -0.25];
-            rightArm.shoulder.animRot = [-0.45 - hop * 0.4, 0, 0.25];
+            leftArm.shoulder.animRot  = [-0.45 - tongueExtend * 0.15, 0, -0.25];
+            rightArm.shoulder.animRot = [-0.45 - tongueExtend * 0.15, 0, 0.25];
 
-            leftLeg.hip.animRot  = [-0.45 * hop, 0, 0];
-            rightLeg.hip.animRot = [0.35 * hop, 0, 0];
             tailPivot.animRot = [0.15, Math.sin(t * 10) * 0.45, 0];
 
-            // Telur melompat di samping Yoshi
         } else {
             // Idle Ceria & Bernapas Halus (Telur berdiri rapi di samping kaki Yoshi, tidak menutupi perut!)
             const breath = Math.sin(t * 2.5);
@@ -339,6 +344,12 @@ function createYoshi(gl) {
             leftArm.shoulder.animRot  = [breath * 0.06, 0, 0];
             rightArm.shoulder.animRot = [-breath * 0.06, 0, 0];
             tailPivot.animRot = [0, Math.sin(t * 3.0) * 0.22, 0];
+        }
+        // Swing opposite arms only in the combined circular-walk mode.
+        if (combined) {
+            const swing = Math.sin(t * 4.5);
+            leftArm.shoulder.animRot = [swing * 0.65, 0, 0];
+            rightArm.shoulder.animRot = [-swing * 0.65, 0, 0];
         }
     };
 
