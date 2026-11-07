@@ -94,24 +94,6 @@ function createMarioEnvironment(gl) {
         ball(p,'PipeHighlight',[0.33,0.87,0.32],[-0.32,h/2,0.36],[0.035,h*0.40,0.025]);
     }
     pipe(-4.2,0,-1.55,1.15); pipe(-7,0.65,-5.7,1.35); pipe(2.6,1.05,-6.6,1.2); pipe(7.3,2,-9,0.95);
-    function question(x,y,z) {
-        const q=node(root,'QuestionBlock',Primitives.createRoundedBox(gl,1,1,1,0.055),[0.98,0.65,0.04],[x,y,z],[0.72,0.72,0.72]);
-        cube(q,'GoldInset',[1,0.77,0.075],[0,0,0.507],[0.90,0.90,0.025]);
-        // Extruded pixel question mark, front and back (no image texture).
-        const glyph=['01110','11011','00011','00110','00100','00000','00100'];
-        for(const side of [-1,1]) {
-            for(let r=0;r<7;r++)for(let c=0;c<5;c++)if(glyph[r][c]==='1')
-                cube(q,'QuestionGlyph',white,[(c-2)*0.108,(3-r)*0.105,side*0.535],[0.112,0.109,0.035]);
-            for(const a of [-1,1])for(const b of [-1,1])ball(q,'CornerRivet',[0.64,0.36,0.06],[a*0.39,b*0.39,side*0.52],[0.035,0.035,0.018]);
-        }
-    }
-    function brick(x,y,z) {
-        const b=node(root,'BrickBlock',Primitives.createRoundedBox(gl,1,1,1,0.035),[0.36,0.16,0.07],[x,y,z],[0.72,0.72,0.72]);
-        for(let row=0;row<3;row++)for(let col=0;col<2;col++)
-            cube(b,'BrickFace',[0.67+row*0.035,0.30,0.12],[-0.245+col*0.49+(row%2)*0.04,-0.33+row*0.33,0],[0.45,0.29,1.01]);
-    }
-    for(const [x,y,z] of [[-7,3.6,-5.5],[0,4.9,-6.4],[0.76,4.9,-6.4],[6.8,4.4,-9],[8,2.4,-3.2]])question(x,y,z);
-    for(const [x,y,z] of [[-7.76,3.6,-5.5],[-6.24,3.6,-5.5],[-0.76,4.9,-6.4],[6.04,4.4,-9],[5.28,4.4,-9]])brick(x,y,z);
     function eyes(p,y,z,spacing=0.18) {
         for(const s of [-1,1])ball(p,'Eye',black,[s*spacing,y,z],[0.045,0.115,0.025]);
     }
@@ -146,10 +128,6 @@ function createMarioEnvironment(gl) {
     }
     for(const [x,z] of [[-4.8,0.5],[-3.8,1.9],[3.8,1.8],[4.8,-0.5]]) {
         ball(root,'Pebble',[0.54,0.61,0.43],[x,0.065,z],[0.14,0.08,0.11]);
-        for(let i=0;i<3;i++) {
-            const tuft=ball(root,'GrassBlade',edge,[x+0.16+i*0.06,0.10,z-0.1],[0.025,0.14,0.035]);
-            tuft.rotation[2]=(i-1)*0.35;
-        }
     }
     // An outer loop of landmarks leaves the character stage and orbit sightlines open.
     // Foreground islands stay low; these become the background at 180 degrees.
@@ -162,9 +140,6 @@ function createMarioEnvironment(gl) {
     platform(11.9,0.8,3.1,3.6,0.5,2.65);
     pipe(-5.4,-0.35,18.5,1.1);pipe(5.8,0.7,19.7,1.25);
     pipe(-11.4,0.15,-0.6,1.0);
-    question(-0.4,2.7,21.2);question(5.3,3.3,19.3);
-    brick(-1.16,2.7,21.2);brick(0.36,2.7,21.2);
-    brick(6.06,3.3,19.3);brick(-11.3,2.65,0);
     mushroom(-7.7,-0.8,4.5,0.8,[0.94,0.13,0.16]);
     mushroom(7.7,-0.65,4.6,0.8,green);
     mushroom(-4.2,-0.35,18.6,0.65,green);
@@ -199,24 +174,6 @@ function createMarioEnvironment(gl) {
         const z=-19+i*3.2;
         for(const side of [-1,1])ball(root,'RiverStone',[0.50,0.57,0.49],[riverX(z)+side*1.02,-2.28,z],[0.22+(i%3)*0.055,0.13,0.20]);
     }
-    // Timber bridge over the stream, including posts, rails, and plank seams.
-    const bridge=node(root,'TimberBridge',null,white,[riverX(5),-2.08,5]);
-    for(let i=0;i<11;i++)cube(bridge,'BridgePlank',[0.65+(i%2)*0.06,0.39,0.18],[-1.45+i*0.29,0,0],[0.27,0.15,1.35]);
-    for(const side of [-1,1]) {
-        cube(bridge,'BridgeRail',[0.48,0.27,0.12],[0,0.64,side*0.65],[3.25,0.09,0.08]);
-        for(const x of [-1.5,0,1.5])cube(bridge,'BridgePost',[0.56,0.32,0.14],[x,0.35,side*0.65],[0.12,0.85,0.12]);
-    }
-    function fence(x,y,z,length,rotation=0) {
-        const f=node(root,'WhitePicketFence',null,white,[x,y,z],[1,1,1],[0,rotation,0]);
-        for(let i=0;i<=length;i++) {
-            cube(f,'FencePicket',[0.95,0.88,0.69],[-length*0.22+i*0.44,0.30,0],[0.12,0.6,0.10]);
-            ball(f,'PicketCap',white,[-length*0.22+i*0.44,0.60,0],[0.075,0.09,0.06]);
-        }
-        for(const y of [0.18,0.43])cube(f,'FenceRail',[0.83,0.73,0.53],[0,y,-0.06],[length*0.44+0.2,0.07,0.08]);
-    }
-    fence(-5.0,-0.35,17.45,5);fence(5.6,0.7,20.9,6);fence(12.8,0.5,0.8,5,Math.PI/2);
-    fence(-1.8,0,-2.35,4);fence(1.8,0,-2.35,4);
-
     function tree(x,y,z,size=1) {
         const t=node(root,'RoundTree',null,white,[x,y,z],[size,size,size]);
         node(t,'TreeTrunk',cylinder,[0.48,0.27,0.11],[0,0.65,0],[0.15,1.3,0.15]);
@@ -226,13 +183,6 @@ function createMarioEnvironment(gl) {
     }
     tree(-9.5,-2.37,8,1.05);tree(9.7,-2.37,8.8,1.2);tree(13,-2.37,-6,1.25);
     tree(-16,-2.37,-8,1.2);tree(4,-2.37,16,1.4);
-    // Low garden patches are kept outside each character's animation footprint.
-    const gardenSpots=[[-4.9,-1.7,0],[4.8,-1.6,0],[-4.8,1.9,0],[4.0,2.0,0],[-7.9,5.2,-0.8],[7.3,5.8,-0.65],[-5.7,19.5,-0.35],[4.7,19.7,0.7],[-11.4,1.2,0.15],[12.4,2.1,0.5]];
-    for(const [x,z,y] of gardenSpots) {
-        for(let i=0;i<3;i++) {
-            const leaf=ball(root,'GardenLeaf',green,[x-0.28+i*0.12,y+0.13,z-0.18],[0.055,0.19,0.06]);leaf.rotation[2]=(i-1)*0.45;
-        }
-    }
     // Discrete stepping stones connect the outer gardens without filling the stage.
     for(let i=0;i<14;i++) {
         const a=i*Math.PI*2/14;
@@ -246,48 +196,7 @@ function createMarioEnvironment(gl) {
         ball(cloth,'FlagEmblem',white,[0,0,0.55],[0.17,0.24,0.06]);
     }
     flag(-0.9,0.25,21.5);flag(11.7,0.5,-0.5);
-    function lantern(x,y,z) {
-        const p=node(root,'GardenLantern',null,white,[x,y,z]);
-        node(p,'LanternPost',cylinder,[0.23,0.31,0.19],[0,0.40,0],[0.045,0.8,0.045]);
-        const glow=ball(p,'WarmLantern',[1,0.72,0.24],[0,0.93,0],[0.14,0.20,0.14]);glow.materialKind=3;
-        cube(p,'LanternRoof',[0.20,0.35,0.17],[0,1.15,0],[0.38,0.07,0.35]);
-        cube(p,'LanternBase',[0.20,0.35,0.17],[0,0.73,0],[0.30,0.06,0.28]);
-    }
-    lantern(-4.9,0,0.2);lantern(4.9,0,0.2);lantern(-4.0,-0.35,19.5);lantern(6.6,0.7,20.8);
-
-    // Distinct landmarks give the orbit a village, a castle, and a waterside garden.
-    function cottage(x,y,z,scale,capColor) {
-        const house=node(root,'MushroomCottage',null,white,[x,y,z],[scale,scale,scale]);
-        node(house,'CottageWall',cylinder,[0.98,0.86,0.58],[0,0.64,0],[0.65,1.28,0.65]);
-        ball(house,'CottageRoof',capColor,[0,1.37,0],[1.02,0.57,0.93]);
-        for(const dir of [[0,1,0],[-0.62,0.65,0.45],[0.62,0.65,0.45],[0,0.6,-0.8]])
-            node(house,'RoofSpot',Primitives.createEllipsoidPatch(gl,1.02,0.57,0.93,dir,0.23,5,12,0.008),white,[0,1.37,0]);
-        rounded(house,'ArchedDoor',[0.30,0.18,0.09],[0,0.37,0.63],[0.38,0.74,0.09],0.15);
-        ball(house,'DoorKnob',[1,0.76,0.16],[0.12,0.36,0.69],[0.035,0.035,0.025]);
-        for(const side of [-1,1]) {
-            ball(house,'WindowFrame',[0.61,0.37,0.16],[side*0.49,0.73,0.48],[0.17,0.19,0.055]);
-            ball(house,'WindowGlass',[0.42,0.81,0.89],[side*0.49,0.73,0.53],[0.125,0.145,0.018]);
-            cube(house,'WindowMullion',white,[side*0.49,0.73,0.555],[0.025,0.28,0.018]);
-        }
-        rounded(house,'Doorstep',[0.69,0.60,0.43],[0,0.035,0.81],[0.6,0.07,0.34],0.03);
-    }
-    cottage(-12.3,meadowTop,-12.8,1.15,[0.92,0.14,0.16]);
-    cottage(-15.2,meadowTop,-10.1,0.85,[0.16,0.63,0.75]);
-    cottage(-7.7,meadowTop,23.0,1.1,[0.94,0.30,0.16]);
-    cottage(-4.3,meadowTop,25.2,0.9,[0.60,0.36,0.77]);
     platform(11,-16,5.1,4.6,-0.3,2.0);
-    const castle=node(root,'PeachGardenCastle',null,white,[11,-0.3,-16]);
-    rounded(castle,'CastleHall',[0.93,0.85,0.71],[0,1.0,0],[2.4,2.0,1.8],0.12);
-    rounded(castle,'CastleGate',[0.34,0.22,0.15],[0,0.63,0.95],[0.72,1.26,0.08],0.28);
-    for(const x of [-1.28,1.28]) {
-        node(castle,'CastleTurret',cylinder,[0.96,0.88,0.74],[x,1.4,0],[0.57,2.8,0.57]);
-        node(castle,'RoseRoof',Primitives.createConeFrustum(gl,0.76,0.035,1.25,32,1,true),[0.88,0.26,0.37],[x,3.25,0]);
-        node(castle,'RoofTrim',cylinder,[1,0.74,0.34],[x,2.63,0],[0.78,0.09,0.78]);
-        rounded(castle,'TurretWindow',[0.23,0.49,0.61],[x,1.94,0.55],[0.18,0.42,0.045],0.07);
-        ball(castle,'GoldenSpire',[1,0.79,0.21],[x,3.92,0],[0.075,0.095,0.075]);
-    }
-    for(let i=0;i<6;i++)rounded(castle,'Battlement',[0.98,0.91,0.77],[-1.0+i*0.4,2.12,0.72],[0.22,0.28,0.30],0.025);
-    flag(11,1.8,-16.2);
     const mill=node(root,'GardenWindmill',null,white,[-11,meadowTop,18]);
     node(mill,'MillTower',Primitives.createConeFrustum(gl,0.74,0.44,2.6,24,1,true),[0.94,0.84,0.61],[0,1.3,0]);
     node(mill,'MillRoof',Primitives.createConeFrustum(gl,0.67,0,0.82,24,1,true),[0.20,0.55,0.58],[0,3.0,0]);
@@ -318,23 +227,6 @@ function createMarioEnvironment(gl) {
     for(let i=0;i<10;i++) {
         const drop=ball(root,'WaterSpray',[0.74,0.95,1],[-9+(i%3-1)*0.23,meadowTop+0.2,-9.27],[0.025,0.05,0.025]);
 
-    }
-    // Low meadow details use shared meshes and stay clear of every platform footprint.
-    let seed=7421;
-    function random(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
-    for(let i=0;i<75;i++) {
-        const x=(random()-0.5)*42,z=(random()-0.5)*46;
-        if(platformFootprints.some(p=>Math.abs(x-p.x)<p.w/2+0.6&&Math.abs(z-p.z)<p.d/2+0.6))continue;
-        if(Math.abs(x-riverX(z))<1.3)continue;
-        const tuft={positions:[],normals:[],indices:[]};
-        for(let j=0;j<3;j++) {
-            const angle=j*Math.PI/3,dx=Math.cos(angle)*0.065,dz=Math.sin(angle)*0.065,h=0.14+random()*0.12;
-            const k=tuft.positions.length/3;
-            tuft.positions.push(x-dx,meadowTop+0.01,z-dz,x+dx,meadowTop+0.01,z+dz,x+dx*0.8,meadowTop+h,z+dz*0.8);
-            for(let t=0;t<3;t++)tuft.normals.push(0,1,0);
-            tuft.indices.push(k,k+1,k+2);
-        }
-        node(root,'MeadowTuft',Primitives.createMeshBuffer(gl,tuft),[0.24,0.54,0.11],[0,0,0]).materialKind=6;
     }
     // A distant, low silhouette prevents the meadow ending at a hard straight horizon.
     for(let i=0;i<18;i++) {

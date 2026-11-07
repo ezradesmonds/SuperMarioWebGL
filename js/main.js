@@ -124,13 +124,6 @@ const FS_SOURCE = `
             }
             finalColor *= 1.0-occlusion*max(N.y,0.0);
         }
-        // Warm light spills softly from the two lanterns on the main garden.
-        for(int i=0;i<2;i++) {
-            vec3 lamp=vec3(i==0?-4.9:4.9,0.93,0.2);
-            vec3 delta=lamp-vWorldPos;
-            float falloff=1.0/(1.0+dot(delta,delta)*3.2);
-            finalColor += material*vec3(1.0,0.53,0.15)*max(dot(N,normalize(delta)),0.0)*falloff*0.30;
-        }
         if(uMaterialKind > 1.5 && uMaterialKind < 2.5) {
             float ripple=sin(vWorldPos.z*9.0+sin(vWorldPos.x*7.0))*0.5+0.5;
             float glint=pow(max(dot(N,H1),0.0),50.0);
