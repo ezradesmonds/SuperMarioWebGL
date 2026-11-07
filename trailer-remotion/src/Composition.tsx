@@ -37,14 +37,14 @@ export const MushroomTrailer = () => {
     <World/>
     <AbsoluteFill style={{pointerEvents:'none',background:'linear-gradient(180deg,rgba(5,24,30,.35),transparent 30%,transparent 65%,rgba(5,24,30,.60))'}}/>
     <Sequence name="Pembukaan dunia" durationInFrames={7*fps}><StoryText eyebrow="THE GREEN GARDENS" text="MUSHROOM KINGDOM" title/></Sequence>
-    <Sequence name="Toad — hari yang tenang" from={7*fps} durationInFrames={7*fps}><StoryText eyebrow="SEMUANYA BERAWAL DI SINI" text="Satu hari yang tenang…"/></Sequence>
+    <Sequence name="Tiga sahabat di taman" from={7*fps} durationInFrames={7*fps}><StoryText eyebrow="SEMUANYA BERAWAL DI SINI" text="Satu hari yang tenang…"/></Sequence>
     <Sequence name="Pengejaran dimulai" from={14*fps} durationInFrames={10*fps}><StoryText eyebrow="TOAD, LARI!" text="…sampai Bowser Jr. datang."/></Sequence>
-    <Sequence name="Bowser Jr. — api" from={24*fps} durationInFrames={7*fps}><StoryText eyebrow="BOWSER JR." text="Kecil. Tapi penuh masalah."/></Sequence>
+    <Sequence name="Bowser Jr. — pengejar" from={24*fps} durationInFrames={7*fps}><StoryText eyebrow="BOWSER JR." text="Kecil. Tapi penuh masalah."/></Sequence>
     <Sequence name="Toad — lompatan" from={31*fps} durationInFrames={7*fps}><StoryText eyebrow="JANGAN SAMPAI TERTANGKAP" text="Satu lompatan lagi!"/></Sequence>
     <Sequence name="Pengejaran melingkar" from={38*fps} durationInFrames={7*fps}><StoryText eyebrow="BAHAYA TERUS MENGIKUTI" text="Ke mana pun Toad berlari…"/></Sequence>
     <Sequence name="Yoshi datang" from={45*fps} durationInFrames={7*fps}><StoryText eyebrow="YOSHI" text="Sahabat tidak tinggal diam."/></Sequence>
     <Sequence name="Tiga karakter satu lintasan" from={52*fps} durationInFrames={8*fps}><StoryText eyebrow="KINI GILIRAN YOSHI" text="Pengejar pun dikejar."/></Sequence>
-    <Sequence name="Serangan balik Yoshi" from={60*fps} durationInFrames={8*fps}><StoryText eyebrow="JANGAN GANGGU SAHABATKU" text="Saatnya menyerang balik!"/></Sequence>
+    <Sequence name="Yoshi ikut mengejar" from={60*fps} durationInFrames={8*fps}><StoryText eyebrow="JANGAN GANGGU SAHABATKU" text="Yoshi tak akan menyerah!"/></Sequence>
     <Sequence name="Bowser dikejar Yoshi" from={68*fps} durationInFrames={8*fps}><StoryText eyebrow="KEADAAN BERBALIK" text="Sekarang, siapa yang harus lari?"/></Sequence>
     <Sequence name="Petualangan bersama" from={76*fps} durationInFrames={6*fps}><StoryText eyebrow="LEBIH SERU BERSAMA" text="Tak ada sahabat yang tertinggal."/></Sequence>
     <Sequence name="Judul penutup" from={82*fps} durationInFrames={8*fps}><StoryText eyebrow="TIGA KARAKTER. SATU PETUALANGAN." text="MUSHROOM KINGDOM" title/></Sequence>
