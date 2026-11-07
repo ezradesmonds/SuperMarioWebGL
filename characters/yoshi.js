@@ -283,6 +283,7 @@ function createYoshi(gl) {
         if (combined) mode = "action";
         root.resetAnim();
         animateBlink(root, t);
+        tonguePivot.visible = false;
         tonguePivot.scale = [0.2, 0.2, 0.15];
 
         if (mode === "walk") {
@@ -305,10 +306,8 @@ function createYoshi(gl) {
 
             tailPivot.animRot = [Math.sin(t * 9) * 0.08, swing * 0.42, 0];
         } else if (mode === "action") {
-            // Aksi khas Yoshi: menjulurkan lidah sambil berdiri.
-            const cycle = (t * 2.2) % (Math.PI * 2);
-            const tongueExtend = Math.max(0, Math.sin(cycle));
-            tonguePivot.scale = [1.0, 1.0, 0.15 + tongueExtend * 1.35];
+            // Pose aksi tanpa menjulurkan lidah.
+            const tongueExtend = 0;
 
             // Keep torso rotation neutral so this action can accompany the walking motion.
 

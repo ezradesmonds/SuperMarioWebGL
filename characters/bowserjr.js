@@ -337,6 +337,7 @@ function createBowserJr(gl) {
         if (combined) mode = "action";
         root.resetAnim();
         animateBlink(root, t);
+        fireballGroup.visible = false;
         fireballGroup.scale = [0.001, 0.001, 0.001];
 
         if (mode === "walk") {
@@ -357,7 +358,7 @@ function createBowserJr(gl) {
 
             tailPivot.animRot = [0, swing * 0.38, 0];
         } else if (mode === "action") {
-            // Aksi khas Bowser Jr.: menyemburkan bola api dengan tangan diam.
+            // Pose aksi Bowser Jr. tanpa semburan api.
             const punch = Math.sin(t * 9.0);
 
             // Keep torso rotation neutral so this action can accompany the walking motion.
@@ -375,12 +376,7 @@ function createBowserJr(gl) {
             }
             tailPivot.animRot = [0.18, Math.sin(t * 12) * 0.45, 0];
 
-            // Semburan Bola Api
-            const firePhase = (t * 1.8) % 1.0;
-            const fireScale = Math.sin(firePhase * Math.PI);
-            fireballGroup.scale = [fireScale, fireScale, fireScale];
-            fireballGroup.animPos = [0, -0.05, firePhase * 1.65];
-            fireballGroup.animRot = [0, 0, t * 12.0];
+            // Efek bola api dinonaktifkan.
         } else {
             // Idle Gagah (mirip pose dinamis gambar referensi!)
             const breath = Math.sin(t * 3.0);
