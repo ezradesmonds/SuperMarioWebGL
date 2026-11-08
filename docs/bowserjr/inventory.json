@@ -1,0 +1,1293 @@
+{
+  "inventory": [
+    {
+      "name": "BowserJrBody",
+      "path": "/BowserJrRoot/BowserJrBody",
+      "kind": "createEllipsoid",
+      "args": [
+        0.58,
+        0.6,
+        0.5
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "PlastronBelly",
+      "path": "/BowserJrRoot/BowserJrBody/PlastronBelly",
+      "kind": "createEllipsoid",
+      "args": [
+        0.45,
+        0.47,
+        0.34
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "BellyRibBezier",
+      "path": "/BowserJrRoot/BowserJrBody/BellyRibBezier",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          -0.34,
+          0.06,
+          0.42
+        ],
+        [
+          -0.14,
+          0.039999999999999994,
+          0.61
+        ],
+        [
+          0.14,
+          0.039999999999999994,
+          0.61
+        ],
+        [
+          0.34,
+          0.06,
+          0.42
+        ],
+        0.015,
+        0.015
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 493
+    },
+    {
+      "name": "BellyRibBezier",
+      "path": "/BowserJrRoot/BowserJrBody/BellyRibBezier",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          -0.34,
+          -0.08,
+          0.42
+        ],
+        [
+          -0.14,
+          -0.1,
+          0.61
+        ],
+        [
+          0.14,
+          -0.1,
+          0.61
+        ],
+        [
+          0.34,
+          -0.08,
+          0.42
+        ],
+        0.015,
+        0.015
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 493
+    },
+    {
+      "name": "BellyRibBezier",
+      "path": "/BowserJrRoot/BowserJrBody/BellyRibBezier",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          -0.34,
+          -0.22,
+          0.42
+        ],
+        [
+          -0.14,
+          -0.24,
+          0.61
+        ],
+        [
+          0.14,
+          -0.24,
+          0.61
+        ],
+        [
+          0.34,
+          -0.22,
+          0.42
+        ],
+        0.015,
+        0.015
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 493
+    },
+    {
+      "name": "WhitePointedBib",
+      "path": "/BowserJrRoot/BowserJrBody/BibBandanaGroup/WhitePointedBib",
+      "kind": "custom mesh",
+      "args": [],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 90
+    },
+    {
+      "name": "GreenShellDome",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/GreenShellDome",
+      "kind": "createDome",
+      "args": [
+        0.58,
+        0.46,
+        0.6,
+        1.8849555921538759
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 755
+    },
+    {
+      "name": "ShellWhiteTorusRim",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellWhiteTorusRim",
+      "kind": "createTorus",
+      "args": [
+        0.54,
+        0.095
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "SpikeBaseRing",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/SpikeBaseRing",
+      "kind": "createTorus",
+      "args": [
+        0.105,
+        0.032
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "ShellSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/ShellSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.11,
+        0.005,
+        0.26,
+        20,
+        4,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 149
+    },
+    {
+      "name": "SpikeBaseRing",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/SpikeBaseRing",
+      "kind": "createTorus",
+      "args": [
+        0.105,
+        0.032
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "ShellSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/ShellSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.11,
+        0.005,
+        0.26,
+        20,
+        4,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 149
+    },
+    {
+      "name": "SpikeBaseRing",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/SpikeBaseRing",
+      "kind": "createTorus",
+      "args": [
+        0.105,
+        0.032
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "ShellSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/ShellSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.11,
+        0.005,
+        0.26,
+        20,
+        4,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 149
+    },
+    {
+      "name": "SpikeBaseRing",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/SpikeBaseRing",
+      "kind": "createTorus",
+      "args": [
+        0.105,
+        0.032
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "ShellSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/SpikedShellGroup/ShellSpikePivot/ShellSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.11,
+        0.005,
+        0.26,
+        20,
+        4,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 149
+    },
+    {
+      "name": "KoopaTailCone",
+      "path": "/BowserJrRoot/BowserJrBody/TailPivot/KoopaTailCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.2,
+        0.01,
+        0.48,
+        20,
+        4,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 149
+    },
+    {
+      "name": "GreenHead",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead",
+      "kind": "createEllipsoid",
+      "args": [
+        0.5,
+        0.45,
+        0.48
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "WideCreamCheeks",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/WideCreamCheeks",
+      "kind": "createEllipsoid",
+      "args": [
+        0.55,
+        0.28,
+        0.44
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "CenterCreamSnout",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/CenterCreamSnout",
+      "kind": "createEllipsoid",
+      "args": [
+        0.42,
+        0.3,
+        0.4
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "Nostril",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/CenterCreamSnout/Nostril",
+      "kind": "createEllipsoid",
+      "args": [
+        0.042,
+        0.028,
+        0.05
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "Nostril",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/CenterCreamSnout/Nostril",
+      "kind": "createEllipsoid",
+      "args": [
+        0.042,
+        0.028,
+        0.05
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "FangToothCone",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/CenterCreamSnout/FangToothCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.048,
+        0.004,
+        0.13,
+        16,
+        3,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 104
+    },
+    {
+      "name": "SmirkGrinBezier",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/CenterCreamSnout/SmirkGrinBezier",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          -0.34,
+          -0.12,
+          0.22
+        ],
+        [
+          -0.15,
+          -0.2,
+          0.39
+        ],
+        [
+          0.15,
+          -0.2,
+          0.39
+        ],
+        [
+          0.34,
+          -0.12,
+          0.22
+        ],
+        0.016,
+        0.016
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 493
+    },
+    {
+      "name": "JrEye",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/JrEye",
+      "kind": "createEllipsoid",
+      "args": [
+        0.075,
+        0.095,
+        0.065
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "JrEyeShine",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/JrEye/JrEyeShine",
+      "kind": "createEllipsoid",
+      "args": [
+        0.028,
+        0.035,
+        0.028
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "BlinkEyelid",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/JrEye/BlinkEyelid",
+      "kind": "createEllipsoidPatch",
+      "args": [
+        0.085,
+        0.105,
+        0.13,
+        [
+          0,
+          0,
+          1
+        ],
+        1.5707963267948966,
+        16,
+        32,
+        0.003
+      ],
+      "visible": false,
+      "isCurve": false,
+      "vertices": 529
+    },
+    {
+      "name": "JrEye",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/JrEye",
+      "kind": "createEllipsoid",
+      "args": [
+        0.075,
+        0.095,
+        0.065
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "JrEyeShine",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/JrEye/JrEyeShine",
+      "kind": "createEllipsoid",
+      "args": [
+        0.028,
+        0.035,
+        0.028
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "BlinkEyelid",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/JrEye/BlinkEyelid",
+      "kind": "createEllipsoidPatch",
+      "args": [
+        0.085,
+        0.105,
+        0.13,
+        [
+          0,
+          0,
+          1
+        ],
+        1.5707963267948966,
+        16,
+        32,
+        0.003
+      ],
+      "visible": false,
+      "isCurve": false,
+      "vertices": 529
+    },
+    {
+      "name": "FieryEyebrowBezier",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/FieryEyebrowBezier",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          -0.06,
+          0.18,
+          0.46
+        ],
+        [
+          -0.17,
+          0.24,
+          0.48
+        ],
+        [
+          -0.3,
+          0.3,
+          0.4
+        ],
+        [
+          -0.4,
+          0.39,
+          0.26
+        ],
+        0.042,
+        0.02
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 493
+    },
+    {
+      "name": "FieryEyebrowBezier",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/FieryEyebrowBezier",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          0.06,
+          0.18,
+          0.46
+        ],
+        [
+          0.17,
+          0.24,
+          0.48
+        ],
+        [
+          0.3,
+          0.3,
+          0.4
+        ],
+        [
+          0.4,
+          0.39,
+          0.26
+        ],
+        0.042,
+        0.02
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 493
+    },
+    {
+      "name": "HornBaseTorus",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/HornGroup/HornBaseTorus",
+      "kind": "createTorus",
+      "args": [
+        0.08,
+        0.028
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "HornCone",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/HornGroup/HornCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.085,
+        0.008,
+        0.2,
+        18,
+        4,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 135
+    },
+    {
+      "name": "HornBaseTorus",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/HornGroup/HornBaseTorus",
+      "kind": "createTorus",
+      "args": [
+        0.08,
+        0.028
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "HornCone",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/HornGroup/HornCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.085,
+        0.008,
+        0.2,
+        18,
+        4,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 135
+    },
+    {
+      "name": "BlackHairTie",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/PonytailGroup/BlackHairTie",
+      "kind": "createCylinder",
+      "args": [
+        0.085,
+        0.075
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 205
+    },
+    {
+      "name": "RedHairBezierStrand",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/PonytailGroup/RedHairBezierStrand",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          0,
+          0.02,
+          0
+        ],
+        [
+          0,
+          0.22,
+          -0.04
+        ],
+        [
+          0,
+          0.35,
+          -0.18
+        ],
+        [
+          0,
+          0.42,
+          -0.34
+        ],
+        0.072,
+        0.015,
+        24,
+        14,
+        1.25
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 375
+    },
+    {
+      "name": "RedHairBezierStrand",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/PonytailGroup/RedHairBezierStrand",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          -0.03,
+          0.02,
+          0
+        ],
+        [
+          -0.13,
+          0.2,
+          -0.04
+        ],
+        [
+          -0.22,
+          0.31,
+          -0.14
+        ],
+        [
+          -0.28,
+          0.34,
+          -0.26
+        ],
+        0.072,
+        0.015,
+        24,
+        14,
+        1.25
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 375
+    },
+    {
+      "name": "RedHairBezierStrand",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/PonytailGroup/RedHairBezierStrand",
+      "kind": "createBezierTube",
+      "args": [
+        [
+          0.03,
+          0.02,
+          0
+        ],
+        [
+          0.13,
+          0.2,
+          -0.04
+        ],
+        [
+          0.22,
+          0.31,
+          -0.14
+        ],
+        [
+          0.28,
+          0.34,
+          -0.26
+        ],
+        0.072,
+        0.015,
+        24,
+        14,
+        1.25
+      ],
+      "visible": true,
+      "isCurve": true,
+      "vertices": 375
+    },
+    {
+      "name": "FireCore",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/FireballProjectile/FireCore",
+      "kind": "createEllipsoid",
+      "args": [
+        0.16,
+        0.16,
+        0.22
+      ],
+      "visible": false,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "FireTailCone",
+      "path": "/BowserJrRoot/BowserJrBody/BowserJrHeadPivot/GreenHead/FireballProjectile/FireTailCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.18,
+        0.01,
+        0.38,
+        18,
+        4,
+        true
+      ],
+      "visible": false,
+      "isCurve": false,
+      "vertices": 135
+    },
+    {
+      "name": "UpperArmFrustum",
+      "path": "/BowserJrRoot/BowserJrBody/LeftShoulder/UpperArmFrustum",
+      "kind": "createConeFrustum",
+      "args": [
+        0.13,
+        0.049,
+        0.34
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 263
+    },
+    {
+      "name": "SpikedWristbandTorus",
+      "path": "/BowserJrRoot/BowserJrBody/LeftShoulder/UpperArmFrustum/Wrist/SpikedWristbandTorus",
+      "kind": "createTorus",
+      "args": [
+        0.14,
+        0.05
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/LeftShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/LeftShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/LeftShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/LeftShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "FistEllipsoid",
+      "path": "/BowserJrRoot/BowserJrBody/LeftShoulder/UpperArmFrustum/Wrist/FistEllipsoid",
+      "kind": "createEllipsoid",
+      "args": [
+        0.2,
+        0.18,
+        0.2
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "UpperArmFrustum",
+      "path": "/BowserJrRoot/BowserJrBody/RightShoulder/UpperArmFrustum",
+      "kind": "createConeFrustum",
+      "args": [
+        0.13,
+        0.049,
+        0.34
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 263
+    },
+    {
+      "name": "SpikedWristbandTorus",
+      "path": "/BowserJrRoot/BowserJrBody/RightShoulder/UpperArmFrustum/Wrist/SpikedWristbandTorus",
+      "kind": "createTorus",
+      "args": [
+        0.14,
+        0.05
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 725
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/RightShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/RightShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/RightShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "WristSpikeCone",
+      "path": "/BowserJrRoot/BowserJrBody/RightShoulder/UpperArmFrustum/Wrist/WristSpikeCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.038,
+        0.004,
+        0.075,
+        12,
+        2,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 67
+    },
+    {
+      "name": "FistEllipsoid",
+      "path": "/BowserJrRoot/BowserJrBody/RightShoulder/UpperArmFrustum/Wrist/FistEllipsoid",
+      "kind": "createEllipsoid",
+      "args": [
+        0.2,
+        0.18,
+        0.2
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "LegCylinder",
+      "path": "/BowserJrRoot/BowserJrBody/LeftHip/LegCylinder",
+      "kind": "createCylinder",
+      "args": [
+        0.17,
+        0.3
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 205
+    },
+    {
+      "name": "FootEllipsoid",
+      "path": "/BowserJrRoot/BowserJrBody/LeftHip/LegCylinder/FootEllipsoid",
+      "kind": "createEllipsoid",
+      "args": [
+        0.24,
+        0.16,
+        0.33
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "FootSolePad",
+      "path": "/BowserJrRoot/BowserJrBody/LeftHip/LegCylinder/FootEllipsoid/FootSolePad",
+      "kind": "createEllipsoid",
+      "args": [
+        0.19,
+        0.055,
+        0.26
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "ToeClawCone",
+      "path": "/BowserJrRoot/BowserJrBody/LeftHip/LegCylinder/FootEllipsoid/ToeClawCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.05,
+        0.005,
+        0.14,
+        14,
+        3,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 92
+    },
+    {
+      "name": "ToeClawCone",
+      "path": "/BowserJrRoot/BowserJrBody/LeftHip/LegCylinder/FootEllipsoid/ToeClawCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.05,
+        0.005,
+        0.14,
+        14,
+        3,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 92
+    },
+    {
+      "name": "ToeClawCone",
+      "path": "/BowserJrRoot/BowserJrBody/LeftHip/LegCylinder/FootEllipsoid/ToeClawCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.05,
+        0.005,
+        0.14,
+        14,
+        3,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 92
+    },
+    {
+      "name": "LegCylinder",
+      "path": "/BowserJrRoot/BowserJrBody/RightHip/LegCylinder",
+      "kind": "createCylinder",
+      "args": [
+        0.17,
+        0.3
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 205
+    },
+    {
+      "name": "FootEllipsoid",
+      "path": "/BowserJrRoot/BowserJrBody/RightHip/LegCylinder/FootEllipsoid",
+      "kind": "createEllipsoid",
+      "args": [
+        0.24,
+        0.16,
+        0.33
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "FootSolePad",
+      "path": "/BowserJrRoot/BowserJrBody/RightHip/LegCylinder/FootEllipsoid/FootSolePad",
+      "kind": "createEllipsoid",
+      "args": [
+        0.19,
+        0.055,
+        0.26
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 1089
+    },
+    {
+      "name": "ToeClawCone",
+      "path": "/BowserJrRoot/BowserJrBody/RightHip/LegCylinder/FootEllipsoid/ToeClawCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.05,
+        0.005,
+        0.14,
+        14,
+        3,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 92
+    },
+    {
+      "name": "ToeClawCone",
+      "path": "/BowserJrRoot/BowserJrBody/RightHip/LegCylinder/FootEllipsoid/ToeClawCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.05,
+        0.005,
+        0.14,
+        14,
+        3,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 92
+    },
+    {
+      "name": "ToeClawCone",
+      "path": "/BowserJrRoot/BowserJrBody/RightHip/LegCylinder/FootEllipsoid/ToeClawCone",
+      "kind": "createConeFrustum",
+      "args": [
+        0.05,
+        0.005,
+        0.14,
+        14,
+        3,
+        true
+      ],
+      "visible": true,
+      "isCurve": false,
+      "vertices": 92
+    }
+  ],
+  "samples": [
+    {
+      "t": 0.16,
+      "position": [
+        -0.8728091808975202,
+        0,
+        4.500498920883624
+      ],
+      "rotation": [
+        0,
+        2.022395102393195,
+        0
+      ],
+      "arbitraryAxis": [
+        1,
+        0,
+        1
+      ],
+      "arbitraryAngle": 0.05934462047743258,
+      "eyelids": [
+        {
+          "visible": true,
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "visible": true,
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "t": 1,
+      "position": [
+        -0.14706469773069222,
+        0,
+        4.30541433508576
+      ],
+      "rotation": [
+        0,
+        1.6443951023931953,
+        0
+      ],
+      "arbitraryAxis": [
+        1,
+        0,
+        1
+      ],
+      "arbitraryAngle": -0.08797771058985873,
+      "eyelids": [
+        {
+          "visible": false,
+          "scale": [
+            1,
+            0.001,
+            1
+          ]
+        },
+        {
+          "visible": false,
+          "scale": [
+            1,
+            0.001,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "t": 2,
+      "position": [
+        0.7351520381400514,
+        0,
+        4.440013042836448
+      ],
+      "rotation": [
+        0,
+        1.1943951023931954,
+        0
+      ],
+      "arbitraryAxis": [
+        1,
+        0,
+        1
+      ],
+      "arbitraryAngle": 0.03709066367175809,
+      "eyelids": [
+        {
+          "visible": false,
+          "scale": [
+            1,
+            0.001,
+            1
+          ]
+        },
+        {
+          "visible": false,
+          "scale": [
+            1,
+            0.001,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "t": 3.16,
+      "position": [
+        1.5646641881553693,
+        0,
+        5.054276925515105
+      ],
+      "rotation": [
+        0,
+        0.6723951023931951,
+        0
+      ],
+      "arbitraryAxis": [
+        1,
+        0,
+        1
+      ],
+      "arbitraryAngle": 0.08969141729712436,
+      "eyelids": [
+        {
+          "visible": true,
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "visible": true,
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "curves": 9,
+  "visibleMeshCount": 64,
+  "meshNodeCount": 68
+}

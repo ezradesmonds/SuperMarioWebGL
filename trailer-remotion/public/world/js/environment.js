@@ -11,7 +11,7 @@ function createMarioEnvironment(gl) {
     const shadowFootprints = [];
     const meadowTop = -2.5 + 0.25 / 2;
     root.groundY = meadowTop;
-    root.walkCenterZ = 6.3; // Circle center; radius 2 keeps the whole route in front of the platform.
+    root.walkCenterZ = 2.0; // Chase circle stays on the square main stage.
     const platformFootprints = [];
     root.shadowFootprints = shadowFootprints;
     function node(parent,name,mesh,color,pos,scale=[1,1,1],rot=[0,0,0]) {
@@ -75,7 +75,7 @@ function createMarioEnvironment(gl) {
     root.surfaceY=0;
     // Extend the soil down into the meadow; leave the stage/character surface at y=0.
     const mainSoilHeight = root.surfaceY - 0.16 - meadowTop + 0.04;
-    platform(0,0,10.8,5.2,root.surfaceY,mainSoilHeight);
+    platform(0,2.0,10.8,10.8,root.surfaceY,mainSoilHeight);
     platform(-7,-5.5,3.5,3.5,0.65,3.2);
     platform(-2.4,-7.4,3.8,2.8,0.25,2.6);
     platform(2.3,-6.3,4,3.1,1.05,3.3);
