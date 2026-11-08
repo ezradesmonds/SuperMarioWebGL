@@ -140,9 +140,12 @@ function addBlinkEyelid(gl, root, eye, color, radii) {
 }
 
 function animateBlink(root, t) {
-    // One 0.32-second blink every three seconds. Scale only the eyelid, not the eye.
+    // One 0.32-second blink every three seconds.
     const phase = t % 3;
     const closed = phase < 0.32 ? Math.sin(Math.PI * phase / 0.32) ** 2 : 0;
+    for (const eye of root.blinkEyes || []) {
+        eye.animScale = [1, 1 - closed * 0.95, 1];
+    }
     for (const lid of root.eyelids || []) {
         lid.visible = closed > 0.001;
         lid.animScale = [1, Math.max(0.001, closed), 1];

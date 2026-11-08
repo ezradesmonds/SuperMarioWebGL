@@ -99,7 +99,8 @@ function createToad(gl) {
         const shine = new SceneNode("ToadEyeShine", eyeShineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.012, 0.04, 0.035]);
         eye.add(shine);
-        addBlinkEyelid(gl, root, eye, C_SKIN, [0.065, 0.125, 0.11]);
+        if (!root.blinkEyes) root.blinkEyes = [];
+        root.blinkEyes.push(eye);
 
     }
 

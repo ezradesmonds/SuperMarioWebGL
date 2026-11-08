@@ -20,6 +20,7 @@ function createYoshi(gl) {
     const root = new SceneNode("YoshiRoot");
     root.eggMode = false;
     root.eggStartedAt = 0;
+    root.blinkEyes = [];
 
     // Alternate form, centered on its rolling pivot. Spots follow the same pivot.
     const eggPivot = new SceneNode('YoshiEggRollPivot');
@@ -175,7 +176,8 @@ function createYoshi(gl) {
         const pupil = new SceneNode("Pupil", pupilMesh, C_BLACK, 85);
         pupil.setTransform([side * -0.035, 0.02, 0.12], [0, side * 0.15, 0]);
         whiteEye.add(pupil);
-        addBlinkEyelid(gl, root, whiteEye, C_GREEN, [0.20, 0.35, 0.29]);
+        // Scale the white eye and its pupil/shine children; keep the green socket fixed.
+        root.blinkEyes.push(whiteEye);
 
         const shine = new SceneNode("EyeShine", shineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.01, 0.07, 0.05]);
@@ -291,7 +293,10 @@ function createYoshi(gl) {
         eggPivot.visible = false;
         body.visible = true;
         body.scale = [1, 1, 1];
-        animateBlink(root, t);
+        // One smooth full-eye blink every three seconds.
+        const blinkPhase = ((t % 3) + 3) % 3;
+        const closed = blinkPhase < 0.32 ? Math.sin(Math.PI * blinkPhase / 0.32) ** 2 : 0;
+        for (const eye of root.blinkEyes) eye.animScale = [1, 1 - closed * 0.95, 1];
         tonguePivot.visible = false;
         tonguePivot.scale = [0.2, 0.2, 0.15];
 

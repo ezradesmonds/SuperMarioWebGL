@@ -178,7 +178,7 @@ function createBowserJr(gl) {
 
     // MATA HITAM BULAT + KILAU PUTIH (Di atas garis moncong krem!)
     // Raised green ellipsoids behind the eyes form a permanent upper-lid/socket border.
-    // The separate BlinkEyelid patches still handle the animated closing motion.
+    // The eye and its shine scale vertically to blink; the green border stays fixed.
     const eyelidBaseMesh = Primitives.createEllipsoid(gl, 0.112, 0.135, 0.075);
     const eyeMesh = Primitives.createEllipsoid(gl, 0.075, 0.095, 0.065);
     const shineMesh = Primitives.createEllipsoid(gl, 0.028, 0.035, 0.028);
@@ -194,7 +194,8 @@ function createBowserJr(gl) {
         const shine = new SceneNode("JrEyeShine", shineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.018, 0.008, 0.054]);
         eye.add(shine);
-        addBlinkEyelid(gl, root, eye, C_GREEN_HEAD, [0.085, 0.105, 0.13]);
+        if (!root.blinkEyes) root.blinkEyes = [];
+        root.blinkEyes.push(eye);
     }
 
     // CURVE 3 & 4: ALIS MERAH TEBAL MENYALA KHAS BOWSER JR. (3D Cubic Bezier Curve Tube)
