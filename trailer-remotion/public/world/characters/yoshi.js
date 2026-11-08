@@ -19,6 +19,18 @@ function createYoshi(gl) {
 
     const root = new SceneNode("YoshiRoot");
 
+    // Alternate form, centered on its rolling pivot. Spots follow the same pivot.
+    const eggPivot = new SceneNode('YoshiEggRollPivot');
+    eggPivot.setTransform([0, 0.65, 0]);
+    root.add(eggPivot);
+    const eggShell = new SceneNode('EggRollShell', Primitives.createEllipsoid(gl, 0.57, 0.72, 0.57), C_WHITE, 55);
+    eggPivot.add(eggShell);
+    for (const direction of [[0, 0, 1], [0, 0, -1], [1, 0.15, 0], [-1, -0.15, 0], [0.25, 1, 0.2], [-0.2, -1, -0.25]]) {
+        const spot = new SceneNode('EggRollGreenSpot', Primitives.createEllipsoidPatch(gl, 0.57, 0.72, 0.57, direction, 0.31, 10, 20, 0.004), C_GREEN, 35);
+        eggShell.add(spot);
+    }
+    eggPivot.visible = false;
+
     // PARENT UTAMA: Torso / Badan Oval (Ellipsoid)
     const bodyMesh = Primitives.createEllipsoid(gl, 0.52, 0.66, 0.48);
     const body = new SceneNode("YoshiBody", bodyMesh, C_GREEN, 36);
@@ -282,6 +294,10 @@ function createYoshi(gl) {
         const combined = mode === "combined";
         if (combined) mode = "action";
         root.resetAnim();
+        root.jumpHeight = 0;
+        eggPivot.visible = false;
+        body.visible = true;
+        body.scale = [1, 1, 1];
         animateBlink(root, t);
         tonguePivot.visible = false;
         tonguePivot.scale = [0.2, 0.2, 0.15];
@@ -306,8 +322,10 @@ function createYoshi(gl) {
 
             tailPivot.animRot = [Math.sin(t * 9) * 0.08, swing * 0.42, 0];
         } else if (mode === "action") {
-            // Pose aksi tanpa menjulurkan lidah.
-            const tongueExtend = 0;
+            // Juluran pendek: skala Z maksimal 0.75, separuh panjang aksi lama.
+            const tongueExtend = Math.max(0, Math.sin(t * 2.2));
+            tonguePivot.visible = tongueExtend > 0.001;
+            tonguePivot.scale = [1, 1, 0.15 + tongueExtend * 0.60];
 
             // Keep torso rotation neutral so this action can accompany the walking motion.
 
@@ -337,8 +355,32 @@ function createYoshi(gl) {
         // Swing opposite arms only in the combined circular-walk mode.
         if (combined) {
             const swing = Math.sin(t * 4.5);
-            leftArm.shoulder.animRot = [swing * 0.65, 0, 0];
-            rightArm.shoulder.animRot = [-swing * 0.65, 0, 0];
+            const phase = t % 4.2;
+            const airborne = phase >= 1.6 && phase < 2.4;
+            const jump = airborne ? Math.sin(Math.PI * (phase - 1.6) / 0.8) : 0;
+            root.jumpHeight = jump * 0.72;
+            // Short alternating steps and a slight forward lean, like the reference.
+            body.animRot = [0.07, 0, 0];
+            leftLeg.hip.animRot = [-swing * 0.55 - jump * 0.65, 0, -jump * 0.08];
+            rightLeg.hip.animRot = [swing * 0.55 - jump * 0.35, 0, jump * 0.08];
+            leftLeg.ankle.animRot = [Math.max(0, swing) * 0.25 + jump * 0.30, 0, 0];
+            rightLeg.ankle.animRot = [Math.max(0, -swing) * 0.25 + jump * 0.30, 0, 0];
+            leftArm.shoulder.animRot = [swing * 0.38 - jump * 0.65, 0, -jump * 0.12];
+            rightArm.shoulder.animRot = [-swing * 0.38 - jump * 0.65, 0, jump * 0.12];
+
+            // Walk, tuck into the egg, roll, then return to the walking pose.
+            const eggPhase = t % 10;
+            const smooth = v => { v = Math.max(0, Math.min(1, v)); return v * v * (3 - 2 * v); };
+            const eggBlend = smooth((eggPhase - 4) / 0.3) * (1 - smooth((eggPhase - 8.2) / 0.3));
+            if (eggBlend > 0) {
+                root.jumpHeight = 0;
+                body.visible = eggBlend < 0.999;
+                const bodySize = Math.max(0.001, 1 - eggBlend);
+                body.scale = [bodySize, bodySize, bodySize];
+                eggPivot.visible = true;
+                eggPivot.scale = [eggBlend, eggBlend, eggBlend];
+                eggPivot.animRot = [(eggPhase - 4) * 9.0, 0, 0];
+            }
         }
     };
 

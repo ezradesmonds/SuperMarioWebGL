@@ -16,7 +16,7 @@ window.drawFilmFrame = function(t) {
       c.setTransform([x, 0, .15], [0, c === yoshiNode ? .15 : c === toadNode ? 0 : -.2, 0]);
     } else {c.setTransform([0, 0, 0]); applyWalkMovement(c, t, i);}
     const foot = characterFootY(c);
-    c.position[1] = ground - (!idle && c === toadNode ? Math.min(foot, c.restFootY) : foot);
+    c.position[1] = ground - (!idle && c === toadNode ? Math.min(foot, c.restFootY) : foot) + (c.jumpHeight || 0);
   }
   const camera = (target, distance, yaw, pitch) => {camTarget = target; camDist = distance; camYaw = yaw; camPitch = pitch;};
   const follow = (c, distance, offset = .35, height = 1.1) => {

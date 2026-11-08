@@ -1,0 +1,700 @@
+[
+  {
+    "name": "YoshiBody",
+    "path": "/YoshiRoot/YoshiBody",
+    "kind": "createEllipsoid",
+    "args": [
+      0.52,
+      0.66,
+      0.48
+    ],
+    "visible": true
+  },
+  {
+    "name": "YoshiBelly",
+    "path": "/YoshiRoot/YoshiBody/YoshiBelly",
+    "kind": "createEllipsoid",
+    "args": [
+      0.43,
+      0.58,
+      0.34
+    ],
+    "visible": true
+  },
+  {
+    "name": "SaddleRedDome",
+    "path": "/YoshiRoot/YoshiBody/YoshiSaddle/SaddleRedDome",
+    "kind": "createDome",
+    "args": [
+      0.4,
+      0.36,
+      0.44,
+      1.82212373908208
+    ],
+    "visible": true
+  },
+  {
+    "name": "SaddleWhiteRim",
+    "path": "/YoshiRoot/YoshiBody/YoshiSaddle/SaddleWhiteRim",
+    "kind": "createTorus",
+    "args": [
+      0.37,
+      0.07
+    ],
+    "visible": true
+  },
+  {
+    "name": "SaddleBezierArch",
+    "path": "/YoshiRoot/YoshiBody/YoshiSaddle/SaddleBezierArch",
+    "kind": "createBezierTube",
+    "args": [
+      [
+        -0.34,
+        0.06,
+        0
+      ],
+      [
+        -0.2,
+        0.39,
+        0.1
+      ],
+      [
+        0.2,
+        0.39,
+        0.1
+      ],
+      [
+        0.34,
+        0.06,
+        0
+      ],
+      0.04,
+      0.04
+    ],
+    "visible": true
+  },
+  {
+    "name": "TailCone",
+    "path": "/YoshiRoot/YoshiBody/TailPivot/TailCone",
+    "kind": "createConeFrustum",
+    "args": [
+      0.3,
+      0.02,
+      0.78,
+      28,
+      8,
+      true
+    ],
+    "visible": true
+  },
+  {
+    "name": "TailUnderWhite",
+    "path": "/YoshiRoot/YoshiBody/TailPivot/TailUnderWhite",
+    "kind": "createConeFrustum",
+    "args": [
+      0.22,
+      0.01,
+      0.72,
+      24,
+      6,
+      true
+    ],
+    "visible": true
+  },
+  {
+    "name": "YoshiNeck",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiNeck",
+    "kind": "createCylinder",
+    "args": [
+      0.25,
+      0.34
+    ],
+    "visible": true
+  },
+  {
+    "name": "NeckFrontWhite",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/NeckFrontWhite",
+    "kind": "createCylinder",
+    "args": [
+      0.21,
+      0.32
+    ],
+    "visible": true
+  },
+  {
+    "name": "YoshiHead",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead",
+    "kind": "createEllipsoid",
+    "args": [
+      0.46,
+      0.44,
+      0.48
+    ],
+    "visible": true
+  },
+  {
+    "name": "YoshiWhiteCheeks",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/YoshiWhiteCheeks",
+    "kind": "createEllipsoid",
+    "args": [
+      0.52,
+      0.28,
+      0.44
+    ],
+    "visible": true
+  },
+  {
+    "name": "MouthCavity",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/MouthCavity",
+    "kind": "createEllipsoid",
+    "args": [
+      0.26,
+      0.18,
+      0.28
+    ],
+    "visible": true
+  },
+  {
+    "name": "WhiteChin",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/WhiteChin",
+    "kind": "createEllipsoid",
+    "args": [
+      0.3,
+      0.14,
+      0.32
+    ],
+    "visible": true
+  },
+  {
+    "name": "YoshiSmileLipBezier",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/YoshiSmileLipBezier",
+    "kind": "createBezierTube",
+    "args": [
+      [
+        -0.4,
+        -0.1,
+        0.28
+      ],
+      [
+        -0.22,
+        -0.26,
+        0.52
+      ],
+      [
+        0.22,
+        -0.26,
+        0.52
+      ],
+      [
+        0.4,
+        -0.1,
+        0.28
+      ],
+      0.028,
+      0.028
+    ],
+    "visible": true
+  },
+  {
+    "name": "YoshiBezierTongue",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/TonguePivot/YoshiBezierTongue",
+    "kind": "createBezierTube",
+    "args": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0.04,
+        0.35
+      ],
+      [
+        0,
+        0.02,
+        0.7
+      ],
+      [
+        0,
+        0,
+        1.05
+      ],
+      0.075,
+      0.095
+    ],
+    "visible": true
+  },
+  {
+    "name": "TongueTip",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/TonguePivot/TongueTip",
+    "kind": "createEllipsoid",
+    "args": [
+      0.11,
+      0.09,
+      0.12
+    ],
+    "visible": true
+  },
+  {
+    "name": "YoshiBigSnout",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/YoshiBigSnout",
+    "kind": "createEllipsoid",
+    "args": [
+      0.5,
+      0.45,
+      0.52
+    ],
+    "visible": true
+  },
+  {
+    "name": "Nostril",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/YoshiBigSnout/Nostril",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.028,
+      0.055
+    ],
+    "visible": true
+  },
+  {
+    "name": "Nostril",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/YoshiBigSnout/Nostril",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.028,
+      0.055
+    ],
+    "visible": true
+  },
+  {
+    "name": "EyeSocket",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket",
+    "kind": "createEllipsoid",
+    "args": [
+      0.23,
+      0.4,
+      0.22
+    ],
+    "visible": true
+  },
+  {
+    "name": "EyeWhite",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite",
+    "kind": "createEllipsoid",
+    "args": [
+      0.19,
+      0.34,
+      0.15
+    ],
+    "visible": true
+  },
+  {
+    "name": "Pupil",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite/Pupil",
+    "kind": "createEllipsoid",
+    "args": [
+      0.085,
+      0.16,
+      0.06
+    ],
+    "visible": true
+  },
+  {
+    "name": "EyeShine",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite/Pupil/EyeShine",
+    "kind": "createEllipsoid",
+    "args": [
+      0.032,
+      0.05,
+      0.03
+    ],
+    "visible": true
+  },
+  {
+    "name": "BlinkEyelid",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite/BlinkEyelid",
+    "kind": "createEllipsoidPatch",
+    "args": [
+      0.2,
+      0.35,
+      0.29,
+      [
+        0,
+        0,
+        1
+      ],
+      1.5707963267948966,
+      16,
+      32,
+      0.003
+    ],
+    "visible": false
+  },
+  {
+    "name": "EyeSocket",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket",
+    "kind": "createEllipsoid",
+    "args": [
+      0.23,
+      0.4,
+      0.22
+    ],
+    "visible": true
+  },
+  {
+    "name": "EyeWhite",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite",
+    "kind": "createEllipsoid",
+    "args": [
+      0.19,
+      0.34,
+      0.15
+    ],
+    "visible": true
+  },
+  {
+    "name": "Pupil",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite/Pupil",
+    "kind": "createEllipsoid",
+    "args": [
+      0.085,
+      0.16,
+      0.06
+    ],
+    "visible": true
+  },
+  {
+    "name": "EyeShine",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite/Pupil/EyeShine",
+    "kind": "createEllipsoid",
+    "args": [
+      0.032,
+      0.05,
+      0.03
+    ],
+    "visible": true
+  },
+  {
+    "name": "BlinkEyelid",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/EyeSocket/EyeWhite/BlinkEyelid",
+    "kind": "createEllipsoidPatch",
+    "args": [
+      0.2,
+      0.35,
+      0.29,
+      [
+        0,
+        0,
+        1
+      ],
+      1.5707963267948966,
+      16,
+      32,
+      0.003
+    ],
+    "visible": false
+  },
+  {
+    "name": "RedCrestCone",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/RedCrestCone",
+    "kind": "createConeFrustum",
+    "args": [
+      0.15,
+      0.045,
+      0.28,
+      20,
+      4,
+      true
+    ],
+    "visible": true
+  },
+  {
+    "name": "RedCrestCone",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/RedCrestCone",
+    "kind": "createConeFrustum",
+    "args": [
+      0.15,
+      0.045,
+      0.28,
+      20,
+      4,
+      true
+    ],
+    "visible": true
+  },
+  {
+    "name": "RedCrestCone",
+    "path": "/YoshiRoot/YoshiBody/YoshiNeckPivot/YoshiHead/RedCrestCone",
+    "kind": "createConeFrustum",
+    "args": [
+      0.15,
+      0.045,
+      0.28,
+      20,
+      4,
+      true
+    ],
+    "visible": true
+  },
+  {
+    "name": "UpperArm",
+    "path": "/YoshiRoot/YoshiBody/LeftShoulder/UpperArm",
+    "kind": "createConeFrustum",
+    "args": [
+      0.12,
+      0.045,
+      0.36
+    ],
+    "visible": true
+  },
+  {
+    "name": "Forearm",
+    "path": "/YoshiRoot/YoshiBody/LeftShoulder/UpperArm/Elbow/Forearm",
+    "kind": "createCylinder",
+    "args": [
+      0.1,
+      0.32
+    ],
+    "visible": true
+  },
+  {
+    "name": "Hand",
+    "path": "/YoshiRoot/YoshiBody/LeftShoulder/UpperArm/Elbow/Forearm/Hand",
+    "kind": "createEllipsoid",
+    "args": [
+      0.14,
+      0.12,
+      0.08
+    ],
+    "visible": true
+  },
+  {
+    "name": "Finger",
+    "path": "/YoshiRoot/YoshiBody/LeftShoulder/UpperArm/Elbow/Forearm/Hand/Finger",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "Finger",
+    "path": "/YoshiRoot/YoshiBody/LeftShoulder/UpperArm/Elbow/Forearm/Hand/Finger",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "Finger",
+    "path": "/YoshiRoot/YoshiBody/LeftShoulder/UpperArm/Elbow/Forearm/Hand/Finger",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "Thumb",
+    "path": "/YoshiRoot/YoshiBody/LeftShoulder/UpperArm/Elbow/Forearm/Hand/Thumb",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "UpperArm",
+    "path": "/YoshiRoot/YoshiBody/RightShoulder/UpperArm",
+    "kind": "createConeFrustum",
+    "args": [
+      0.12,
+      0.045,
+      0.36
+    ],
+    "visible": true
+  },
+  {
+    "name": "Forearm",
+    "path": "/YoshiRoot/YoshiBody/RightShoulder/UpperArm/Elbow/Forearm",
+    "kind": "createCylinder",
+    "args": [
+      0.1,
+      0.32
+    ],
+    "visible": true
+  },
+  {
+    "name": "Hand",
+    "path": "/YoshiRoot/YoshiBody/RightShoulder/UpperArm/Elbow/Forearm/Hand",
+    "kind": "createEllipsoid",
+    "args": [
+      0.14,
+      0.12,
+      0.08
+    ],
+    "visible": true
+  },
+  {
+    "name": "Finger",
+    "path": "/YoshiRoot/YoshiBody/RightShoulder/UpperArm/Elbow/Forearm/Hand/Finger",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "Finger",
+    "path": "/YoshiRoot/YoshiBody/RightShoulder/UpperArm/Elbow/Forearm/Hand/Finger",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "Finger",
+    "path": "/YoshiRoot/YoshiBody/RightShoulder/UpperArm/Elbow/Forearm/Hand/Finger",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "Thumb",
+    "path": "/YoshiRoot/YoshiBody/RightShoulder/UpperArm/Elbow/Forearm/Hand/Thumb",
+    "kind": "createEllipsoid",
+    "args": [
+      0.048,
+      0.048,
+      0.13
+    ],
+    "visible": true
+  },
+  {
+    "name": "Thigh",
+    "path": "/YoshiRoot/YoshiBody/LeftHip/Thigh",
+    "kind": "createEllipsoid",
+    "args": [
+      0.21,
+      0.26,
+      0.22
+    ],
+    "visible": true
+  },
+  {
+    "name": "LegCylinder",
+    "path": "/YoshiRoot/YoshiBody/LeftHip/LegCylinder",
+    "kind": "createCylinder",
+    "args": [
+      0.15,
+      0.34
+    ],
+    "visible": true
+  },
+  {
+    "name": "BootCuff",
+    "path": "/YoshiRoot/YoshiBody/LeftHip/LegCylinder/Ankle/BootCuff",
+    "kind": "createTorus",
+    "args": [
+      0.17,
+      0.055
+    ],
+    "visible": true
+  },
+  {
+    "name": "OrangeBoot",
+    "path": "/YoshiRoot/YoshiBody/LeftHip/LegCylinder/Ankle/OrangeBoot",
+    "kind": "createEllipsoid",
+    "args": [
+      0.24,
+      0.2,
+      0.39
+    ],
+    "visible": true
+  },
+  {
+    "name": "YellowSole",
+    "path": "/YoshiRoot/YoshiBody/LeftHip/LegCylinder/Ankle/OrangeBoot/YellowSole",
+    "kind": "createEllipsoid",
+    "args": [
+      0.24,
+      0.065,
+      0.38
+    ],
+    "visible": true
+  },
+  {
+    "name": "Thigh",
+    "path": "/YoshiRoot/YoshiBody/RightHip/Thigh",
+    "kind": "createEllipsoid",
+    "args": [
+      0.21,
+      0.26,
+      0.22
+    ],
+    "visible": true
+  },
+  {
+    "name": "LegCylinder",
+    "path": "/YoshiRoot/YoshiBody/RightHip/LegCylinder",
+    "kind": "createCylinder",
+    "args": [
+      0.15,
+      0.34
+    ],
+    "visible": true
+  },
+  {
+    "name": "BootCuff",
+    "path": "/YoshiRoot/YoshiBody/RightHip/LegCylinder/Ankle/BootCuff",
+    "kind": "createTorus",
+    "args": [
+      0.17,
+      0.055
+    ],
+    "visible": true
+  },
+  {
+    "name": "OrangeBoot",
+    "path": "/YoshiRoot/YoshiBody/RightHip/LegCylinder/Ankle/OrangeBoot",
+    "kind": "createEllipsoid",
+    "args": [
+      0.24,
+      0.2,
+      0.39
+    ],
+    "visible": true
+  },
+  {
+    "name": "YellowSole",
+    "path": "/YoshiRoot/YoshiBody/RightHip/LegCylinder/Ankle/OrangeBoot/YellowSole",
+    "kind": "createEllipsoid",
+    "args": [
+      0.24,
+      0.065,
+      0.38
+    ],
+    "visible": true
+  }
+]

@@ -114,6 +114,7 @@ const FS_SOURCE = `
             float occlusion=0.0;
             for(int i=0;i<3;i++) {
                 vec4 s=uContactShadows[i];
+                if (s.w <= 0.0) continue;
                 vec2 delta=(vWorldPos.xz-s.xy)/max(s.w,0.01);
                 delta.y *= 1.35;
                 float lift = i==0 ? uShadowLift.x : (i==1 ? uShadowLift.y : (i==2 ? uShadowLift.z : 0.0));
@@ -294,20 +295,11 @@ function setViewMode(mode) {
 
     // MODE INDIVIDUAL
     else {
-        camDist = 5.0;
-
-        if (mode === "yoshi") {
-            camTarget = [-2.8, 1.1, 0.15];
-        }
-        else if (mode === "toad") {
-            camTarget = [0, 1.0, 0];
-        }
-        else if (mode === "bowserjr") {
-            camTarget = [2.8, 1.1, 0.15];
-        }
-
-        camYaw = 0.22;
-        camPitch = 0.12;
+        // Use the default world view, keeping the entire walking area visible.
+        camDist = 17.5;
+        camTarget = animMode === "walk" ? [0, -0.25, 2.0] : [0, 1.5, -2.0];
+        camYaw = 0.13;
+        camPitch = 0.29;
     }
 }
 
@@ -318,6 +310,7 @@ function setAnimMode(mode) {
         b.classList.toggle("active", active);
         b.setAttribute("aria-pressed", active);
     });
+    setViewMode(viewMode);
 }
 
 // Available anywhere on the page, without clicking the canvas first.
@@ -327,6 +320,12 @@ function setupCharacterShortcuts() {
         if (event.ctrlKey || event.altKey || event.metaKey) return;
         const target = event.target;
         if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
+        const key = event.key.toLowerCase();
+        if (key === 'i' || key === 'o') {
+            setAnimMode(key === 'i' ? 'idle' : 'walk');
+            event.preventDefault();
+            return;
+        }
         if (Object.prototype.hasOwnProperty.call(modes, event.key)) {
             setViewMode(modes[event.key]);
             event.preventDefault();
@@ -386,7 +385,7 @@ function applyWalkMovement(character, t, followerIndex = 0) {
     // Each follower is 120 degrees behind the character it is chasing.
     const angle = t * 0.45 - followerIndex * Math.PI * 2 / 3;
     const radius = 2.0;
-    const centerZ = viewMode === 'env' ? environmentNode.walkCenterZ : 0;
+    const centerZ = environmentNode.walkCenterZ;
     character.position[0] = Math.cos(angle) * radius;
     character.position[2] = centerZ + Math.sin(angle) * radius;
     // The model faces +Z, so yaw -angle aligns it with the circle's tangent.
@@ -409,13 +408,16 @@ function renderLoop(timestamp) {
     const width=Math.round(canvas.clientWidth*ratio),height=Math.round(canvas.clientHeight*ratio);
     if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
     const poseMode = animMode === 'walk' ? 'combined' : animMode;
-    yoshiNode.animate(accumTime,poseMode);toadNode.animate(accumTime,poseMode);bowserJrNode.animate(accumTime,poseMode);
+    const poseTime = animMode === 'idle' ? 1 : accumTime;
+    yoshiNode.animate(poseTime,poseMode);toadNode.animate(poseTime,poseMode);bowserJrNode.animate(poseTime,poseMode);
+    if (animMode === 'idle') {
+        // A completely still base pose: no breathing, blinking or joint motion.
+        for (const character of [yoshiNode, toadNode, bowserJrNode]) character.resetAnim();
+    }
     yoshiNode.setTransform([-2.8,0,0.15],[0,0.15,0]);
     toadNode.setTransform([0,0,0]);bowserJrNode.setTransform([2.8,0,0.15],[0,-0.20,0]);
-    const walkingOnGround = viewMode === 'env' && animMode === 'walk';
-    const standingY = viewMode === 'env'
-        ? (walkingOnGround ? environmentNode.groundY : environmentNode.surfaceY)
-        : 0;
+    const walkingOnGround = animMode === 'walk';
+    const standingY = walkingOnGround ? environmentNode.groundY : environmentNode.surfaceY;
     // Ground idle feet and prevent animated soles penetrating the stage; preserve upward jumps.
     const chaseOrder = [toadNode, bowserJrNode, yoshiNode];
     for (const character of [yoshiNode, toadNode, bowserJrNode]) {
@@ -423,25 +425,20 @@ function renderLoop(timestamp) {
             const animation = poseMode;
             character.animate(0, 'idle');
             character.restFootY = characterFootY(character);
-            character.animate(accumTime, animation);
+            character.animate(poseTime, animation);
+            if (animMode === 'idle') character.resetAnim();
         }
         if (animMode === 'walk') applyWalkMovement(character, accumTime, chaseOrder.indexOf(character));
         const currentFootY = characterFootY(character);
         const bottom = animMode !== 'idle' && character === toadNode
             ? Math.min(currentFootY, character.restFootY) : currentFootY;
-        character.position[1] = standingY - bottom;
+        character.position[1] = standingY - bottom + (character.jumpHeight || 0);
     }
 
 
-    const roots=[];
-    if(viewMode==='env')roots.push(environmentNode);
+    const roots=[environmentNode];
     for(const [mode,character] of [['yoshi',yoshiNode],['toad',toadNode],['bowserjr',bowserJrNode]])
         if(viewMode==='env'||viewMode==='all'||viewMode===mode)roots.push(character);
-    // Keep a moving individual character centered after selecting it with 1/2/3.
-    const focused = { yoshi: yoshiNode, toad: toadNode, bowserjr: bowserJrNode }[viewMode];
-    if (focused && animMode === 'walk') {
-        camTarget = [focused.position[0], focused.position[1] + 1.15, focused.position[2]];
-    }
     renderWorld(roots, standingY);
     requestAnimationFrame(renderLoop);
 }
@@ -468,11 +465,14 @@ function renderWorld(roots, standingY) {
     gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,sunShadow.texture);
     gl.uniform1i(shaderProgram.uShadowMap,0);gl.uniform1f(shaderProgram.uShadowTexel,1/sunShadow.size);
     gl.uniform1f(shaderProgram.uShadowEnabled,sunShadow.enabled?1:0);
-    gl.uniform3fv(shaderProgram.uShadowLift,[yoshiNode,toadNode,bowserJrNode].map(c=>Math.max(0,characterFootY(c)+c.position[1]-standingY)));
-    const footprints=[yoshiNode,toadNode,bowserJrNode].map((c,i)=>[
+    const characters = [yoshiNode, toadNode, bowserJrNode];
+    const castsShadow = c => roots.includes(c) && c.visible;
+    gl.uniform3fv(shaderProgram.uShadowLift,characters.map(c=>castsShadow(c)
+        ? Math.max(0,characterFootY(c)+c.position[1]-standingY) : 0));
+    const footprints=characters.map((c,i)=>castsShadow(c) ? [
         c.position[0],c.position[2]+0.10,standingY,
         [0.57,0.50,0.58][i]*c.animScale[0]
-    ]);
+    ] : [0, 0, standingY, 0]);
     gl.uniform4fv(shaderProgram.uContactShadows,new Float32Array(footprints.flat()));
     const identity=Mat4.identity();for(const root of roots)root.draw(gl,shaderProgram,identity);
 }
@@ -489,11 +489,12 @@ function setLightingMode(mode) {
 function characterFootY(root) {
     let lowest = Infinity;
     function visit(n, parent) {
+        if (n !== root && !n.visible) return;
         let m = Mat4.translate(parent, n === root ? 0 : n.position[0] + n.animPos[0], n === root ? 0 : n.position[1] + n.animPos[1], n === root ? 0 : n.position[2] + n.animPos[2]);
         for (const [i, rotate] of [Mat4.rotateX,Mat4.rotateY,Mat4.rotateZ].entries()) m=rotate.call(Mat4,m,n.rotation[i]+n.animRot[i]);
         m=Mat4.rotateAxis(m,n.animAxis,n.animAxisAngle);
         m=Mat4.scale(m,...n.scale.map((v,i)=>v*n.animScale[i]));
-        if(n.mesh && /sole|footellipsoid|brownshoe|boot/i.test(n.name)) {
+        if(n.mesh && /sole|footellipsoid|brownshoe|boot|eggrollshell/i.test(n.name)) {
             let g=Mat4.translate(m,...n.geomOffset);
             g=Mat4.rotateX(g,n.geomRot[0]);g=Mat4.rotateY(g,n.geomRot[1]);g=Mat4.rotateZ(g,n.geomRot[2]);
             g=Mat4.scale(g,...n.geomScale);
