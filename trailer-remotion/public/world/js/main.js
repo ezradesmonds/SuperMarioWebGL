@@ -279,16 +279,16 @@ function setViewMode(mode) {
 
     // MODE ENVIRONMENT
     if (mode === "env") {
-        camDist = 17.5;
-        camTarget = animMode === "walk" ? [0, -0.25, 2.0] : [0, 1.5, -2.0];
+        camDist = 19.0;
+        camTarget = [0, 1.2, 1.0];
         camYaw = 0.13;
-        camPitch = 0.29;
+        camPitch = 0.36;
     }
 
     // MODE SEMUA KARAKTER
     else if (mode === "all") {
         camDist = 11.5;
-        camTarget = [0, 1.05, 0];
+        camTarget = [0, 1.05, 1.0];
         camYaw = 0.0;
         camPitch = 0.18;
     }
@@ -296,10 +296,10 @@ function setViewMode(mode) {
     // MODE INDIVIDUAL
     else {
         // Use the default world view, keeping the entire walking area visible.
-        camDist = 17.5;
-        camTarget = animMode === "walk" ? [0, -0.25, 2.0] : [0, 1.5, -2.0];
+        camDist = 19.0;
+        camTarget = [0, 1.2, 1.0];
         camYaw = 0.13;
-        camPitch = 0.29;
+        camPitch = 0.36;
     }
 }
 
@@ -433,8 +433,7 @@ function renderLoop(timestamp) {
     }
     yoshiNode.setTransform([-2.8,0,0.15],[0,0.15,0]);
     toadNode.setTransform([0,0,0]);bowserJrNode.setTransform([2.8,0,0.15],[0,-0.20,0]);
-    const walkingOnGround = animMode === 'walk';
-    const standingY = walkingOnGround ? environmentNode.groundY : environmentNode.surfaceY;
+    const standingY = environmentNode.surfaceY;
     // Ground idle feet and prevent animated soles penetrating the stage; preserve upward jumps.
     const chaseOrder = [toadNode, bowserJrNode, yoshiNode];
     for (const character of [yoshiNode, toadNode, bowserJrNode]) {

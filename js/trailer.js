@@ -20,14 +20,14 @@
             character.animate(0,'idle');character.restFootY=characterFootY(character);character.animate(t,mode);
         }
         const foot = characterFootY(character);
-        character.position[1] = environmentNode.groundY - (jump ? Math.min(foot,character.restFootY) : foot);
+        character.position[1] = environmentNode.surfaceY - (jump ? Math.min(foot,character.restFootY) : foot);
     }
     function camera(target, distance, yaw, pitch) {
         camTarget=target;camDist=distance;camYaw=yaw;camPitch=pitch;
     }
     function stage(t) {
         const y = yoshiNode, b = bowserJrNode, toad = toadNode;
-        const ground = environmentNode.groundY;
+        const ground = environmentNode.surfaceY;
         lightingMode = t > 29 ? 'golden' : 'day';
         pose(y,t,'idle',-4.2,5.2,0.45);
         pose(toad,t,'idle',1.4,6.4,-0.2);
@@ -39,11 +39,11 @@
             title='MUSHROOM KINGDOM';subtitle='Satu hari yang tenang…';tag='THE GREEN GARDENS';
         } else if(t < 12) {
             const q=t-4, a=q*.65;
-            const r=2.25, center=6.3;
+            const r=2.25, center=environmentNode.walkCenterZ;
             pose(toad,t*1.55,'walk',Math.cos(a)*r,center+Math.sin(a)*r,-a);
             pose(b,t*1.45,'walk',Math.cos(a-1.12)*r,center+Math.sin(a-1.12)*r,-a+1.12);
             y.visible=false;
-            camera([0,-0.8,6.3],10.8,0.18+Math.sin(q*.2)*.16,0.19);
+            camera([0,1.575,environmentNode.walkCenterZ],10.8,0.18+Math.sin(q*.2)*.16,0.19);
             subtitle=q<3.5?'…berubah menjadi pengejaran.':'TOAD, LARI!';tag='TAK ADA WAKTU UNTUK DIAM';
         } else if(t < 16) {
             const q=t-12;

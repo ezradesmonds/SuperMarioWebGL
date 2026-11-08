@@ -10,7 +10,7 @@ window.drawFilmFrame = function(t) {
   const opening = t < 5;
   const introduction = t >= 5 && t < 23;
   const solo = t < 11 ? toadNode : t < 17 ? bowserJrNode : yoshiNode;
-  const ground = opening || introduction ? environmentNode.surfaceY : environmentNode.groundY;
+  const ground = environmentNode.surfaceY;
   const hitTime = 67.5;
   const hit = t - hitTime;
   yoshiNode.eggStartedAt = 64;
@@ -48,18 +48,18 @@ window.drawFilmFrame = function(t) {
   const follow=(c,distance,height=1)=>camera([c.position[0],ground+height,c.position[2]],distance,.06,.15);
   if(opening) camera([0,1,-.3],19-t*.6,.13,.23);
   else if(introduction) camera([0,solo===toadNode?.75:1.25,.15],solo===toadNode?5.8:7.5,.08,.14);
-  else if(t<35){yoshiNode.visible=false;camera([0,-.85,6.3],10.5,.08,.28);}
+  else if(t<35){yoshiNode.visible=false;camera([0,ground+1.525,environmentNode.walkCenterZ],10.5,.08,.28);}
   else if(t<40){yoshiNode.visible=false;follow(toadNode,6.2,.65);}
   else if(t<45){yoshiNode.visible=false;follow(bowserJrNode,7.2);}
   else if(t<54){toadNode.visible=bowserJrNode.visible=false;follow(yoshiNode,7.6,1.2);}
-  else if(t<64) camera([0,-.7,6.3],11,.12,.30);
+  else if(t<64) camera([0,ground+1.675,environmentNode.walkCenterZ],11,.12,.30);
   else if(t<70) {
-    const mid=[(yoshiNode.position[0]+bowserJrNode.position[0])/2,-1.2,(yoshiNode.position[2]+bowserJrNode.position[2])/2];
+    const mid=[(yoshiNode.position[0]+bowserJrNode.position[0])/2,ground+1.175,(yoshiNode.position[2]+bowserJrNode.position[2])/2];
     camera(mid,8.2,.06,.27);
     if(hit>=0&&hit<.4) camTarget[0]+=Math.sin(hit*60)*.07*(1-hit/.4);
   }
   else if(t<76) follow(yoshiNode,7.6,1.2);
-  else camera([0,-.6,6.3],11+(t-76)*.12,.12,.28);
+  else camera([0,ground+1.775,environmentNode.walkCenterZ],11+(t-76)*.12,.12,.28);
   renderWorld([environmentNode,...order.filter(c=>c.visible)],ground);
   gl.finish();
 };
