@@ -305,6 +305,7 @@ function setViewMode(mode) {
 
 function setAnimMode(mode) {
     animMode = mode;
+    if (mode === 'idle' && yoshiNode) yoshiNode.eggMode = false;
     document.querySelectorAll("#anim-idle, #anim-walk, #anim-action").forEach(b => {
         const active = b.id === "anim-" + mode;
         b.classList.toggle("active", active);
@@ -321,6 +322,22 @@ function setupCharacterShortcuts() {
         const target = event.target;
         if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
         const key = event.key.toLowerCase();
+        if (key === 'z') {
+            if (!event.repeat) window.location.assign('trailer-player.html');
+            event.preventDefault();
+            return;
+        }
+        if (key === 't') {
+            if (!event.repeat && yoshiNode) {
+                if (animMode !== 'walk') setAnimMode('walk');
+                if (!yoshiNode.eggMode) {
+                    yoshiNode.eggMode = true;
+                    yoshiNode.eggStartedAt = accumTime;
+                }
+            }
+            event.preventDefault();
+            return;
+        }
         if (key === 'i' || key === 'o') {
             setAnimMode(key === 'i' ? 'idle' : 'walk');
             event.preventDefault();
@@ -447,7 +464,6 @@ function renderLoop(timestamp) {
 function renderWorld(roots, standingY) {
     const canvas = gl.canvas;
     gl.disableVertexAttribArray(shaderProgram.aNormal);
-    sunShadow.render(roots);
     gl.viewport(0,0,canvas.width,canvas.height);
     gl.useProgram(shaderProgram.program);
     gl.enableVertexAttribArray(shaderProgram.aPosition);gl.enableVertexAttribArray(shaderProgram.aNormal);
@@ -464,9 +480,9 @@ function renderWorld(roots, standingY) {
     gl.uniform1f(shaderProgram.uGolden,lightingMode==='golden'?1:0);
     gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,sunShadow.texture);
     gl.uniform1i(shaderProgram.uShadowMap,0);gl.uniform1f(shaderProgram.uShadowTexel,1/sunShadow.size);
-    gl.uniform1f(shaderProgram.uShadowEnabled,sunShadow.enabled?1:0);
+    gl.uniform1f(shaderProgram.uShadowEnabled,0);
     const characters = [yoshiNode, toadNode, bowserJrNode];
-    const castsShadow = c => roots.includes(c) && c.visible;
+    const castsShadow = () => false;
     gl.uniform3fv(shaderProgram.uShadowLift,characters.map(c=>castsShadow(c)
         ? Math.max(0,characterFootY(c)+c.position[1]-standingY) : 0));
     const footprints=characters.map((c,i)=>castsShadow(c) ? [
@@ -529,3 +545,4 @@ function drawSkyGradient() {
 }
 
 window.addEventListener("DOMContentLoaded", initWebGL);
+

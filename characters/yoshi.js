@@ -18,6 +18,8 @@ function createYoshi(gl) {
     const C_BLACK       = [0.06, 0.06, 0.08];
 
     const root = new SceneNode("YoshiRoot");
+    root.eggMode = false;
+    root.eggStartedAt = 0;
 
     // Alternate form, centered on its rolling pivot. Spots follow the same pivot.
     const eggPivot = new SceneNode('YoshiEggRollPivot');
@@ -322,10 +324,6 @@ function createYoshi(gl) {
 
             tailPivot.animRot = [Math.sin(t * 9) * 0.08, swing * 0.42, 0];
         } else if (mode === "action") {
-            // Juluran pendek: skala Z maksimal 0.75, separuh panjang aksi lama.
-            const tongueExtend = Math.max(0, Math.sin(t * 2.2));
-            tonguePivot.visible = tongueExtend > 0.001;
-            tonguePivot.scale = [1, 1, 0.15 + tongueExtend * 0.60];
 
             // Keep torso rotation neutral so this action can accompany the walking motion.
 
@@ -337,9 +335,9 @@ function createYoshi(gl) {
                 leftLeg.ankle.animRot = [Math.max(0, swing) * 0.35, 0, 0];
                 rightLeg.ankle.animRot = [Math.max(0, -swing) * 0.35, 0, 0];
             }
-            head.animRot = [tongueExtend * 0.15, 0, 0];
-            leftArm.shoulder.animRot  = [-0.45 - tongueExtend * 0.15, 0, -0.25];
-            rightArm.shoulder.animRot = [-0.45 - tongueExtend * 0.15, 0, 0.25];
+            head.animRot = [0, 0, 0];
+            leftArm.shoulder.animRot  = [-0.45, 0, -0.25];
+            rightArm.shoulder.animRot = [-0.45, 0, 0.25];
 
             tailPivot.animRot = [0.15, Math.sin(t * 10) * 0.45, 0];
 
@@ -355,23 +353,21 @@ function createYoshi(gl) {
         // Swing opposite arms only in the combined circular-walk mode.
         if (combined) {
             const swing = Math.sin(t * 4.5);
-            const phase = t % 4.2;
-            const airborne = phase >= 1.6 && phase < 2.4;
-            const jump = airborne ? Math.sin(Math.PI * (phase - 1.6) / 0.8) : 0;
-            root.jumpHeight = jump * 0.72;
             // Short alternating steps and a slight forward lean, like the reference.
             body.animRot = [0.07, 0, 0];
-            leftLeg.hip.animRot = [-swing * 0.55 - jump * 0.65, 0, -jump * 0.08];
-            rightLeg.hip.animRot = [swing * 0.55 - jump * 0.35, 0, jump * 0.08];
-            leftLeg.ankle.animRot = [Math.max(0, swing) * 0.25 + jump * 0.30, 0, 0];
-            rightLeg.ankle.animRot = [Math.max(0, -swing) * 0.25 + jump * 0.30, 0, 0];
-            leftArm.shoulder.animRot = [swing * 0.38 - jump * 0.65, 0, -jump * 0.12];
-            rightArm.shoulder.animRot = [-swing * 0.38 - jump * 0.65, 0, jump * 0.12];
+            leftLeg.hip.animRot = [-swing * 0.55, 0, 0];
+            rightLeg.hip.animRot = [swing * 0.55, 0, 0];
+            leftLeg.ankle.animRot = [Math.max(0, swing) * 0.25, 0, 0];
+            rightLeg.ankle.animRot = [Math.max(0, -swing) * 0.25, 0, 0];
+            leftArm.shoulder.animRot = [swing * 0.38, 0, 0];
+            rightArm.shoulder.animRot = [-swing * 0.38, 0, 0];
 
-            // Walk, tuck into the egg, roll, then return to the walking pose.
-            const eggPhase = t % 10;
+            // Egg Roll is enabled explicitly with T, never by an automatic cycle.
+            const eggPhase = Math.max(0, t - root.eggStartedAt);
             const smooth = v => { v = Math.max(0, Math.min(1, v)); return v * v * (3 - 2 * v); };
-            const eggBlend = smooth((eggPhase - 4) / 0.3) * (1 - smooth((eggPhase - 8.2) / 0.3));
+            if (eggPhase >= 4.6) root.eggMode = false;
+            const eggBlend = root.eggMode
+                ? smooth(eggPhase / 0.3) * (1 - smooth((eggPhase - 4.3) / 0.3)) : 0;
             if (eggBlend > 0) {
                 root.jumpHeight = 0;
                 body.visible = eggBlend < 0.999;
@@ -379,7 +375,7 @@ function createYoshi(gl) {
                 body.scale = [bodySize, bodySize, bodySize];
                 eggPivot.visible = true;
                 eggPivot.scale = [eggBlend, eggBlend, eggBlend];
-                eggPivot.animRot = [(eggPhase - 4) * 9.0, 0, 0];
+                eggPivot.animRot = [eggPhase * 9.0, 0, 0];
             }
         }
     };
