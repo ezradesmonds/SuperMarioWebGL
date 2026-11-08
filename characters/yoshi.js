@@ -313,7 +313,7 @@ function createYoshi(gl) {
             leftLeg.ankle.animRot = [Math.max(0, swing) * 0.35, 0, 0];
             rightLeg.ankle.animRot = [Math.max(0, -swing) * 0.35, 0, 0];
 
-            tailPivot.animRot = [Math.sin(t * 9) * 0.08, swing * 0.42, 0];
+            tailPivot.animRot = [0, 0, 0];
         } else if (mode === "action") {
 
             // Keep torso rotation neutral so this action can accompany the walking motion.
@@ -330,7 +330,7 @@ function createYoshi(gl) {
             leftArm.shoulder.animRot  = [-0.45, 0, -0.25];
             rightArm.shoulder.animRot = [-0.45, 0, 0.25];
 
-            tailPivot.animRot = [0.15, Math.sin(t * 10) * 0.45, 0];
+            tailPivot.animRot = combined ? [0, 0, 0] : [0.15, Math.sin(t * 10) * 0.45, 0];
 
         } else {
             // Idle Ceria & Bernapas Halus (Telur berdiri rapi di samping kaki Yoshi, tidak menutupi perut!)
