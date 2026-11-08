@@ -183,11 +183,6 @@ function createMarioEnvironment(gl) {
     }
     tree(-9.5,-2.37,8,1.05);tree(9.7,-2.37,8.8,1.2);tree(13,-2.37,-6,1.25);
     tree(-16,-2.37,-8,1.2);tree(4,-2.37,16,1.4);
-    // Discrete stepping stones connect the outer gardens without filling the stage.
-    for(let i=0;i<14;i++) {
-        const a=i*Math.PI*2/14;
-        ball(root,'SteppingStone',[0.69,0.69,0.48],[Math.cos(a)*8.8,-2.29,Math.sin(a)*7.6],[0.38,0.10,0.27]);
-    }
     function flag(x,y,z) {
         const p=node(root,'CheckpointFlag',null,white,[x,y,z]);
         node(p,'FlagPole',cylinder,[0.84,0.86,0.78],[0,1.1,0],[0.035,2.2,0.035]);
@@ -208,17 +203,6 @@ function createMarioEnvironment(gl) {
     }
     ball(rotor,'RotorHub',[1,0.72,0.21],[0,0,0.07],[0.15,0.15,0.09]);
 
-    // A continuous dirt path ties the landmarks into a single little world.
-    const pathData={positions:[],normals:[],indices:[]};
-    for(let i=0;i<=128;i++) {
-        const a=i*Math.PI*2/128;
-        for(const side of [-1,1]) {
-            pathData.positions.push(Math.cos(a)*(9.1+side*0.36),meadowTop+0.014,Math.sin(a)*(7.6+side*0.36));
-            pathData.normals.push(0,1,0);
-        }
-        if(i<128){const k=i*2;pathData.indices.push(k,k+1,k+2,k+1,k+3,k+2);}
-    }
-    node(root,'GardenTrail',Primitives.createMeshBuffer(gl,pathData),[0.83,0.69,0.40],[0,0,0]).materialKind=4;
     // Water emerges from the upper pool and cascades into a basin beside the river.
     ball(root,'SpringPool',[0.12,0.72,0.88],[-9,1.515,-11.0],[0.61,0.025,1.22]).materialKind=2;
     const waterfall=cube(root,'Waterfall',[0.28,0.78,0.93],[-9,(1.48+meadowTop)/2,-9.465],[0.72,1.48-meadowTop,0.055]);waterfall.materialKind=5;

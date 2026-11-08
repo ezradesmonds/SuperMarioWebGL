@@ -13,8 +13,11 @@ window.drawFilmFrame = function(t) {
   const ground = environmentNode.surfaceY;
   const hitTime = 67.5;
   const hit = t - hitTime;
-  yoshiNode.eggStartedAt = 64;
-  yoshiNode.eggMode = t >= 64 && t < 68.6;
+  // A short egg reveal during Yoshi's introduction, using the original morph
+  // at double speed (18.5–20.8 s), then return to Yoshi before the next scene.
+  const introEgg = t >= 18.5 && t < 20.8;
+  yoshiNode.eggStartedAt = introEgg ? t - (t - 18.5) * 2 : 64;
+  yoshiNode.eggMode = introEgg || (t >= 64 && t < 68.6);
   for (const [i, c] of order.entries()) {
     c.visible = !introduction || c === solo;
     c.setTransform([0,0,0]);

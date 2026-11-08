@@ -1,9 +1,9 @@
 // Karakter 1: YOSHI (Super Mario Series) - High-Fidelity Pure WebGL Model
 // Pemenuhan Ketentuan:
 // 1. Ellipsoid: Kepala, moncong bulat besar, pipi putih, badan, perut putih, mata, sepatu boots, jari, telur Yoshi (dengan flush surface patch spots)
-// 2. Cylinder: Leher, lengan atas/bawah, paha/betis
-// 3. Quadric Non-Ellipsoid/Cylinder: Cone (Ekor meruncing & 3 jambul duri merah belakang kepala) & Torus (rim putih saddle merah & cuff sepatu)
-// 4. Curve (3D Cubic Bezier Tube): Bibir senyum mulut, lidah panjang dapat menjulur, lengkungan pelana (saddle), dan kontur perut putih
+// 2. Cylinder: Leher, lengan bawah, dan batang kaki; paha memakai ellipsoid.
+// 3. Quadric lain: Cone frustum pada ekor, jambul, dan lengan atas. Torus adalah detail rim pelana dan cuff sepatu.
+// 4. Curve (3D Cubic Bezier Tube): Senyum terlihat pada moncong; mesh lidah tersimpan tetapi disembunyikan saat animasi.
 
 function createYoshi(gl) {
     const C_GREEN       = [0.20, 0.80, 0.22];
@@ -45,7 +45,7 @@ function createYoshi(gl) {
     belly.setTransform([0, -0.01, 0.22], [-0.04, 0, 0]);
     body.add(belly);
 
-    // SADDLE / PELANA MERAH DI PUNGGUNG ATAS (Dome + Quadric Torus Rim + Bezier Arch)
+    // SADDLE / PELANA MERAH DI PUNGGUNG ATAS (Dome + Torus Rim)
     const saddleNode = new SceneNode("YoshiSaddle");
     saddleNode.setTransform([0, 0.12, -0.40], [-1.32, 0, 0]);
     body.add(saddleNode);
@@ -54,36 +54,25 @@ function createYoshi(gl) {
     const saddleShell = new SceneNode("SaddleRedDome", saddleShellMesh, C_RED, 65);
     saddleNode.add(saddleShell);
 
-    // Quadric Non-Ellipsoid/Cylinder: Torus untuk cincin dasar putih Saddle
+    // Torus untuk cincin dasar putih Saddle, sebagai detail tambahan.
     const saddleRimMesh = Primitives.createTorus(gl, 0.37, 0.07);
     const saddleRim = new SceneNode("SaddleWhiteRim", saddleRimMesh, C_WHITE, 30);
     saddleRim.setTransform([0, 0.04, 0], [Math.PI / 2, 0, 0]);
     saddleNode.add(saddleRim);
 
-    // CURVE 2: Kurva Bezier Pelana (Saddle Arch Detail)
-    const saddleArchCurve = Primitives.createBezierTube(
-        gl,
-        [-0.34, 0.06, 0.0],
-        [-0.20, 0.39, 0.10],
-        [0.20, 0.39, 0.10],
-        [0.34, 0.06, 0.0],
-        0.04, 0.04
-    );
-    saddleNode.add(new SceneNode("SaddleBezierArch", saddleArchCurve, C_RED, 65));
-
-    // EKOR YOSHI MERUNCING KE BELAKANG ATAS (QUADRIC NON-ELLIPSOID/CYLINDER: CONE)
+    // Ekor pendek mengarah ke belakang dengan sedikit kemiringan ke atas.
     const tailPivot = new SceneNode("TailPivot");
-    tailPivot.setTransform([0, -0.38, -0.32], [-1.18, 0, 0]);
+    tailPivot.setTransform([0, -0.38, -0.32], [-1.60, 0, 0]);
     body.add(tailPivot);
 
-    const tailConeMesh = Primitives.createConeFrustum(gl, 0.30, 0.02, 0.78, 28, 8, true);
+    const tailConeMesh = Primitives.createConeFrustum(gl, 0.27, 0.02, 0.52, 28, 8, true);
     const tailCone = new SceneNode("TailCone", tailConeMesh, C_GREEN, 30);
-    tailCone.setTransform([0, 0.32, 0]);
+    tailCone.setTransform([0, 0.19, 0]);
     tailPivot.add(tailCone);
 
-    const tailUnderMesh = Primitives.createConeFrustum(gl, 0.22, 0.01, 0.72, 24, 6, true);
+    const tailUnderMesh = Primitives.createConeFrustum(gl, 0.20, 0.01, 0.48, 24, 6, true);
     const tailUnder = new SceneNode("TailUnderWhite", tailUnderMesh, C_WHITE, 20);
-    tailUnder.setTransform([0, 0.31, -0.07]);
+    tailUnder.setTransform([0, 0.18, -0.06]);
     tailPivot.add(tailUnder);
 
     // LEHER & KEPALA (Leher = Cylinder, Kepala = Ellipsoid)
@@ -110,27 +99,29 @@ function createYoshi(gl) {
     cheeks.setTransform([0, -0.14, 0.14]);
     head.add(cheeks);
 
-    // Rongga Mulut Terbuka Ceria & Dagu Putih di Bawah Moncong
-    const mouthCavityMesh = Primitives.createEllipsoid(gl, 0.26, 0.18, 0.28);
-    const mouthCavity = new SceneNode("MouthCavity", mouthCavityMesh, C_DARK_MOUTH, 10);
-    mouthCavity.setTransform([0, -0.22, 0.36], [0.25, 0, 0]);
-    head.add(mouthCavity);
-
     const chinMesh = Primitives.createEllipsoid(gl, 0.30, 0.14, 0.32);
     const chin = new SceneNode("WhiteChin", chinMesh, C_WHITE, 22);
     chin.setTransform([0, -0.31, 0.34], [0.15, 0, 0]);
     head.add(chin);
 
-    // CURVE 3: Garis Bibir Senyum Melengkung (3D Cubic Bezier Curve)
-    const smileCurveMesh = Primitives.createBezierTube(
-        gl,
-        [-0.40, -0.10, 0.28],
-        [-0.22, -0.26, 0.52],
-        [0.22, -0.26, 0.52],
-        [0.40, -0.10, 0.28],
-        0.028, 0.028
-    );
-    head.add(new SceneNode("YoshiSmileLipBezier", smileCurveMesh, C_WHITE, 25));
+    // Two quarter-ellipse Bezier arcs share a tangent for a smooth semicircle.
+    // Tilt the arc's plane to meet the snout/jaw seam at its center and corners.
+    const smileLip = new SceneNode('YoshiSmileLipBezier');
+    const rx = 0.298, rz = 0.320;
+    const k = 4 * (Math.sqrt(2) - 1) / 3;
+    const lipPoint = (x, z) => [x, 0.045 - 0.070 * z / rz, z];
+    const smileArcs = [
+        [lipPoint(-rx, 0), lipPoint(-rx, k*rz),
+            lipPoint(-k*rx, rz), lipPoint(0, rz)],
+        [lipPoint(0, rz), lipPoint(k*rx, rz),
+            lipPoint(rx, k*rz), lipPoint(rx, 0)]
+    ];
+    for (const points of smileArcs) {
+        const mesh = Primitives.createBezierTube(gl, ...points,
+            0.008, 0.008, 40, 16);
+        smileLip.add(new SceneNode('SmileBezierSegment', mesh, C_DARK_MOUTH, 18));
+    }
+    chin.add(smileLip);
 
     // CURVE 4: Lidah Panjang Yoshi (3D Cubic Bezier Curve yang bisa menjulur saat aksi!)
     const tonguePivot = new SceneNode("TonguePivot");
