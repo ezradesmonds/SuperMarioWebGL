@@ -28,36 +28,6 @@ function createMarioEnvironment(gl) {
         if(!roundedCache.has(key))roundedCache.set(key,Primitives.createRoundedBox(gl,...dimensions,radius));
         return node(parent,name,roundedCache.get(key),color,pos);
     }
-    function turfSkirt(w,d) {
-        const data={positions:[],normals:[],indices:[]},radius=0.16;
-        const perimeter=[];
-        for(let corner=0;corner<4;corner++) {
-            const angle=corner*Math.PI/2;
-            const cx=(corner===0||corner===3?1:-1)*(w/2-radius);
-            const cz=(corner<2?1:-1)*(d/2-radius);
-            for(let j=0;j<=6;j++) {
-                const a=angle+j*Math.PI/12;
-                perimeter.push([cx+Math.cos(a)*radius,cz+Math.sin(a)*radius]);
-            }
-        }
-        // Subdivide long edges for a continuous gently draping grass silhouette.
-        const points=[];
-        for(let i=0;i<perimeter.length;i++) {
-            const a=perimeter[i],b=perimeter[(i+1)%perimeter.length];
-            const steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/0.10));
-            for(let j=0;j<steps;j++)points.push([a[0]+(b[0]-a[0])*j/steps,a[1]+(b[1]-a[1])*j/steps]);
-        }
-        for(let i=0;i<=points.length;i++) {
-            const [x,z]=points[i%points.length];
-            const nx=Math.abs(x)/(w/2)>Math.abs(z)/(d/2)?Math.sign(x):0;
-            const nz=nx===0?Math.sign(z):0;
-            const hang=0.19+0.045*Math.sin(x*14+z*13)+0.015*Math.sin(x*27-z*17);
-            data.positions.push(x,-0.035,z,x,-hang,z);
-            data.normals.push(nx,0,nz,nx,0,nz);
-            if(i<points.length){const k=i*2;data.indices.push(k,k+1,k+2,k+1,k+3,k+2);}
-        }
-        return Primitives.createMeshBuffer(gl,data);
-    }
     function platform(x,z,w,d,top,h) {
         const p=node(root,'GrassPlatform',null,white,[x,top,z]);
         platformFootprints.push({x,z,w,d,top});
@@ -69,7 +39,6 @@ function createMarioEnvironment(gl) {
         soil.checker = true;
         rounded(p,'DarkGrassLip',edge,[0,-0.12,0],[w+0.10,0.23,d+0.10],0.10);
         rounded(p,'GrassSurface',grass,[0,-0.055,0],[w+0.08,0.11,d+0.08],0.045).materialKind=1;
-        node(p,'DrapedTurf',turfSkirt(w+0.09,d+0.09),edge,[0,0,0]);
         return p;
     }
     root.surfaceY=0;
