@@ -129,21 +129,14 @@ function createMarioEnvironment(gl) {
     for(const [x,z] of [[-4.8,0.5],[-3.8,1.9],[3.8,1.8],[4.8,-0.5]]) {
         ball(root,'Pebble',[0.54,0.61,0.43],[x,0.065,z],[0.14,0.08,0.11]);
     }
-    // An outer loop of landmarks leaves the character stage and orbit sightlines open.
-    // Foreground islands stay low; these become the background at 180 degrees.
+    // Side islands frame the main platform; rear extensions remain removed.
     platform(-7.8,4.4,3.0,2.7,-0.8,1.4);
     platform(7.5,4.8,3.1,3.0,-0.65,1.55);
-    platform(-5.0,18.7,3.6,3.0,-0.35,1.7);
-    platform(0.0,21.2,3.2,2.8,0.25,2.25);
-    platform(5.6,19.5,3.7,3.3,0.7,2.8);
     platform(-11.3,0.0,2.8,3.6,0.15,2.3);
     platform(11.9,0.8,3.1,3.6,0.5,2.65);
-    pipe(-5.4,-0.35,18.5,1.1);pipe(5.8,0.7,19.7,1.25);
     pipe(-11.4,0.15,-0.6,1.0);
     mushroom(-7.7,-0.8,4.5,0.8,[0.94,0.13,0.16]);
     mushroom(7.7,-0.65,4.6,0.8,green);
-    mushroom(-4.2,-0.35,18.6,0.65,green);
-    mushroom(0.7,0.25,21.1,0.75,[0.94,0.13,0.16]);
     mushroom(11.8,0.5,1.0,1.05,[0.94,0.13,0.16]);
 
     // Hills and cloud banks surround the level, with faces turned toward the stage.
@@ -158,22 +151,6 @@ function createMarioEnvironment(gl) {
         ball(c,'CloudPuff',white,[0.5,-0.07,0],[0.46,0.34,0.39]);eyes(c,0.28,0.43,0.13);
     }
 
-    // A static curving stream at meadow level, built as a geometric ribbon.
-    const riverData={positions:[],normals:[],indices:[]};
-    const riverX=z=>-12.8+Math.sin(z*0.19)*1.65;
-    for(let i=0;i<=64;i++) {
-        const z=-28+i*0.9;
-        for(const side of [-1,1]) {
-            riverData.positions.push(riverX(z)+side*0.85,-2.352,z);
-            riverData.normals.push(0,1,0);
-        }
-        if(i<64){const k=i*2;riverData.indices.push(k,k+1,k+2,k+1,k+3,k+2);}
-    }
-    node(root,'WindingStream',Primitives.createMeshBuffer(gl,riverData),[0.08,0.62,0.86],[0,0,0]).materialKind=2;
-    for(let i=0;i<14;i++) {
-        const z=-19+i*3.2;
-        for(const side of [-1,1])ball(root,'RiverStone',[0.50,0.57,0.49],[riverX(z)+side*1.02,-2.28,z],[0.22+(i%3)*0.055,0.13,0.20]);
-    }
     function tree(x,y,z,size=1) {
         const t=node(root,'RoundTree',null,white,[x,y,z],[size,size,size]);
         node(t,'TreeTrunk',cylinder,[0.48,0.27,0.11],[0,0.65,0],[0.15,1.3,0.15]);
@@ -190,28 +167,9 @@ function createMarioEnvironment(gl) {
         const cloth=cube(p,'FlagCloth',[0.93,0.18,0.15],[0.32,1.87,0],[0.6,0.40,0.035]);
         ball(cloth,'FlagEmblem',white,[0,0,0.55],[0.17,0.24,0.06]);
     }
-    flag(-0.9,0.25,21.5);flag(11.7,0.5,-0.5);
+
+    flag(11.7,0.5,-0.5);
     platform(11,-16,5.1,4.6,-0.3,2.0);
-    const mill=node(root,'GardenWindmill',null,white,[-11,meadowTop,18]);
-    node(mill,'MillTower',Primitives.createConeFrustum(gl,0.74,0.44,2.6,24,1,true),[0.94,0.84,0.61],[0,1.3,0]);
-    node(mill,'MillRoof',Primitives.createConeFrustum(gl,0.67,0,0.82,24,1,true),[0.20,0.55,0.58],[0,3.0,0]);
-    const rotor=node(mill,'WindmillRotor',null,white,[0,2.12,0.59]);
-    for(let i=0;i<4;i++) {
-        const blade=node(rotor,'SailPivot',null,white,[0,0,0],[1,1,1],[0,0,i*Math.PI/2]);
-        rounded(blade,'WoodSailFrame',[0.48,0.30,0.16],[0,0.63,0],[0.10,1.26,0.07],0.025);
-        rounded(blade,'CreamSail',[0.99,0.91,0.68],[0.17,0.79,0.015],[0.34,0.77,0.035],0.015);
-    }
-    ball(rotor,'RotorHub',[1,0.72,0.21],[0,0,0.07],[0.15,0.15,0.09]);
-
-    // Water emerges from the upper pool and cascades into a basin beside the river.
-    ball(root,'SpringPool',[0.12,0.72,0.88],[-9,1.515,-11.0],[0.61,0.025,1.22]).materialKind=2;
-    const waterfall=cube(root,'Waterfall',[0.28,0.78,0.93],[-9,(1.48+meadowTop)/2,-9.465],[0.72,1.48-meadowTop,0.055]);waterfall.materialKind=5;
-    ball(root,'WaterfallBasin',[0.16,0.68,0.84],[-9,meadowTop+0.045,-9.0],[1.15,0.04,0.82]).materialKind=2;
-    for(let i=0;i<7;i++)ball(root,'CascadeFoam',white,[-9.42+i*0.14,meadowTop+0.09,-9.37+(i%2)*0.10],[0.14,0.055,0.11]);
-    for(let i=0;i<10;i++) {
-        const drop=ball(root,'WaterSpray',[0.74,0.95,1],[-9+(i%3-1)*0.23,meadowTop+0.2,-9.27],[0.025,0.05,0.025]);
-
-    }
     // A distant, low silhouette prevents the meadow ending at a hard straight horizon.
     for(let i=0;i<18;i++) {
         const a=i*Math.PI*2/18;

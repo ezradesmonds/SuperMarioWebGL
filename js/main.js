@@ -428,8 +428,11 @@ function renderLoop(timestamp) {
     const poseTime = animMode === 'idle' ? 1 : accumTime;
     yoshiNode.animate(poseTime,poseMode);toadNode.animate(poseTime,poseMode);bowserJrNode.animate(poseTime,poseMode);
     if (animMode === 'idle') {
-        // A completely still base pose: no breathing, blinking or joint motion.
-        for (const character of [yoshiNode, toadNode, bowserJrNode]) character.resetAnim();
+        // Keep the body still and apply blinking after resetting the pose.
+        for (const character of [yoshiNode, toadNode, bowserJrNode]) {
+            character.resetAnim();
+            animateBlink(character, accumTime);
+        }
     }
     yoshiNode.setTransform([-2.8,0,0.15],[0,0.15,0]);
     toadNode.setTransform([0,0,0]);bowserJrNode.setTransform([2.8,0,0.15],[0,-0.20,0]);
@@ -442,7 +445,10 @@ function renderLoop(timestamp) {
             character.animate(0, 'idle');
             character.restFootY = characterFootY(character);
             character.animate(poseTime, animation);
-            if (animMode === 'idle') character.resetAnim();
+            if (animMode === 'idle') {
+                character.resetAnim();
+                animateBlink(character, accumTime);
+            }
         }
         if (animMode === 'walk') applyWalkMovement(character, accumTime, chaseOrder.indexOf(character));
         const currentFootY = characterFootY(character);
