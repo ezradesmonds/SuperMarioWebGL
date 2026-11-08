@@ -1,12 +1,13 @@
-const world=document.getElementById('world'),music=document.getElementById('music'),seek=document.getElementById('seek');
-const scenes=[[0,"","Pada suatu hari, di Mushroom Kingdom yang damai..."],[5,"","Toad sedang menikmati paginya yang tenang."],[10,"","Tiba-tiba, Bowser Jr. muncul dari kejauhan."],[13,"","Dia datang untuk mengganggu Toad."],[16,"","Sementara itu, Yoshi memperhatikan mereka dari jauh."],[21,"","Toad berjalan santai, tanpa curiga apa-apa."],[25,"","Bowser Jr. mulai mengejarnya!"],[29,"","Toad pun berlari secepat mungkin."],[32,"",""],[33,"","Melihat itu, Yoshi ikut berlari dan bergabung."],[37,"","Kejar-kejaran pun semakin seru dan kacau."],[40,"",""],[41,"","Tiba-tiba, Yoshi berubah menjadi sebuah telur!"],[44,"","Telur itu menggelinding cepat menuju Bowser Jr."],[46,"","BRAK!"],[47.5,"","Yoshi pun kembali ke bentuk semula."],[50,"","Bowser Jr. menyerah dan pusing sendiri."],[54,"","Akhirnya, mereka berjalan bersama dengan damai."],[58,"",""],[60,"","Dan petualangan mereka pun belum berakhir."],[64,"","THE END"]];
-let t=0,playing=false,last=0,ready=false;
-music.volume=.65;
-function draw(){if(!ready)return;world.contentWindow.drawFilmFrame(t);let i=Math.max(0,scenes.findLastIndex(s=>t>=s[0]));const s=scenes[i],end=scenes[i+1]?.[0]??68;document.getElementById('eyebrow').textContent=s[1];document.getElementById('title').textContent=s[2];document.getElementById('caption').style.opacity=Math.max(0,Math.min(1,(t-s[0])/.65,(end-t)/.5));document.getElementById('fade').style.opacity=Math.max(0,(t-66.5)/1.5);music.volume=.65*Math.max(0,Math.min(1,(68-t)/1.5));seek.value=t;document.getElementById('time').textContent=Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0')+' / 1:08';}
-function toggle(){if(!ready)return;if(t>=68)t=0;playing=!playing;last=performance.now();document.getElementById('play').textContent=playing?'Jeda':'Putar';if(playing){music.currentTime=t;music.play().catch(()=>{});}else music.pause();}
-world.addEventListener('load',()=>{ready=true;draw();toggle();});
-document.getElementById('play').onclick=toggle;
-seek.oninput=()=>{t=Number(seek.value);music.currentTime=t;last=performance.now();draw();};
-
-window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='z'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){e.preventDefault();if(!e.repeat)location.assign('index.html');return;}if(e.code==='Space'&&e.target.tagName!=='INPUT'){e.preventDefault();toggle();}});
-function tick(now){if(playing){t=Math.max(0,Math.min(68,t+Math.max(0,now-last)/1000));draw();if(t>=68){playing=false;music.pause();document.getElementById('play').textContent='Ulangi';}}last=now;requestAnimationFrame(tick);}requestAnimationFrame(tick);
+const video = document.getElementById('trailer');
+video.play().catch(() => { /* Native controls allow playback if autoplay is blocked. */ });
+window.addEventListener('keydown', event => {
+    if (event.ctrlKey || event.altKey || event.metaKey) return;
+    if (event.key.toLowerCase() === 'z') {
+        event.preventDefault();
+        if (!event.repeat) location.assign('index.html');
+    } else if (event.code === 'Space' && !['BUTTON', 'INPUT', 'A'].includes(event.target.tagName)) {
+        event.preventDefault();
+        if (video.paused) video.play().catch(() => {});
+        else video.pause();
+    }
+});
