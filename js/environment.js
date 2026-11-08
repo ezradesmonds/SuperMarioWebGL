@@ -8,17 +8,15 @@ function createMarioEnvironment(gl) {
     const cylinder = Primitives.createCylinder(gl,1,1,32,1,true);
     const detailSphere=Primitives.createEllipsoid(gl,1,1,1,8,12);
     const hillSphere=Primitives.createEllipsoid(gl,1,1,1,28,36);
-    const shadowFootprints = [];
     const meadowTop = -2.5 + 0.25 / 2;
     root.groundY = meadowTop;
     root.walkCenterZ = 2.0; // Chase circle stays on the square main stage.
     const platformFootprints = [];
-    root.shadowFootprints = shadowFootprints;
     function node(parent,name,mesh,color,pos,scale=[1,1,1],rot=[0,0,0]) {
         return parent.add(new SceneNode(name,mesh,color,24).setTransform(pos,rot,scale));
     }
     function ball(parent,name,color,pos,scale) {
-        const small=/^(Eye|HillSpeck|GrassBlade|GardenLeaf|DoorKnob|WaterSpray|CascadeFoam|RedFruit|CornerRivet)$/.test(name);
+        const small=/^(Eye|HillSpeck|RedFruit)$/.test(name);
         return node(parent,name,small?detailSphere:sphere,color,pos,scale);
     }
     function cube(parent,name,color,pos,scale) { return node(parent,name,box,color,pos,scale); }
@@ -55,7 +53,6 @@ function createMarioEnvironment(gl) {
     cube(root,'Meadow',[0.26,0.67,0.24],[0,-2.5,0],[100,0.25,100]).materialKind = 1;
     function pipe(x,y,z,h) {
         const p=node(root,'WarpPipe',null,white,[x,y,z]);
-        shadowFootprints.push([x-0.22,z-0.15,y,0.75]);
         node(p,'PipeBody',cylinder,green,[0,h/2,0],[0.49,h,0.49]);
         node(p,'ThickLip',cylinder,[0.18,0.75,0.22],[0,h-0.04,0],[0.60,0.24,0.60]);
         node(p,'DarkOpening',cylinder,[0.025,0.15,0.055],[0,h+0.085,0],[0.48,0.012,0.48]);
@@ -125,7 +122,6 @@ function createMarioEnvironment(gl) {
         node(t,'TreeTrunk',cylinder,[0.48,0.27,0.11],[0,0.65,0],[0.15,1.3,0.15]);
         for(const [dx,dy,dz,r] of [[0,1.7,0,0.75],[-0.45,1.4,0.1,0.55],[0.45,1.45,0.05,0.6]])ball(t,'TreeCrown',[0.24,0.62+dy*0.035,0.12],[dx,dy,dz],[r,r*1.1,r]);
         for(const [dx,dy,dz] of [[-0.4,1.4,0.56],[0.4,1.6,0.56],[0.1,2.1,0.55]])ball(t,'RedFruit',[0.94,0.13,0.09],[dx,dy,dz],[0.11,0.12,0.11]);
-        shadowFootprints.push([x-0.3,z-0.2,y,0.9*size]);
     }
     tree(-9.5,-2.37,8,1.05);tree(9.7,-2.37,8.8,1.2);tree(13,-2.37,-6,1.25);
     tree(-16,-2.37,-8,1.2);tree(4,-2.37,16,1.4);

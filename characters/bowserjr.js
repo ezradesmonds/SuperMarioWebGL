@@ -20,8 +20,6 @@ function createBowserJr(gl) {
     const C_HORN        = [0.96, 0.92, 0.70];
     const C_SHELL_SPIKE = [1.00, 0.91, 0.61];
     const C_SPIKE_BASE  = [0.68, 0.35, 0.12];
-    const C_FIRE_CORE   = [1.00, 0.92, 0.25];
-    const C_FIRE_OUTER  = [0.98, 0.32, 0.06];
 
     const root = new SceneNode("BowserJrRoot");
 
@@ -258,18 +256,6 @@ function createBowserJr(gl) {
         hairGroup.add(strand);
     }
 
-    // BOLA API BOWSER JR. (Muncul menyembur dari mulut saat mode Aksi / Environment!)
-    const fireballGroup = new SceneNode("FireballProjectile");
-    fireballGroup.setTransform([0, -0.08, 0.85]);
-    fireballGroup.scale = [0.001, 0.001, 0.001];
-    head.add(fireballGroup);
-
-    const fireCore = new SceneNode("FireCore", Primitives.createEllipsoid(gl, 0.16, 0.16, 0.22), C_FIRE_CORE, 100);
-    fireballGroup.add(fireCore);
-    const fireTailCone = new SceneNode("FireTailCone", Primitives.createConeFrustum(gl, 0.18, 0.01, 0.38, 18, 4, true), C_FIRE_OUTER, 80);
-    fireTailCone.setTransform([0, 0, -0.18], [-Math.PI / 2, 0, 0]);
-    fireballGroup.add(fireTailCone);
-
     // LENGAN: cone frustum + torus cuff + cone studs + ellipsoid fists
     // +Y connects to the shoulder; keep that end narrower than the wrist end.
     const upperArmMesh = Primitives.createConeFrustum(gl, 0.13, 0.049, 0.34);
@@ -360,8 +346,6 @@ function createBowserJr(gl) {
         if (combined) mode = "action";
         root.resetAnim();
         animateBlink(root, t);
-        fireballGroup.visible = false;
-        fireballGroup.scale = [0.001, 0.001, 0.001];
 
         if (mode === "walk") {
             const swing = Math.sin(t * 5.0);
@@ -399,7 +383,6 @@ function createBowserJr(gl) {
             }
             tailPivot.animRot = [0.18, Math.sin(t * 12) * 0.45, 0];
 
-            // Efek bola api dinonaktifkan.
         } else {
             // Idle Gagah (mirip pose dinamis gambar referensi!)
             const breath = Math.sin(t * 3.0);

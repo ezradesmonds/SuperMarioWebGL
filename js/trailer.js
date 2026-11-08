@@ -50,9 +50,6 @@
             pose(b,0.45+q*.28,'action',-1.65,6,Math.PI/2);
             pose(toad,q*.8,'action',1.6,6.1,-Math.PI/2,true);
             y.visible=false;
-            // A single fireball crosses the gap while Toad dodges it.
-            const fire=node(b,'FireballProjectile');
-            fire.scale=[.9,.9,.9];fire.animPos=[0,0,(q%1.4)*2];
             camera([0,-.7,6],8.5,0.12,0.13);
             subtitle='Satu lompatan. Satu kesempatan.';tag='BAHAYA MAKIN DEKAT';
         } else if(t < 20) {
@@ -67,9 +64,6 @@
             pose(y,0.52+q*.18,'action',-1.15,7.2,Math.PI/2);
             pose(b,t,'idle',1.05,7.2,-Math.PI/2);
             pose(toad,t,'idle',3.1,6.1,-Math.PI/2);
-            // Build one readable attack rather than repeating the tongue cycle.
-            const strike=ease(q/.55)*(1-ease((q-1.35)/.6));
-            const tongue=node(y,'TonguePivot');tongue.scale=[1,1,.15+strike*1.48];
             const head=node(y,'YoshiHead');head.animRot=[0,0,0];
             if(q>0.65) {
                 const recoil=ease((q-.65)/.7);

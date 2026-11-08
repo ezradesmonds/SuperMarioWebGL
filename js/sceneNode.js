@@ -123,22 +123,6 @@ class SceneNode {
     }
 }
 
-// Thin front ellipsoid surface, with no solid back half. The top edge is the scale pivot.
-function addBlinkEyelid(gl, root, eye, color, radii) {
-    const [rx, ry, rz] = radii;
-    const patch = Primitives.createEllipsoidPatch(gl, rx, ry, rz, [0, 0, 1], Math.PI / 2, 16, 32, 0.003);
-    const lid = new SceneNode('BlinkEyelid', patch, color, 22);
-    const top = ry + 0.002;
-    // Move the curved patch inward relative to its own depth.
-    lid.setTransform([0, top, -rz * 0.15]);
-    lid.setGeomTransform([1, 1, 1], [0, -top, 0]);
-    lid.animScale = [1, 0.001, 1];
-    lid.visible = false;
-    eye.add(lid);
-    if (!root.eyelids) root.eyelids = [];
-    root.eyelids.push(lid);
-}
-
 function animateBlink(root, t) {
     // One 0.32-second blink every three seconds.
     const phase = t % 3;
@@ -146,8 +130,5 @@ function animateBlink(root, t) {
     for (const eye of root.blinkEyes || []) {
         eye.animScale = [1, 1 - closed * 0.95, 1];
     }
-    for (const lid of root.eyelids || []) {
-        lid.visible = closed > 0.001;
-        lid.animScale = [1, Math.max(0.001, closed), 1];
-    }
+
 }

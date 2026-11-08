@@ -150,52 +150,7 @@ const FS_SOURCE = `
     }
 `;
 
-const CHAR_DESCRIPTIONS = {
-    env: `
-        <b>Dunia Mario ? Mushroom Kingdom</b>
-        <ul>
-            <li>Yoshi, Toad, dan Bowser Jr. berdampingan di platform rumput utama.</li>
-            <li>Platform bertingkat dengan tanah checkerboard, pipa hijau, blok tanda tanya, dan bata.</li>
-            <li>Bukit, awan bermata, jamur, dan semak.</li>
-            <li>Pilih Idle, Berjalan, atau Aksi untuk animasi asli karakter.</li>
-        </ul>
-    `,
-    all: `
-        <b>Studio Mode - Kelompok Super Mario (3 Karakter):</b>
-        <ul>
-            <li><b>1. Yoshi:</b> Pipi putih lebar, mulut merah terbuka & lidah Bezier, moncong bulat besar, bintik telur <i>flush surface patch</i>, ekor & jambul Cone, pelana Torus & Bezier.</li>
-            <li><b>2. Toad:</b> Mushroom cap duduk pas di atas dahi (wajah & mata terlihat 100% utuh), 5 bintik merah <i>flush surface patch</i>, rompi biru V-neck terbuka (Open Frustum) dengan lis emas Bezier.</li>
-            <li><b>3. Bowser Jr.:</b> Pipi tembem krem & moncong bulat dengan taring Cone, bib/bandana segitiga rapi di leher (plastron perut terlihat utuh), alis & rambut merah Bezier, shell berduri Cone.</li>
-        </ul>
-    `,
-    yoshi: `
-        <b>1. YOSHI (High-Fidelity Model)</b>
-        <ul>
-            <li><b>Ellipsoid:</b> Kepala, pipi putih lebar, moncong bulat besar, badan oval, mata menonjol, sepatu boots, telur polkadot (<i>Flush Surface Patch</i>).</li>
-            <li><b>Cylinder:</b> Leher, lengan atas & bawah, kaki.</li>
-            <li><b>Quadric Non-Ellipsoid/Cylinder:</b> <b>Cone</b> pada ekor meruncing & 3 jambul duri merah belakang kepala; <b>Torus</b> pada cincin saddle & sepatu.</li>
-            <li><b>Curve (3D Cubic Bezier):</b> Lidah panjang yang bisa menjulur, bibir senyum, arch saddle merah, dan garis kontur perut putih.</li>
-        </ul>
-    `,
-    toad: `
-        <b>2. TOAD (High-Fidelity Model)</b>
-        <ul>
-            <li><b>Ellipsoid:</b> Kepala bulat cerah, Mushroom Cap besar + 5 bintik merah bulat rata (<i>Flush Ellipsoid Patch</i>), celana putih, tangan & jari, sepatu coklat.</li>
-            <li><b>Cylinder:</b> Lengan dan kaki.</li>
-            <li><b>Quadric Non-Ellipsoid/Cylinder:</b> <b>Cone / Frustum</b> pada torso/badan dan rompi biru terbuka depan, serta <b>Torus</b> pada lipatan bawah mushroom cap.</li>
-            <li><b>Curve (3D Cubic Bezier):</b> Lis emas tepi rompi biru (kiri, kanan, bawah), kurva senyum mulut, dan alur detail mushroom cap.</li>
-        </ul>
-    `,
-    bowserjr: `
-        <b>3. BOWSER JR. (High-Fidelity Model)</b>
-        <ul>
-            <li><b>Ellipsoid:</b> Kepala hijau, pipi krem tembem & moncong, badan kuning, plastron perut, kepalan tangan, telapak kaki, inti bola api.</li>
-            <li><b>Cylinder:</b> Lengan, paha/kaki, dan ikat rambut hitam.</li>
-            <li><b>Quadric Non-Ellipsoid/Cylinder:</b> <b>Cone</b> pada 2 tanduk kepala, 4 duri cangkang, gigi taring, 6 kuku kaki, stud gelang, ekor, & ujung bandana; <b>Torus</b> pada rim shell & gelang besi.</li>
-            <li><b>Curve (3D Cubic Bezier):</b> Alis merah menyala, 3 helai rambut merah ponytail, lukisan mulut monster pada bib/bandana, garis segmen perut, dan senyum menyeringai.</li>
-        </ul>
-    `
-};
+
 
 function compileShader(gl, type, source) {
     const s = gl.createShader(type);

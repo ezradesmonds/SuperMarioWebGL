@@ -3,7 +3,7 @@
 // 1. Ellipsoid: Kepala, moncong bulat besar, pipi putih, badan, perut putih, mata, sepatu boots, jari, telur Yoshi (dengan flush surface patch spots)
 // 2. Cylinder: Leher, lengan bawah, dan batang kaki; paha memakai ellipsoid.
 // 3. Quadric lain: Cone frustum pada ekor, jambul, dan lengan atas. Torus adalah detail rim pelana dan cuff sepatu.
-// 4. Curve (3D Cubic Bezier Tube): Senyum terlihat pada moncong; mesh lidah tersimpan tetapi disembunyikan saat animasi.
+// 4. Curve (3D Cubic Bezier Tube): Senyum terlihat pada moncong.
 
 function createYoshi(gl) {
     const C_GREEN       = [0.20, 0.80, 0.22];
@@ -12,7 +12,6 @@ function createYoshi(gl) {
     const C_RED         = [0.92, 0.16, 0.14];
     const C_CREST       = [0.94, 0.28, 0.12];
     const C_DARK_MOUTH  = [0.55, 0.08, 0.12];
-    const C_TONGUE      = [0.96, 0.36, 0.48];
     const C_ORANGE_BOOT = [0.95, 0.42, 0.10];
     const C_YELLOW_SOLE = [0.98, 0.84, 0.18];
     const C_BLACK       = [0.06, 0.06, 0.08];
@@ -123,26 +122,6 @@ function createYoshi(gl) {
         smileLip.add(new SceneNode('SmileBezierSegment', mesh, C_DARK_MOUTH, 18));
     }
     chin.add(smileLip);
-
-    // CURVE 4: Lidah Panjang Yoshi (3D Cubic Bezier Curve yang bisa menjulur saat aksi!)
-    const tonguePivot = new SceneNode("TonguePivot");
-    tonguePivot.setTransform([0, -0.22, 0.42]);
-    head.add(tonguePivot);
-
-    const tongueCurveMesh = Primitives.createBezierTube(
-        gl,
-        [0, 0, 0],
-        [0, 0.04, 0.35],
-        [0, 0.02, 0.70],
-        [0, 0.0, 1.05],
-        0.075, 0.095
-    );
-    const tongueNode = new SceneNode("YoshiBezierTongue", tongueCurveMesh, C_TONGUE, 35);
-    tonguePivot.add(tongueNode);
-    const tongueTip = new SceneNode("TongueTip", Primitives.createEllipsoid(gl, 0.11, 0.09, 0.12), C_TONGUE, 35);
-    tongueTip.setTransform([0, 0, 1.05]);
-    tonguePivot.add(tongueTip);
-    tonguePivot.scale = [0.2, 0.2, 0.15]; // Default tersimpan di dalam mulut
 
     // MONCONG BULAT BESAR KHAS YOSHI (Proporsi pas di depan atas mulut)
     const snoutMesh = Primitives.createEllipsoid(gl, 0.50, 0.45, 0.52);
@@ -293,12 +272,7 @@ function createYoshi(gl) {
         eggPivot.visible = false;
         body.visible = true;
         body.scale = [1, 1, 1];
-        // One smooth full-eye blink every three seconds.
-        const blinkPhase = ((t % 3) + 3) % 3;
-        const closed = blinkPhase < 0.32 ? Math.sin(Math.PI * blinkPhase / 0.32) ** 2 : 0;
-        for (const eye of root.blinkEyes) eye.animScale = [1, 1 - closed * 0.95, 1];
-        tonguePivot.visible = false;
-        tonguePivot.scale = [0.2, 0.2, 0.15];
+        animateBlink(root, t);
 
         if (mode === "walk") {
             const swing = Math.sin(t * 4.5);
