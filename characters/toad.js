@@ -89,10 +89,12 @@ function createToad(gl) {
     // mata hitam dan pantulan cahayanya sama-sama memakai ellipsoid.
     const eyeBlackMesh = Primitives.createEllipsoid(gl, 0.055, 0.115, 0.045);
     const eyeShineMesh = Primitives.createEllipsoid(gl, 0.026, 0.045, 0.03);
+    root.blinkEyes = [];
     for (const side of [-1, 1]) {
         const eye = new SceneNode("ToadEye", eyeBlackMesh, C_BLACK, 90);
         eye.setTransform([side * 0.15, 0.02, 0.41], [0, side * 0.15, 0]);
         head.add(eye);
+        root.blinkEyes.push(eye);
 
         const shine = new SceneNode("ToadEyeShine", eyeShineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.012, 0.04, 0.035]);
@@ -231,7 +233,10 @@ function createToad(gl) {
 
     // animasi badan diteruskan ke bagian tubuh yang terhubung melalui susunan induk-anak.
     root.animate = function(t, mode) {
+        const combined = mode === "combined";
+        if (combined) mode = "walk";
         root.resetAnim();
+        animateBlink(root, t);
         if (mode === "walk") {
             const swing = Math.sin(t * 5.5);
             const bounce = Math.abs(Math.cos(t * 5.5));
