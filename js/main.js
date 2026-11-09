@@ -6,6 +6,9 @@ let lightingMode = "day";
 
 let viewMode = "env";    // 'all', 'yoshi', 'toad', 'bowserjr'
 let animMode = "walk";    // 'walk' (combined movement), 'action', 'idle'
+let storyboardScene = false;
+let storyboardTime = 0;
+let storyboardCamera = null;
 
 // Camera Orbit State
 let camYaw = 0.0;
@@ -269,6 +272,20 @@ function setAnimMode(mode) {
     setViewMode(viewMode);
 }
 
+function setSceneMode(mode) {
+    if (mode === 'idle' || mode === 'walk') {
+        storyboardScene = false;
+        animMode = mode;
+        yoshiNode.eggMode = false;
+        setViewMode('env');
+    } else if (mode === 'trailer') {
+        storyboardScene = true;
+        storyboardTime = 0;
+        storyboardCamera = null;
+        lastTimestamp = 0;
+    }
+}
+
 // Available anywhere on the page, without clicking the canvas first.
 function setupCharacterShortcuts() {
     const modes = { '0': 'env', '1': 'bowserjr', '2': 'toad', '3': 'yoshi' };
@@ -293,8 +310,8 @@ function setupCharacterShortcuts() {
             event.preventDefault();
             return;
         }
-        if (key === 'i' || key === 'o') {
-            setAnimMode(key === 'i' ? 'idle' : 'walk');
+        if (key === 'p' || key === 'o' || key === 'i') {
+            setSceneMode(key === 'p' ? 'idle' : key === 'o' ? 'walk' : 'trailer');
             event.preventDefault();
             return;
         }
@@ -342,7 +359,10 @@ function setupMouseControls(canvas) {
         else if(e.key==='ArrowRight')camYaw+=0.08;
         else if(e.key==='ArrowUp')camPitch=Math.min(1.3,camPitch+0.05);
         else if(e.key==='ArrowDown')camPitch=Math.max(-0.35,camPitch-0.05);
-        else if(e.key.toLowerCase()==='r')setViewMode(viewMode);
+        else if(e.key.toLowerCase()==='r') {
+            if (storyboardScene) storyboardCamera = null;
+            else setViewMode(viewMode);
+        }
         else return;
         e.preventDefault();
     });
@@ -368,6 +388,97 @@ function applyWalkMovement(character, t, followerIndex = 0) {
     character.animAxisAngle = Math.sin(t * 4.5) * 0.09;
 }
 
+function renderTrailerScene(t) {
+    const y = yoshiNode, b = bowserJrNode, toad = toadNode;
+    const ground = environmentNode.surfaceY;
+    const mix = (a, b, q) => a + (b - a) * q;
+    const ease = value => { value = Math.max(0, Math.min(1, value)); return value * value * (3 - 2 * value); };
+    function pose(character, time, mode, x, z, yaw, jump = false) {
+        character.visible = true;
+        character.animate(time, mode);
+        character.setTransform([x, 0, z], [0, yaw, 0]);
+        if (character.restFootY === undefined) {
+            character.animate(0, 'idle'); character.restFootY = characterFootY(character); character.animate(time, mode);
+        }
+        const foot = characterFootY(character);
+        character.position[1] = ground - (jump ? Math.min(foot, character.restFootY) : foot);
+    }
+    function camera(target, distance, yaw, pitch) {
+        if (!storyboardCamera) {
+            camTarget = target; camDist = distance; camYaw = yaw; camPitch = pitch;
+            storyboardCamera = { target: [...target], distance, yaw, pitch };
+        }
+    }
+    lightingMode = t > 29 ? 'golden' : 'day';
+    pose(y, t, 'idle', -4.2, 5.2, 0.45);
+    pose(toad, t, 'idle', 1.4, 6.4, -0.2);
+    pose(b, t, 'idle', -2, 6.2, 0.8);
+    if (t < 4) {
+        y.visible = b.visible = false;
+        camera([0, 0.2, -1], mix(26, 19, ease(t / 4)), 0.32 - t * 0.03, 0.34);
+    } else if (t < 12) {
+        const q = t - 4, a = q * 0.65, r = 2.25, center = environmentNode.walkCenterZ;
+        pose(toad, t * 1.55, 'walk', Math.cos(a) * r, center + Math.sin(a) * r, -a);
+        pose(b, t * 1.45, 'walk', Math.cos(a - 1.12) * r, center + Math.sin(a - 1.12) * r, -a + 1.12);
+        y.visible = false;
+        camera([0, 1.575, center], 10.8, 0.18 + Math.sin(q * 0.2) * 0.16, 0.19);
+    } else if (t < 16) {
+        const q = t - 12;
+        pose(b, 0.45 + q * 0.28, 'action', -1.65, 6, Math.PI / 2);
+        pose(toad, q * 0.8, 'action', 1.6, 6.1, -Math.PI / 2, true);
+        y.visible = false;
+        camera([0, -0.7, 6], 8.5, 0.12, 0.13);
+    } else if (t < 20) {
+        const q = t - 16;
+        pose(y, t, 'walk', mix(-4, -1.6, ease(q / 3)), 7.2, Math.PI / 2);
+        pose(b, t, 'idle', 1.5, 7.2, -Math.PI / 2);
+        pose(toad, t, 'idle', 3.3, 6.1, -Math.PI / 2);
+        camera([-1.4, -0.65, 7.2], mix(7, 8.5, ease(q / 4)), 0.32, 0.16);
+    } else if (t < 25) {
+        const q = t - 20;
+        pose(y, 0.52 + q * 0.18, 'action', -1.15, 7.2, Math.PI / 2);
+        pose(b, t, 'idle', 1.05, 7.2, -Math.PI / 2);
+        pose(toad, t, 'idle', 3.1, 6.1, -Math.PI / 2);
+        const head = findSceneNode(y, 'YoshiHead'); head.animRot = [0, 0, 0];
+        if (q > 0.65) {
+            const recoil = ease((q - 0.65) / 0.7);
+            b.position[0] += recoil * 0.9;
+            b.animAxis = [1, 0, 1]; b.animAxisAngle = -Math.sin(Math.min(1, (q - 0.65) / 1.2) * Math.PI / 2) * 0.6;
+            b.position[1] = ground - characterFootY(b);
+        }
+        camera([0.2, -0.7, 7.1], 8.8, 0.15, 0.18);
+    } else if (t < 29) {
+        const q = t - 25;
+        pose(y, t, 'idle', -1.1, 7.2, 0.25);
+        pose(toad, q * 0.7, 'action', 1.2, 7.2, -0.2, true);
+        pose(b, t * 1.5, 'walk', mix(2.8, 9, ease(q / 4)), 6.7, Math.PI / 2);
+        b.animAxis = [1, 0, 1]; b.animAxisAngle = Math.sin(q * 9) * 0.16;
+        b.position[1] = ground - characterFootY(b);
+        camera([0.3, -0.75, 7.1], 9.3, -0.12, 0.16);
+    } else if (t < 33) {
+        const q = t - 29;
+        pose(y, t, 'idle', -1.15, 7.1, 0.15);
+        pose(toad, q * 0.7, 'action', 1.15, 7.1, -0.15, true);
+        b.visible = false;
+        camera([0, -0.6, 7], mix(8.5, 7.2, ease(q / 4)), 0.12 - q * 0.04, 0.15);
+    } else {
+        const q = t - 33;
+        pose(y, t, 'idle', -2.8, 0.15, 0.15); y.position[1] = -characterFootY(y);
+        pose(toad, t, 'idle', 0, 0, 0); toad.position[1] = -characterFootY(toad);
+        pose(b, t, 'idle', 2.8, 0.15, -0.2); b.position[1] = -characterFootY(b);
+        camera([0, 1, -1], 18.5 - q * 0.25, 0.12, 0.25);
+    }
+    renderWorld([environmentNode, y, toad, b], t >= 33 ? 0 : ground);
+}
+
+function findSceneNode(root, name) {
+    if (root.name === name) return root;
+    for (const child of root.children) {
+        const found = findSceneNode(child, name);
+        if (found) return found;
+    }
+}
+
 function renderLoop(timestamp) {
     if (window.Trailer && window.Trailer.active) {
         window.Trailer.frame(timestamp);
@@ -379,6 +490,12 @@ function renderLoop(timestamp) {
     const canvas=gl.canvas,ratio=Math.min(window.devicePixelRatio||1,1.5);
     const width=Math.round(canvas.clientWidth*ratio),height=Math.round(canvas.clientHeight*ratio);
     if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+    if (storyboardScene) {
+        storyboardTime += dt;
+        renderTrailerScene(storyboardTime);
+        requestAnimationFrame(renderLoop);
+        return;
+    }
     const poseMode = animMode === 'walk' ? 'combined' : animMode;
     const poseTime = animMode === 'idle' ? 1 : accumTime;
     yoshiNode.animate(poseTime,poseMode);toadNode.animate(poseTime,poseMode);bowserJrNode.animate(poseTime,poseMode);

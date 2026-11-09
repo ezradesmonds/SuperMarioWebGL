@@ -4,7 +4,7 @@
 // senyum, detail topi, dan lis emas rompi dibuat dari kurva Bezier 3D berbentuk tabung.
 // warna dan bentuk disusun agar tampil seperti Toad; environment dibuat di file terpisah.
 // posisi, rotasi, dan skala bagian model diatur melalui transformasi pada SceneNode.
-// SceneNode mendukung rotasi X/Y/Z serta axis-angle untuk goyangan pada sumbu diagonal.
+// rotasi terhadap sumbu sembarang belum tersedia di sini; SceneNode hanya memakai sumbu X, Y, dan Z.
 // badan menjadi induk bagi rompi, celana, kepala, bahu, dan pinggul.
 // bagian anak mengikuti gerak induknya, seperti susunan cabang tubuh di bawah ini.
 
@@ -25,8 +25,6 @@ function createToad(gl) {
     const torsoFrustumMesh = Primitives.createConeFrustum(gl, 0.39, 0.29, 0.56, 28, 6, true);
     const body = new SceneNode("ToadTorsoFrustum", torsoFrustumMesh, C_SKIN, 22);
     body.setTransform([0, 0.78, 0]);
-    // Scale the complete body hierarchy; root placement is reset by the scene each frame.
-    body.scale = [0.65, 0.65, 0.65];
     root.add(body);
 
     // rompi biru terbuka di depan supaya bagian dada tetap terlihat.
@@ -99,8 +97,6 @@ function createToad(gl) {
         const shine = new SceneNode("ToadEyeShine", eyeShineMesh, C_WHITE, 100);
         shine.setTransform([side * -0.012, 0.04, 0.035]);
         eye.add(shine);
-        if (!root.blinkEyes) root.blinkEyes = [];
-        root.blinkEyes.push(eye);
 
     }
 
@@ -117,31 +113,12 @@ function createToad(gl) {
 
     // kubah topi memakai ellipsoid; lima bintik merah mengikuti permukaan kubah.
     const capGroup = new SceneNode("MushroomCapGroup");
-    capGroup.setTransform([0, 0.72, -0.04], [-0.04, 0, 0]);
+    capGroup.setTransform([0, 0.64, -0.04], [-0.08, 0, 0]);
     // topi menjadi anak kepala; tepian, garis detail, dan bintik menempel pada grup topi.
     head.add(capGroup);
 
-    const capRx = 0.87, capRy = 0.72, capRz = 0.80;
-    // Gently compress the lower surface; apply the same shape to its red patches.
-    function flattenCapBottom(mesh) {
-        const positions = mesh.cpuPositions, normals = mesh.cpuNormals;
-        const edge = -0.28, depth = capRy + edge, flatten = 0.55;
-        for (let i = 0; i < positions.length; i += 3) {
-            if (positions[i + 1] >= edge) continue;
-            const distance = edge - positions[i + 1];
-            const derivative = 1 - flatten * distance / depth;
-            positions[i + 1] += flatten * distance * distance / (2 * depth);
-            normals[i + 1] /= derivative;
-            const length = Math.hypot(normals[i], normals[i + 1], normals[i + 2]);
-            for (let axis = 0; axis < 3; axis++) normals[i + axis] /= length;
-        }
-        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.position);
-        gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normal);
-        gl.bufferData(gl.ARRAY_BUFFER, normals, gl.STATIC_DRAW);
-        return mesh;
-    }
-    const capMainMesh = flattenCapBottom(Primitives.createEllipsoid(gl, capRx, capRy, capRz, 36, 36));
+    const capRx = 0.90, capRy = 0.62, capRz = 0.88;
+    const capMainMesh = Primitives.createEllipsoid(gl, capRx, capRy, capRz, 36, 36);
     const capMain = new SceneNode("MushroomCapMain", capMainMesh, C_WHITE, 45);
     capGroup.add(capMain);
 
@@ -164,31 +141,30 @@ function createToad(gl) {
 
     // bintik merah dibuat sebagai patch ellipsoid yang menempel pada kubah.
     const spotDirs = [
-        { dir: [0, 0.20, 0.98],   rad: 0.52 }, // Bintik depan besar, sedikit naik mengikuti kubah.
+        { dir: [0, 0.08, 0.99],   rad: 0.46 }, // Bintik Merah Depan Tengah (Ikonik!)
         { dir: [-0.96, 0.08, 0.12], rad: 0.44 }, // Bintik Merah Samping Kiri
         { dir: [0.96, 0.08, 0.12],  rad: 0.44 }, // Bintik Merah Samping Kanan
         { dir: [0, 0.08, -0.99],  rad: 0.45 }, // Bintik Merah Belakang
         { dir: [0, 0.99, -0.05],  rad: 0.42 }  // Bintik Merah Atas
     ];
     for (const sp of spotDirs) {
-        const patchMesh = flattenCapBottom(Primitives.createEllipsoidPatch(gl, capRx, capRy, capRz, sp.dir, sp.rad, 14, 28, 0.009));
+        const patchMesh = Primitives.createEllipsoidPatch(gl, capRx, capRy, capRz, sp.dir, sp.rad, 14, 28, 0.009);
         capMain.add(new SceneNode("FlushRedSpotPatch", patchMesh, C_RED, 50));
     }
 
-    // Lengan atas berupa frustum yang mengecil ke bahu; lengan bawah tetap silinder.
-    const upperArmMesh = Primitives.createConeFrustum(gl, 0.09, 0.034, 0.23);
+    // setiap lengan terdiri dari dua silinder yang disambungkan di siku dan pergelangan.
     const armCylMesh  = Primitives.createCylinder(gl, 0.09, 0.23);
     const elbowMesh   = Primitives.createEllipsoid(gl, 0.095, 0.095, 0.095);
-    const palmMesh    = Primitives.createEllipsoid(gl, 0.12, 0.10, 0.08);
+    const palmMesh    = Primitives.createEllipsoid(gl, 0.12, 0.10, 0.13);
     const fingerMesh  = Primitives.createEllipsoid(gl, 0.038, 0.038, 0.10);
 
     function createArm(side) {
         // susunan lengan: bahu → lengan atas → siku → lengan bawah → pergelangan → telapak → jari.
         const shoulder = new SceneNode(side < 0 ? "LeftShoulder" : "RightShoulder");
-        shoulder.setTransform([side * 0.30, 0.23, 0.18], [0.10, 0, side * 0.50]);
+        shoulder.setTransform([side * 0.30, 0.18, 0.18], [0.10, 0, side * 0.50]);
         body.add(shoulder);
 
-        const upperArm = new SceneNode("UpperArmFrustum", upperArmMesh, C_SKIN, 25);
+        const upperArm = new SceneNode("UpperArmCylinder", armCylMesh, C_SKIN, 25);
         upperArm.setTransform([0, -0.105, 0]);
         shoulder.add(upperArm);
 
@@ -206,18 +182,16 @@ function createToad(gl) {
         lowerArm.add(wrist);
 
         const hand = new SceneNode("PalmEllipsoid", palmMesh, C_SKIN, 25);
-        hand.setTransform([0, -0.04, 0.02], [0, side * Math.PI / 2, 0]);
+        hand.setTransform([0, -0.04, 0.02]);
         wrist.add(hand);
 
         for (let f = -1.5; f <= 1.5; f += 1.0) {
             const finger = new SceneNode("Finger", fingerMesh, C_SKIN, 25);
-            // Jari mengikuti arah telapak ke bawah, bukan menunjuk ke depan.
-            finger.setTransform([f * 0.042, -0.115, 0.01], [Math.PI / 2 - 0.10, 0, f * 0.10]);
+            finger.setTransform([f * 0.042, -0.05, 0.08], [0.2, f * 0.18, 0]);
             hand.add(finger);
         }
         const thumb = new SceneNode("Thumb", fingerMesh, C_SKIN, 25);
-        thumb.setTransform([side * -0.11, -0.025, 0.02], [Math.PI / 2 - 0.25, 0, side * -0.65]);
-        thumb.setGeomTransform([0.9, 0.9, 0.8]);
+        thumb.setTransform([side * -0.09, -0.01, 0.05], [0, side * -0.6, 0]);
         hand.add(thumb);
 
         return { shoulder, elbow, wrist };
@@ -257,10 +231,7 @@ function createToad(gl) {
 
     // animasi badan diteruskan ke bagian tubuh yang terhubung melalui susunan induk-anak.
     root.animate = function(t, mode) {
-        const combined = mode === "combined";
-        if (combined) mode = "action";
         root.resetAnim();
-        animateBlink(root, t);
         if (mode === "walk") {
             const swing = Math.sin(t * 5.5);
             const bounce = Math.abs(Math.cos(t * 5.5));
@@ -278,13 +249,17 @@ function createToad(gl) {
             leftLeg.hip.animRot  = [-swing * 0.70, 0, 0];
             rightLeg.hip.animRot = [swing * 0.70, 0, 0];
         } else if (mode === "action") {
-            // Toad melompat dengan tangan tetap pada pose dasar.
+            // toad melompat sambil mengangkat dan angkat kedua tangannya.
             const jump = Math.max(0, Math.sin(t * 4.5));
             body.animPos = [0, jump * 0.48, 0];
-            // Keep torso rotation neutral so this action can accompany the walking motion.
+            body.animRot = [-jump * 0.10, Math.sin(t * 2.2) * 0.20, 0];
 
             headPivot.animRot = [-0.10 * jump, Math.sin(t * 4.5) * 0.14, Math.sin(t * 9.0) * 0.08];
 
+            leftArm.shoulder.animRot  = [0, 0, -0.35 + Math.sin(t * 12) * 0.20];
+            rightArm.shoulder.animRot = [0, 0, 0.35 - Math.sin(t * 12) * 0.20];
+            leftArm.elbow.animRot = [-0.18, 0, 0];
+            rightArm.elbow.animRot = [-0.18, 0, 0];
 
             leftLeg.hip.animRot  = [jump * 0.45, 0, -jump * 0.12];
             rightLeg.hip.animRot = [-jump * 0.35, 0, jump * 0.12];
@@ -297,27 +272,6 @@ function createToad(gl) {
             rightArm.shoulder.animRot = [0, 0, 0.35 - Math.sin(t * 3.5) * 0.08];
             leftArm.elbow.animRot = [Math.sin(t * 2.8) * 0.04, 0, 0];
             rightArm.elbow.animRot = [-Math.sin(t * 2.8) * 0.04, 0, 0];
-        }
-        // High alternating steps and an occasional short kick while circling.
-        if (combined) {
-            const swing = Math.sin(t * 5.5);
-            const phase = t % 4.0;
-            const kick = phase >= 2.0 && phase < 2.8
-                ? Math.sin(Math.PI * (phase - 2.0) / 0.8) ** 2 : 0;
-            const kickingLeft = Math.floor(t / 4.0) % 2 === 0;
-            const stepWeight = 1 - kick;
-            // Replace the old repeated jumps with steps; one foot supports the body.
-            body.animPos = [0, 0, 0];
-            body.animRot = [0.04 + kick * 0.10, 0, 0];
-            headPivot.animRot = [-kick * 0.06, 0, Math.sin(t * 5.5) * 0.025];
-            leftLeg.hip.animRot = [-swing * 0.85 * stepWeight - (kickingLeft ? kick * 1.05 : 0), 0, 0];
-            rightLeg.hip.animRot = [swing * 0.85 * stepWeight - (!kickingLeft ? kick * 1.05 : 0), 0, 0];
-            leftLeg.hip.animPos = [0, Math.max(0, swing) * 0.10 * stepWeight, 0];
-            rightLeg.hip.animPos = [0, Math.max(0, -swing) * 0.10 * stepWeight, 0];
-            leftArm.shoulder.animRot = [swing * 0.50 * stepWeight - kick * 0.18, 0, -kick * 0.18];
-            rightArm.shoulder.animRot = [-swing * 0.50 * stepWeight - kick * 0.18, 0, kick * 0.18];
-            leftArm.elbow.animRot = [-swing * 0.12 * stepWeight, 0, 0];
-            rightArm.elbow.animRot = [swing * 0.12 * stepWeight, 0, 0];
         }
     };
 
