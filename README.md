@@ -3,6 +3,13 @@
 Proyek ini dibuat menggunakan **100% Pure WebGL 1.0 (Tanpa Three.js)** dan memenuhi seluruh ketentuan Praktikum Grafika Komputer serta spesifikasi pada dokumen `Mario_UTSGrafkom_Deskripsi Bentuk.pdf`.
 
 ## Cara Menjalankan
+
+Tekan **Z** untuk menyalakan rangkaian animasi karakter yang mengikuti urutan adegan video (sekitar 110 detik, berulang), tanpa tulisan dan musik. Kamera tetap bebas: drag kiri untuk orbit, drag kanan untuk pan, dan scroll untuk zoom. Tekan **Z** lagi untuk kembali ke gerakan biasa. Mode ini berjalan langsung di scene 3D dan tidak membuka pemutar MP4.
+
+Karakter muncul sesuai adegan: Toad pada pembuka, Bowser Jr. mulai detik 15, dan Yoshi mulai detik 34. Toad tetap tampil dan bergerak selama Yoshi keluar dari pipe.
+
+Yoshi keluar dari pipe sambil membesar, melompat masuk ke lintasan pengejaran, lalu berubah menjadi telur dan langsung menyusul untuk menabrak Bowser Jr. Bowser Jr. jatuh duduk lalu berdiri, sementara Yoshi memantul mundur ke posisi semula. Ketiganya kemudian kembali berjalan mengelilingi platform. Pergerakan antarbagian tersambung tanpa memindahkan karakter ke lokasi adegan lain.
+
 1. Ekstrak seluruh isi file ZIP ini ke dalam satu folder.
 2. Buka langsung file **`index.html`** menggunakan browser modern (Chrome, Edge, Brave, atau Firefox) — tidak memerlukan instalasi library eksternal atau web server karena seluruh script ditulis dalam Vanilla JavaScript murni.
 

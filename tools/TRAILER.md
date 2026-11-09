@@ -1,5 +1,28 @@
 # Mushroom Kingdom — trailer
 
+## Animasi karakter dengan kamera bebas
+
+Di halaman utama, **Z** mengaktifkan koreografi sekitar 110 detik berdasarkan urutan adegan `assets/videos/mushroom-kingdom-trailer.mp4`. Animasi diatur oleh `js/character-film.js`, menggunakan karakter dan environment proyek secara langsung. Karakter hanya ditampilkan saat hadir dalam adegannya, tanpa teks, audio, atau kamera otomatis. Kontrol orbit, pan, dan zoom tetap aktif. Adegan berulang setelah selesai; **Z** mematikannya dan mengembalikan mode tampilan sebelumnya beserta visibilitas semua karakter.
+
+| Waktu | Karakter yang tampil |
+|---|---|
+| 0–15 dtk | Toad |
+| 15–34 dtk | Toad dan Bowser Jr. |
+| 34–110 dtk | Ketiga karakter; Toad tetap tampil saat Yoshi keluar dari pipe |
+
+Pada pergantian adegan, posisi dan pose dihitung dari waktu animasi saat itu sehingga karakter muncul sesuai adegan, termasuk ketika timeline berulang.
+
+Urutan Yoshi berlangsung tanpa memindahkan karakter mendadak:
+
+- Detik 34–36: Yoshi keluar dari mulut pipe pada platform utama sambil membesar dari skala 0,04 menjadi 1.
+- Detik 36–40: Yoshi melompat dari pipe dan bergabung ke lintasan pengejaran. Kurva Hermite menyambungkan posisi serta kecepatan saat mendarat; Bowser Jr. tetap mengejar sepanjang kemunculan Yoshi.
+- Detik 64–68: Yoshi berubah menjadi telur di posisi larinya, lalu mempercepat gerak sepanjang lintasan sampai menyentuh punggung Bowser Jr.
+- Detik 68–70: Bowser Jr. jatuh ke posisi duduk dengan kaki ke depan dan cangkang menopang badan di lantai. Telur Yoshi memantul mundur ke posisi lintasannya sebelum menyusul, lalu kembali ke bentuk tubuhnya setelah mendarat.
+- Detik 70,5–72,5: Bowser Jr. berdiri kembali secara bertahap melalui rotasi pinggul, telapak, torso, dan lengan.
+- Detik 75–80: ketiganya menyambung gerak ke lintasan bersama. Mulai detik 80, ketiganya berjalan mengelilingi platform dengan kecepatan lebih santai dan jarak terjaga.
+
+## Studio video terpisah
+
 Trailer 36 detik, 1280 × 720, dibuat langsung dari scene dan model asli WebGL proyek.
 Tidak ada credits atau nama kelas pada versi ini.
 

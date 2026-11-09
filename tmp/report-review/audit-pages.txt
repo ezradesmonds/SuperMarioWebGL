@@ -1,0 +1,767 @@
+PAGE 1
+Laporan Project Grafika Komputer
+Super Mario
+Kelompok 2
+C14240060 Jonathan Matthew
+C14240036 Hauw Feliciano
+C14240176 Ezra Desmond Sutanto
+Mata Kuliah: Grafika Komputer | Kelas: A1 dan B
+Program Studi Informatika
+Universitas Kristen Petra
+Dosen Pengampu: Liliana, M.Eng.
+Tahun 2026
+PAGE 2
+A.Environment
+Mushroom Kingdom
+a. Konsep dan Peran Environment
+Environment proyek ini mengusung tema Mushroom Kingdom dengan
+suasana cerah dan gaya kartun. Elemen seperti platform berumput, bukit,
+pipa hijau, jamur, dan awan digunakan untuk memperkuat ciri khas dunia
+Super Mario. Selain menjadi latar, environment juga menyediakan ruang
+bagi Toad, Bowser Jr., dan Yoshi untuk berjalan, saling mengejar, dan
+berinteraksi sehingga cerita terasa lebih hidup.
+b. Breakdown Elemen Environment & Objek Pembentuk
+● Tanah dasar (Meadow)
+Tanah dasar menggunakan box berukuran 100 × 0,25 × 100
+satuan dengan warna hijau. Pusatnya berada pada [0, −2,5, 0],
+sehingga permukaan atasnya berada di Y = −2,375. Objek ini
+menjadi dasar tempat seluruh environment dibangun.
+● Platform utama
+Platform utama menjadi tempat Toad, Bowser Jr., dan Yoshi
+beraktivitas. Platform berbentuk persegi dengan ukuran 10,8 ×
+10,8 satuan, berpusat pada X = 0 dan Z = 2, serta memiliki
+permukaan pijakan di Y = 0. Area ini menyediakan ruang bagi
+ketiga karakter untuk berjalan melingkar dengan radius 2 satuan.
+● Platform bertingkat
+Di sekeliling platform utama terdapat beberapa platform
+tambahan di sekitar platform utama. Ukuran dan ketinggiannya
+dibuat berbeda untuk memberi variasi bentuk serta kedalaman.
+Platform tersebar di depan, belakang, dan sisi panggung agar
+environment tetap menarik ketika kamera diputar.
+PAGE 3
+● Badan tanah platform (CheckerSoil)
+Badan tanah menggunakan rounded box berwarna cokelat
+dengan pola kotak-kotak yang dibuat melalui shader. Sudutnya
+dibuat membulat agar sesuai dengan gaya kartun. Bagian bawah
+tanah diperpanjang hingga masuk ke tanah dasar sehingga
+platform tidak terlihat melayang. Pada platform utama, dasar
+tanah mencapai sekitar Y = −2,415.
+● Permukaan dan bibir rumput
+Bagian atas platform terdiri atas permukaan rumput hijau setebal
+0,11 satuan dan bibir rumput hijau tua setebal 0,23 satuan.
+Keduanya menggunakan rounded box dengan ukuran sedikit
+lebih lebar daripada badan tanah. Susunan ini membuat batas
+antara rumput dan tanah terlihat lebih jelas.
+● Pipa hijau
+Terdapat pipa yang tersebar di beberapa platform. Badan dan
+bibir pipa menggunakan cylinder berwarna hijau, dengan radius
+masing-masing 0,49 dan 0,60 satuan. Bagian atasnya diberi dua
+cylinder tipis berwarna gelap untuk memberi kesan lubang.
+Ellipsoid tipis berwarna hijau terang ditambahkan pada sisi pipa
+sebagai aksen.
+● Jamur dekoratif
+Environment memiliki jamur dengan tudung merah atau hijau.
+Batang dan tudungnya menggunakan ellipsoid, sedangkan bintik
+putih pada tudung menggunakan ellipsoid patch yang mengikuti
+permukaannya. Setiap jamur juga memiliki dua mata hitam kecil.
+Ukurannya divariasikan dan posisi dasarnya mengikuti ketinggian
+platform.
+PAGE 4
+● Bukit dekat dan menengah
+Terdapat beberapa bukit yang menggunakan ellipsoid besar
+dengan variasi warna hijau. Bentuknya dibuat tinggi dengan
+bagian depan–belakang yang lebih tipis. Sebagian bukit diberi
+mata hitam, sedangkan seluruhnya memiliki bercak kecil sebagai
+detail. Bukit tambahan ditempatkan mengelilingi panggung dan
+diarahkan ke pusat environment.
+● Langit dan awan
+Langit ditampilkan menggunakan gradasi warna melalui
+shader. Di atas environment terdapat beberapa awan,
+masing-masing tersusun dari tiga ellipsoid putih dan dua ellipsoid
+hitam sebagai mata. Awan ditempatkan pada ketinggian Y = 5
+hingga 8,5 untuk memberi variasi pada bagian atas
+pemandangan.
+● Pohon berbuah
+Terdapat pohon di sisi luar panggung yang batangnya
+menggunakan cylinder cokelat, sedangkan tajuknya terdiri atas
+tiga ellipsoid hijau. Setiap pohon memiliki tiga ellipsoid merah
+kecil sebagai buah. Seluruh bagian disusun dalam satu kelompok
+agar posisi dan ukuran pohon dapat diatur bersama.
+● Semak
+Semak tersusun dari tiga ellipsoid hijau dengan tinggi yang
+berbeda. Penempatannya diperiksa terlebih dahulu agar tidak
+bertabrakan dengan badan platform. Karena itu, jumlah semak
+yang muncul mengikuti hasil pemeriksaan posisi tersebut.
+● Bendera checkpoint
+Terdapat bendera checkpoint. Tiangnya menggunakan cylinder
+tipis dengan ellipsoid keemasan pada ujungnya. Kain bendera
+menggunakan box merah tipis dan dilengkapi lambang putih
+berbentuk ellipsoid pipih. Bendera berfungsi sebagai dekorasi dan
+tidak memiliki animasi berkibar.
+PAGE 5
+c. Breakdown Elemen Environment & Objek Pembentuk
+Elemen Jenis Geometri /
+Teknik
+Fungsi / Penerapan
+Platform hijau
+dan tanah
+Rounded box
+tanah/rumput,
+custom mesh
+tepi,
+checkerboard
+shader
+Panggung persegi
+10,8 × 10,8;
+pijakan Y = 0
+dan lintasan
+kejar-kejaran
+Elemen
+Mushroom
+Kingdom
+Cylinder
+pipa/batang/tian
+g; ellipsoid
+jamur/bukit/awa
+n/tajuk; frustum
+kincir; mesh pita
+sungai/tepi
+rumput
+Memperkuat
+identitas visual
+lingkungan
+Permukaan dan
+shader
+Normal pada
+ellipsoid, torus,
+tabung Bézier;
+material
+prosedural
+Siluet halus dan
+pola rumput,
+tanah, air
+Pencahayaan Key light hangat,
+sky fill biru,
+back light,
+specular, rim
+light, fog
+Menghasilkan
+nuansa dan
+kedalaman
+scene
+PAGE 6
+B. Character
+1. Yoshi (Hauw Feliciano - C14240036)
+a. Bentuk final
+1. Badan dan perut
+Badan Yoshi menggunakan ellipsoid hijau dengan radius
+[0,52; 0,66; 0,48]. Di bagian depannya terdapat ellipsoid
+putih beradius [0,43; 0,58; 0,34] sebagai perut dan dada.
+Kedua bentuk ini menghasilkan tubuh bulat dengan
+bagian depan putih yang menjadi ciri khas Yoshi.
+2. Leher
+Leher menggunakan cylinder hijau dengan radius 0,25
+dan tinggi 0,34. Bagian depannya dilapisi cylinder putih
+dengan radius 0,21 dan tinggi 0,32. Leher dan kepala
+terhubung melalui satu pivot agar gerakannya tetap
+menyatu.
+3. Kepala
+Kepala dibentuk dari ellipsoid hijau dengan radius [0,46;
+0,44; 0,48]. Pipi, dagu, moncong, mata, dan jambul
+terhubung pada kepala sehingga seluruh detail wajah ikut
+bergerak ketika kepala diputar.
+4. Pipi putih dan dagu
+Bagian pipi menggunakan satu ellipsoid putih yang
+melebar, dengan radius [0,52; 0,28; 0,44]. Dagu
+menggunakan ellipsoid putih lebih kecil beradius [0,30;
+0,14; 0,32], yang ditempatkan di bawah dan sedikit ke
+depan kepala. Keduanya membentuk rahang putih di
+bawah moncong.
+PAGE 7
+5. Moncong dan lubang hidung
+Moncong menggunakan ellipsoid hijau muda dengan
+radius [0,50; 0,45; 0,52]. Pada bagian atasnya terdapat
+dua ellipsoid hijau tua beradius [0,048; 0,028; 0,055]
+untuk memberi kesan lubang hidung.
+6. Garis senyum
+Senyum Yoshi dibentuk dari dua kurva Bézier kubik yang
+tersambung secara halus. Kurva tersebut diberi ketebalan
+menjadi tabung dengan radius 0,008, lalu ditempatkan di
+pertemuan moncong dan dagu. Warnanya merah tua agar
+garis senyum tetap terlihat. Bagian ini menjadi penerapan
+kurva 3D pada karakter.
+7. Bingkai mata hijau
+Kedua mata memiliki bagian dasar berwarna hijau yang
+menggunakan ellipsoid beradius [0,23; 0,40; 0,22].
+Bentuknya memanjang ke atas dan ditempatkan simetris
+pada kepala. Bagian ini tetap mempertahankan bentuknya
+saat Yoshi berkedip.
+8. Bola mata, pupil, dan kilau
+Bola mata menggunakan ellipsoid putih beradius [0,19;
+0,34; 0,15]. Pupilnya berupa ellipsoid hitam beradius
+[0,085; 0,16; 0,06], dengan ellipsoid putih kecil beradius
+[0,032; 0,05; 0,03] sebagai kilau. Ketiganya disusun
+bertingkat agar pupil dan kilau mengikuti gerakan bola
+mata.
+9. Animasi kedipan
+Kedipan dibuat dengan mengecilkan skala sumbu Y pada
+bola mata putih. Pupil dan kilau ikut mengecil karena
+menjadi bagian dari hierarki bola mata. Saat mata
+tertutup, tinggi kelompok mata berkurang hingga sekitar
+5%, lalu kembali normal. Kedipan berlangsung sekitar
+0,32 detik setiap 3 detik.
+10. Jambul belakang kepala
+Terdapat tiga jambul berwarna oranye kemerahan yang
+menggunakan cone frustum atau kerucut terpancung.
+Bentuk dasarnya memiliki radius bawah 0,15, radius atas
+0,045, dan tinggi 0,28. Ketiganya diberi posisi, rotasi, dan
+skala yang menyesuaikan lengkungan belakang kepala.
+Permukaan kerucutnya menjadi penerapan quadric selain
+ellipsoid dan cylinder.
+PAGE 8
+11. saddle dan pinggiran putih
+saddle merah menggunakan dome dari permukaan
+ellipsoid dengan radius [0,40; 0,36; 0,44]. Pinggirannya
+menggunakan torus putih dengan radius utama 0,37 dan
+radius tabung 0,07. Keduanya diposisikan mengikuti
+punggung Yoshi. Torus digunakan sebagai detail
+tambahan dan tidak termasuk quadric.
+12. Ekor
+Ekor menggunakan cone frustum hijau dengan radius
+bawah 0,27, radius atas 0,02, dan tinggi 0,52. Bagian
+bawahnya dilengkapi cone frustum putih dengan radius
+bawah 0,20, radius atas 0,01, dan tinggi 0,48. Keduanya
+membentuk ekor pendek yang mengarah ke belakang.
+13. Lengan atas dan bawah
+Lengan atas menggunakan cone frustum hijau dengan
+radius bawah 0,12, radius atas 0,045, dan tinggi 0,36,
+sehingga bentuknya menyempit ke arah bahu. Lengan
+bawah menggunakan cylinder hijau dengan radius 0,10
+dan tinggi 0,32. Pivot pada bahu dan siku memungkinkan
+seluruh bagian lengan bergerak bersama.
+14. Telapak dan jari
+Telapak tangan menggunakan ellipsoid hijau beradius
+[0,14; 0,12; 0,08]. Setiap tangan memiliki tiga jari dan
+satu ibu jari yang memakai bentuk dasar ellipsoid
+beradius [0,048; 0,048; 0,13]. Ibu jari diberi skala
+tambahan agar sedikit lebih kecil. Semua jari terhubung
+pada telapak sehingga mengikuti gerakan tangan.
+15. Paha dan batang kaki
+Paha menggunakan ellipsoid hijau beradius [0,21; 0,26;
+0,22], sedangkan batang kaki menggunakan cylinder
+beradius 0,15 dan tinggi 0,34. Pivot pada pangkal kaki
+menjadi pusat ayunan langkah, sementara pivot
+pergelangan mengatur gerakan sepatu.
+16. Sepatu dan sol
+Sepatu menggunakan ellipsoid oranye beradius [0,24;
+0,20; 0,39] yang memanjang ke depan. Solnya berupa
+ellipsoid kuning pipih beradius [0,24; 0,065; 0,38].
+Bagian atas sepatu dilengkapi torus oranye dengan radius
+utama 0,17 dan radius tabung 0,055.
+PAGE 9
+17. Bentuk telur
+Bentuk alternatif Yoshi menggunakan ellipsoid putih
+beradius [0,57; 0,72; 0,57]. Permukaannya dilengkapi
+enam bercak hijau berupa ellipsoid patch yang mengikuti
+lengkungan telur. Bentuk ini ditampilkan saat
+transformasi telur diaktifkan, baik melalui kontrol
+interaktif maupun pengaturan adegan trailer.
+b. Penjelasan bentuk selain quadratic
+1. Pinggiran saddle
+Pinggiran putih pada saddle menggunakan torus dengan
+radius utama 0,37 dan radius tabung 0,07. Bentuk cincin
+ini memperjelas batas antara saddle merah dan punggung
+Yoshi. Torus termasuk bentuk non-quadric.
+2. Cuff sepatu
+Bagian atas setiap sepatu dilengkapi torus oranye dengan
+radius utama 0,17 dan radius tabung 0,055. Bentuknya
+menyerupai cincin yang mengelilingi pergelangan kaki
+dan menjadi detail tambahan pada sepatu.
+3. Garis senyum Bézier
+Senyum Yoshi menggunakan dua tabung Bézier kubik
+yang bertemu dengan arah singgung sejalan agar
+lengkungannya terlihat mulus. Tabung berwarna merah
+tua ini memiliki radius 0,008 dan ditempatkan di antara
+moncong dan dagu. Bagian ini menjadi penerapan kurva
+3D pada karakter.
+4. Saddle berbentuk dome
+Saddle merah menggunakan dome dari ellipsoid dengan
+radius [0,40; 0,36; 0,44]. Permukaannya dipotong pada
+sudut tertentu dan diberi penutup dasar agar membentuk
+saddle yang menempel pada punggung. Bagian
+lengkungnya tetap berasal dari ellipsoid, sehingga tidak
+dihitung sebagai jenis quadric baru.
+5. Bintik pada telur
+Enam bintik hijau pada telur menggunakan ellipsoid
+patch, yaitu potongan permukaan ellipsoid yang
+mengikuti lengkungan cangkang. Dengan bentuk ini,
+bintik terlihat menempel pada telur. Patch tersebut tetap
+merupakan bagian permukaan ellipsoid dan tidak dihitung
+sebagai jenis quadric baru.
+PAGE 10
+c. Breakdown animasi
+1. Rotasi
+a. Kedua lengan berayun berlawanan pada sumbu X
+dengan amplitudo 0,38 radian, mengikuti fungsi
+sin(4,5t).
+b. Kedua kaki melangkah bergantian melalui rotasi
+pivot pinggul dengan amplitudo 0,55 radian.
+Pergelangan kaki ikut berputar hingga 0,25 radian
+untuk mendukung langkah.
+c. Badan dimiringkan ke depan sebesar 0,07 radian
+untuk membentuk postur berjalan.
+d. Seluruh karakter berputar pada sumbu Y
+mengikuti arah singgung lintasan melingkar.
+e. Saat berubah menjadi telur, pivot telur berputar
+pada sumbu X dengan kecepatan 9 radian per detik
+sehingga terlihat menggelinding.
+f. Pada mode Aksi terpisah, ekor berayun pada
+sumbu Y dengan amplitudo 0,45 radian.
+2. Translasi
+a. Yoshi bergerak pada bidang XZ mengikuti lintasan
+lingkaran berjari-jari 2 satuan, dengan pusat [0, 0,
+2].
+b. Kecepatan sudut lintasan adalah 0,45 radian per
+detik. Yoshi mengikuti Bowser Jr. dengan selisih
+fase 120° dalam animasi pengejaran.
+c. Posisi vertikal karakter dikoreksi berdasarkan titik
+terendah kaki atau bentuk telur agar tetap berpijak
+pada permukaan platform.
+3. Penskalaan
+a. Kelopak mata mengalami perubahan skala pada
+sumbu Y untuk menghasilkan kedipan selama 0,32
+detik pada setiap siklus tiga detik.
+b. Transformasi menjadi telur dipicu melalui tombol
+T. Skala tubuh diperkecil secara bertahap,
+sementara skala telur diperbesar.
+c. Menjelang akhir transformasi, telur diperkecil dan
+tubuh Yoshi dikembalikan ke ukuran semula.
+d. Keseluruhan transformasi berlangsung sekitar 4,6
+detik, menggunakan fungsi smoothstep agar
+perubahan skala berlangsung halus.
+4. Rotasi Sumbu Sembarang
+PAGE 11
+a. Akar karakter berputar terhadap sumbu diagonal
+[1, 0, 1] dengan sudut 0,09 sin(4,5t) radian.
+b. Rotasi ini menghasilkan goyangan kecil pada
+seluruh tubuh selama berjalan.
+c. Perhitungan menggunakan Mat4.rotateAxis, yang
+menormalisasi vektor sumbu dan membentuk
+matriks rotasi melalui rumus Rodrigues.
+5. Transformasi Hierarkial
+a. Struktur utama: YoshiRoot → YoshiBody.
+b. Kepala: Body → NeckPivot → Head → moncong,
+pipi, mata, dan jambul.
+c. Tangan: Body → Shoulder → UpperArm →
+Elbow → Forearm → Hand → jari.
+d. Kaki: Body → Hip → LegCylinder → Ankle →
+sepatu → sol.
+e. Telur: YoshiRoot → EggRollPivot →
+EggRollShell → bintik hijau.
+f. Transformasi induk diteruskan kepada seluruh
+turunannya. Contohnya, ayunan bahu membawa
+seluruh lengan dan jari, sedangkan rotasi pivot
+telur membawa cangkang telur beserta bintiknya.
+2. Toad (Ezra Desmond - C14240176)
+a. Bentuk final
+PAGE 12
+1. Torso sebagai induk tubuh. ToadTorsoFrustum
+menggunakan cone frustum berwarna kulit dengan radius
+bawah 0,39, radius atas 0,29, dan tinggi 0,56. Seluruh
+hierarki badan diberi skala seragam 0,65. Bentuk torso
+yang masih utuh ini dipakai sebagai bukti quadric ketiga;
+dimensinya adalah parameter lokal sebelum skala hierarki
+diterapkan.
+2. Rompi biru terbuka. ToadBlueVestFrustum dibuat
+dengan createOpenVestFrustum: radius bawah 0,42,
+radius atas 0,32, dan tinggi 0,55. Sebagian sektor depan
+dihilangkan agar dada terlihat, lalu tepi potong
+membentuk bukaan rompi. Bentuk ini merupakan mesh
+turunan frustum yang dibatasi, bukan cylinder dan bukan
+tekstur biru pada badan.
+3. Bahu rompi (2 unit). VestShoulderStrap menggunakan
+ellipsoid biru pipih. Dua salinan diposisikan pada
+kiri–kanan bagian atas torso dan sedikit diputar.
+Komponen ini menyambungkan kesan rompi ke bahu
+tanpa menutupi dada.
+4. Lis emas depan rompi (2 kurva). Dua
+VestGoldTrimBezier adalah tabung Bézier 3D beradius
+0,027 yang mengikuti tepi bukaan kiri–kanan rompi.
+Empat titik kontrol tiap kurva mengatur lintasan dari
+bagian bahu menuju bawah rompi. Lis menjadi anak
+rompi, sehingga tetap menempel ketika tubuh
+bertransformasi.
+5. Lis emas sisi dan belakang (4 kurva).
+VestBackTopGoldTrim terdiri atas empat segmen tabung
+Bézier yang tersambung sepanjang tepi atas rompi. Titik
+kontrol disusun dari arah singgung busur sehingga
+bentuknya melingkar dari sisi menuju punggung. Bersama
+dua lis depan, detail emas tetap dapat terlihat ketika model
+diputar 180°.
+6. Celana putih. ToadWhitePants adalah ellipsoid putih
+yang diposisikan di bawah torso. Sumbu vertikal pendek
+memberi siluet celana bulat melebar. Celana menjadi anak
+badan sehingga mengikuti gerak tubuh dan tetap menutupi
+pangkal kedua kaki.
+PAGE 13
+7. Kepala dan penghubung topi. ToadHead adalah
+ellipsoid warna kulit. ToadHeadPivot tidak memiliki mesh
+dan menghubungkan kepala ke torso;
+MushroomCapGroup menjadi anak kepala. Karena itu
+gerakan kepala juga membawa topi, mata, dan senyum
+secara hierarkis.
+8. Mata hitam dan kilau (masing-masing 2 unit). ToadEye
+memakai ellipsoid hitam yang memanjang vertikal.
+ToadEyeShine memakai ellipsoid putih di bagian
+depan–atas mata. Kilau merupakan geometri putih kecil
+dan berbeda dari pantulan cahaya specular yang dihitung
+shader.
+9. Senyum. ToadSmileCurve dibuat dengan tabung Bézier
+kubik cokelat kemerahan beradius 0,016. Dua titik ujung
+ditempatkan lebih tinggi daripada dua titik kontrol tengah
+sehingga menghasilkan lengkung senyum. Kurva
+ditempelkan sedikit di depan permukaan bawah wajah.
+10. Tudung putih. MushroomCapMain berawal dari ellipsoid
+dengan tessellation 36 × 36. Fungsi flattenCapBottom
+memampatkan bagian yang berada di bawah Y lokal
+−0,28 dan memperbaiki normal permukaannya. Hasil
+akhirnya merupakan ellipsoid yang dideformasi di bagian
+bawah; bentuk ini tidak diklaim sebagai quadric murni
+yang baru.
+11. Bintik merah tudung (5 unit). FlushRedSpotPatch
+menggunakan ellipsoid patch, masing-masing menghadap
+depan, kiri, kanan, belakang, dan atas tudung. Patch
+ditempatkan sedikit di atas permukaan untuk menghindari
+tumpang tindih kedalaman. Deformasi flattenCapBottom
+juga diterapkan pada patch agar tetap mengikuti bagian
+bawah topi yang dipipihkan.
+12. Cincin dan garis detail bawah topi.
+MushroomUnderTorus berupa torus putih keabu-abuan
+dengan radius utama 0,46 dan radius tabung 0,12.
+CapSeamBezier merupakan tabung Bézier abu-abu
+beradius 0,018 yang melengkung di tepi depan bawah.
+Torus memberi ketebalan tepi, sedangkan kurva
+membentuk garis sambungan; keduanya adalah geometri
+tambahan non-quadric.
+PAGE 14
+13. Lengan atas, siku, dan lengan bawah. Setiap
+UpperArmFrustum memakai cone frustum warna kulit
+[radius bawah 0,09; radius atas 0,034; tinggi 0,23].
+ElbowJoint adalah ellipsoid kecil, sedangkan
+LowerArmCylinder berupa cylinder beradius 0,09 dan
+tinggi 0,23. Shoulder, ElbowPivot, dan Wrist adalah node
+pengatur sendi tanpa geometri.
+14. Telapak dan jari. PalmEllipsoid memakai ellipsoid
+warna kulit. Setiap telapak memiliki empat Finger dan
+satu Thumb, semuanya ellipsoid memanjang. Perbedaan
+posisi dan rotasi membentuk arah jari yang turun
+mengikuti telapak; seluruh bagian mengikuti Wrist.
+15. Kaki kiri dan kanan. Masing-masing LegCylinder
+menggunakan cylinder putih beradius 0,13 dan tinggi
+0,20. LeftHip/RightHip adalah pivot tanpa mesh di bawah
+celana yang mengatur gerakan langkah. Sepatu menjadi
+anak cylinder kaki sehingga ikut bergerak ketika pinggul
+diputar.
+16. Sepatu cokelat dan sol. BrownShoe berupa ellipsoid
+cokelat yang memanjang ke depan dan sedikit diputar ke
+luar. ShoeSole merupakan ellipsoid cokelat tua pipih di
+bawahnya. Masing-masing kaki memiliki satu sepatu dan
+satu sol.
+Kelompok
+bentuk
+Penerapan pada Yoshi
+Ellipsoid Kepala, topi jamur, celana, tali bahu
+rompi, tangan, jari, dan sepatu.
+Cylinder Lengan bawah dan kaki; lengan atas
+menggunakan cone frustum.
+Cone
+frustu
+m
+Torso/badan, lengan atas, serta mesh
+rompi terbuka turunan frustum.
+Torus Lipatan cincin bawah topi.
+Bezier
+tube
+Lis emas rompi, garis senyum, dan
+detail bawah topi.
+PAGE 15
+Ellipsoid
+patch
+Lima bintik merah topi dan dua
+kelopak; patch bintik mengikuti
+perubahan bentuk tudung.
+b. Penjelasan bentuk selain quadratic
+Torus membentuk cincin di bawah topi. Tabung Bézier digunakan
+untuk lis depan rompi, empat sambungan lis sisi-belakang,
+senyum, dan detail tepi topi. Ellipsoid patch membentuk lima
+bintik merah dan kelopak. Bagian bawah topi dimodifikasi
+melalui flattenCapBottom: vertex ellipsoid di bawah ambang Y =
+−0,28 dikompresi secara halus dan normalnya dikoreksi; bintik
+mengalami deformasi yang sama sehingga tetap menempel.
+Torso dibuat melalui createConeFrustum dengan radius atas dan
+bawah berbeda. Lis emas mengikuti tepi depan rompi dengan
+empat titik kontrol Bezier, sehingga detail tersebut melekat pada
+bentuk tubuh. Lis menjadi anak rompi agar perpindahan dan
+rotasi rompi otomatis menggerakkan detail emasnya.
+c. Breakdown animasi
+1. Rotate — Rotasi
+● Kedua lengan berayun berlawanan pada sumbu X dengan
+amplitudo 0,38 radian, mengikuti fungsi sin(4,5t).
+● Kedua kaki melangkah bergantian melalui rotasi pivot
+pinggul dengan amplitudo 0,55 radian. Pergelangan kaki
+ikut berputar hingga 0,25 radian untuk mendukung
+langkah.
+● Badan dimiringkan ke depan sebesar 0,07 radian untuk
+membentuk postur berjalan.
+● Seluruh karakter berputar pada sumbu Y mengikuti arah
+singgung lintasan melingkar.
+● Saat berubah menjadi telur, pivot telur berputar pada
+sumbu X dengan kecepatan 9 radian per detik sehingga
+terlihat menggelinding.
+● Pada mode Aksi terpisah, ekor berayun pada sumbu Y
+dengan amplitudo 0,45 radian.
+2. Translate — Translasi
+● Yoshi bergerak pada bidang XZ mengikuti lintasan
+lingkaran berjari-jari 2 satuan, dengan pusat [0, 0, 2].
+PAGE 16
+● Kecepatan sudut lintasan adalah 0,45 radian per detik.
+Yoshi mengikuti Bowser Jr. dengan selisih fase 120°
+dalam animasi pengejaran.
+● Posisi vertikal karakter dikoreksi berdasarkan titik
+terendah kaki atau bentuk telur agar tetap berpijak pada
+permukaan platform.
+3. Scaling — Penskalaan
+● Kelopak mata mengalami perubahan skala pada sumbu Y
+untuk menghasilkan kedipan selama 0,32 detik pada
+setiap siklus tiga detik.
+● Transformasi menjadi telur dipicu melalui tombol T.
+Skala tubuh diperkecil secara bertahap, sementara skala
+telur diperbesar.
+● Menjelang akhir transformasi, telur diperkecil dan tubuh
+Yoshi dikembalikan ke ukuran semula.
+● Keseluruhan transformasi berlangsung sekitar 4,6 detik,
+menggunakan fungsi smoothstep agar perubahan skala
+berlangsung halus.
+4. Arbitrary Axis Rotation — Rotasi Sumbu Sembarang
+● Akar karakter berputar terhadap sumbu diagonal [1, 0, 1]
+dengan sudut 0,09 sin(4,5t) radian.
+● Rotasi ini menghasilkan goyangan kecil pada seluruh
+tubuh selama berjalan.
+● Perhitungan menggunakan Mat4.rotateAxis, yang
+menormalisasi vektor sumbu dan membentuk matriks
+rotasi melalui rumus Rodrigues.
+5. Hierarchical Transformation — Transformasi
+Berjenjang
+● Struktur utama: YoshiRoot → YoshiBody.
+● Kepala: Body → NeckPivot → Head → moncong, pipi,
+mata, dan jambul.
+● Tangan: Body → Shoulder → UpperArm → Elbow →
+Forearm → Hand → jari.
+● Kaki: Body → Hip → LegCylinder → Ankle → sepatu →
+sol.
+● Telur: YoshiRoot → EggRollPivot → EggRollShell →
+bintik hijau.
+● Transformasi induk diteruskan kepada seluruh
+turunannya. Contohnya, ayunan bahu membawa seluruh
+lengan dan jari, sedangkan rotasi pivot telur membawa
+cangkang telur beserta bintiknya.
+PAGE 17
+3. Bowser Jr. (Jonathan Matthew - C14240060)
+A. Bentuk final
+1. Kepala: ellipsoid hijau yang membentuk tempurung kepala.
+Kepala menjadi induk bagi pipi, moncong, mata, alis, tanduk, dan
+rambut sehingga seluruh detail wajah mengikuti transformasi
+kepala.
+2. Pipi dan rahang: satu ellipsoid krem yang melebar secara
+horizontal, ditempatkan pada bagian bawah kepala untuk
+membentuk pipi tembem dan rahang.
+3. Moncong: ellipsoid krem yang menonjol ke depan wajah.
+Bentuknya bertumpuk dengan pipi sehingga menghasilkan siluet
+moncong bulat khas Bowser Jr.
+4. Lubang hidung: dua ellipsoid kecil berwarna cokelat gelap yang
+diposisikan simetris dan sedikit dimiringkan pada permukaan atas
+moncong.
+5. Mata: sepasang ellipsoid hitam dengan ellipsoid putih kecil
+sebagai kilau pada bagian depan mata. Kilau menjadi anak mata
+agar posisinya tetap mengikuti gerakan mata.
+6. Dasar kelopak mata: dua ellipsoid hijau di belakang dan sedikit
+di atas mata hitam. Bagian ini membentuk bingkai mata yang
+tetap terlihat ketika mata terbuka.
+7. Kelopak berkedip: dua ellipsoid patch hijau yang mengikuti
+permukaan depan mata. Patch memiliki titik tumpu di bagian atas
+dan dianimasikan melalui perubahan skala vertikal.
+8. Alis: dua tabung kurva Bézier kubik 3D berwarna merah-oranye.
+Bagian dalam alis lebih rendah di dekat hidung, sedangkan
+PAGE 18
+bagian luar melengkung naik dan meruncing untuk membentuk
+ekspresi tegas.
+9. Garis senyum: satu tabung kurva Bézier 3D berwarna coklat
+yang melengkung mengikuti bagian bawah moncong.
+10. Taring: satu cone frustum putih berukuran kecil yang diputar
+mengarah ke bawah pada sisi mulut.
+11. Tanduk kepala: dua cone frustum berwarna krem yang dipasang
+miring ke luar pada sisi kepala. Setiap tanduk memiliki torus
+krem sebagai cincin pangkalnya.
+12. Rambut dan ikatan: tiga helai jambul merah-oranye berupa
+tabung kurva Bézier 3D dengan ujung meruncing. Ketiga pangkal
+rambut berdekatan dan terhubung dengan ikatan rambut
+berbentuk cylinder berwarna gelap.
+13. Badan: ellipsoid kuning yang menjadi induk utama kepala,
+lengan, kaki, cangkang, bandana, dan ekor.
+14. Perut atau plastron: ellipsoid krem kekuningan yang
+ditempatkan di bagian depan badan. Bentuk ovalnya
+membedakan permukaan perut dari kulit kuning di sekelilingnya.
+15. Garis perut: tiga tabung kurva Bézier 3D tipis berwarna coklat
+keemasan. Posisi titik kontrolnya dihitung mengikuti permukaan
+ellipsoid perut agar garis tetap menempel dan tidak tenggelam.
+16. Bandana atau napkin: kain putih berupa ellipsoid patch yang
+mengikuti lengkungan dada dan perut bagian atas. Bandana
+dilengkapi kerah berbentuk torus putih serta simpul berbentuk
+elipsoid putih.
+17. Cangkang: dome hijau yang dibentuk dari bagian permukaan
+ellipsoid dengan penutup dasar. Kelompok cangkang diputar
+sehingga menghadap ke belakang badan.
+18. Pinggiran cangkang: torus putih yang posisi dan skalanya
+disesuaikan dengan tepi potongan dome, sehingga membentuk
+batas cangkang yang membulat.
+19. Duri punggung: tujuh cone frustum krem dengan tujuh torus
+cokelat-oranye sebagai cincin pangkal. Susunannya terdiri atas
+satu duri atas, dua sisi atas, satu tengah, dua sisi bawah, dan satu
+bawah. Arah setiap duri mengikuti normal permukaan cangkang.
+20. Lengan: sepasang cone frustum kuning yang menyempit ke arah
+bahu. Lengan dihubungkan dengan node bahu dan pergelangan
+sebagai pusat transformasi.
+21. Gelang dan durinya: dua gelang gelap berbentuk torus.
+Masing-masing gelang memiliki empat duri putih berbentuk cone
+frustum, sehingga terdapat delapan duri gelang.
+PAGE 19
+22. Tangan: dua ellipsoid kuning yang membentuk kepalan tangan di
+bawah pergelangan.
+23. Sendi paha dan batang kaki: sendi paha menggunakan ellipsoid
+kuning untuk menutup sambungan atas kaki, sedangkan batang
+kaki menggunakan cylinder kuning. Keduanya mengikuti pivot
+pinggul kiri dan kanan.
+24. Telapak dan bantalan kaki: telapak memakai ellipsoid kuning
+yang memanjang ke depan. Bantalan bawahnya berupa ellipsoid
+patch krem yang mengikuti lengkungan permukaan telapak.
+25. Kuku kaki: enam cone frustum krem, masing-masing tiga pada
+setiap kaki, yang diputar mengarah ke depan.
+26. Ekor: cone frustum kuning yang mengecil ke ujung dan
+diarahkan ke bagian bawah-belakang badan melalui pivot ekor.
+B. Pengelompokan geometri
+1. Ellipsoid: kepala, pipi, moncong, lubang hidung, mata, kilau
+mata, dasar kelopak, badan, perut, simpul bandana, kepalan
+tangan, sendi paha, dan telapak kaki.
+2. Cylinder: ikatan rambut dan batang kaki.
+3. Cone frustum: tanduk, taring, duri cangkang, lengan, duri
+gelang, kuku kaki, dan ekor.
+4. Geometri tambahan: torus, dome, ellipsoid patch, dan tabung
+kurva Bézier 3D.
+C. Penjelasan bentuk selain quadratic
+1. Torus: digunakan pada pinggiran putih cangkang, cincin pangkal
+duri punggung, pangkal tanduk, gelang, dan kerah bandana.
+Bentuk cincin ini menghasilkan sambungan yang membulat.
+Torus merupakan permukaan berderajat empat sehingga tidak
+digunakan sebagai bukti objek quadric ketiga.
+2. Tabung kurva Bézier kubik 3D: digunakan untuk dua alis, tiga
+helai rambut, satu garis senyum, dan tiga garis perut. Empat titik
+kontrol menentukan lintasan setiap kurva, kemudian penampang
+melingkar disusun sepanjang lintasan untuk menghasilkan tabung
+dengan volume. Radius tabung dapat diperkecil menuju ujung
+untuk membentuk rambut dan alis yang meruncing.
+3. Dome: digunakan untuk kubah cangkang hijau. Geometri dibuat
+dengan mengambil sebagian permukaan ellipsoid dan
+menambahkan penutup dasar. Dome merupakan variasi
+permukaan ellipsoid yang dibatasi, sehingga tidak dihitung
+sebagai keluarga quadric baru.
+4. Ellipsoid patch: digunakan untuk kain bandana, kelopak
+berkedip, dan bantalan bawah telapak kaki. Patch mengambil
+bagian tertentu dari permukaan ellipsoid agar dapat mengikuti
+PAGE 20
+kontur tubuh tanpa menambahkan volume ellipsoid utuh. Seperti
+dome, patch tetap berasal dari permukaan ellipsoid.
+D. Breakdown animasi
+1. Rotate
+a) Pada mode berjalan aplikasi, kedua bahu berayun
+berlawanan pada sumbu X dengan amplitudo 0,7 radian
+menggunakan fungsi sin(5t).
+b) Kedua pivot pinggul berputar berlawanan pada sumbu X
+dengan amplitudo 0,8 radian sehingga kaki melangkah
+bergantian.
+c) Kepala menoleh pada sumbu Y menggunakan sudut −0,22
+sin(9t), disertai kemiringan kecil pada sumbu X.
+d) Kelompok rambut berputar pada sumbu X mengikuti
+gerakan kepala, sementara ekor berayun pada sumbu Y
+dengan amplitudo 0,45 radian.
+e) Seluruh karakter berputar pada sumbu Y mengikuti arah
+singgung lintasan melingkar agar tetap menghadap arah
+geraknya.
+2. Translate
+a) Bowser Jr. berpindah pada bidang XZ mengikuti lintasan
+lingkaran berjari-jari 2 satuan, dengan pusat [0, 0, 2].
+b) Kecepatan sudut lintasan adalah 0,45 radian per detik.
+Perbedaan fase 120° antarkarakter menjaga jarak dalam
+animasi saling mengejar.
+c) Urutan pengejaran adalah Toad, Bowser Jr., kemudian
+Yoshi.
+d) Posisi vertikal karakter dikoreksi berdasarkan titik
+terendah telapak kaki agar tetap berpijak pada permukaan
+platform Y = 0 selama anggota tubuh bergerak.
+3. Scaling
+a) Mata berkedip melalui perubahan skala sumbu Y pada
+ellipsoid mata hitam beserta kilau putih yang menjadi
+anaknya.
+b) Kedipan berlangsung selama 0,32 detik pada setiap siklus
+tiga detik, menggunakan fungsi sinus kuadrat untuk
+menghasilkan gerakan menutup dan membuka yang
+kontinu.
+c) Skala vertikal mata berubah dari 1 menjadi minimum
+0,05, kemudian kembali normal. Mata tetap ditampilkan
+selama kedipan.
+PAGE 21
+d) Perubahan skala diterapkan pada mata dan kilau putih,
+sedangkan ellipsoid hijau sebagai dasar kelopak tetap
+mempertahankan bentuknya.
+4. Arbitrary Axis Rotation
+a) Akar karakter menerima rotasi terhadap sumbu diagonal
+[1, 0, 1].
+b) Sudut rotasinya mengikuti 0,09 sin(4,5t) radian, sehingga
+badan mengalami goyangan kecil selama bergerak
+mengelilingi panggung.
+c) Vektor sumbu dinormalisasi dan diproses menggunakan
+matriks rotasi sumbu sembarang pada fungsi
+Mat4.rotateAxis.
+5. Hierarchical Transformation
+a) Struktur utama karakter adalah BowserJrRoot →
+BowserJrBody.
+b) Cabang kepala mengikuti susunan Body → HeadPivot →
+GreenHead → mata, moncong, tanduk, dan rambut.
+c) Cabang tangan mengikuti susunan Body → Shoulder →
+UpperArmFrustum → Wrist → gelang, duri, dan kepalan
+tangan.
+d) Cabang kaki mengikuti susunan Body → Hip →
+LegCylinder → FootEllipsoid → bantalan dan kuku.
+e) Cabang cangkang mengikuti susunan Body →
+SpikedShellGroup → dome, rim, dan pivot duri.
+f) Transformasi induk diteruskan kepada seluruh anaknya.
+Contohnya, rotasi kepala membawa mata, alis, tanduk,
+serta rambut, sedangkan ayunan bahu membawa lengan,
+gelang, dan kepalan tangan.
+II. Penjelasan tambahan
+A. Pencahayaan (lighting): per-pixel lighting dengan cahaya utama hangat,
+cahaya pengisi kebiruan, cahaya belakang, dan hemisphere ambient
+untuk memperjelas volume environment serta karakter. Blinn-Phong
+specular menghasilkan kilau permukaan, sedangkan rim light
+mempertegas tepi siluet objek.
+B. Pola material prosedural (procedural shading): pola checkerboard
+pada tanah platform, variasi warna rumput berbasis fungsi sinus, pola
+riak dan kilau air, serta garis busa air terjun dihitung langsung melalui
+fragment shader tanpa tekstur gambar eksternal.
+C. Gradasi langit dan kabut (sky gradient & distance fog): gradasi
+warna membentuk tampilan langit, sedangkan fog berbasis jarak
+membaurkan objek jauh dengan warna cakrawala untuk memberikan
+kesan kedalaman pada environment.
+PAGE 22
+D. Kamera perspektif dan orbit: proyeksi perspektif menampilkan
+kedalaman ruang 3D, dilengkapi kontrol orbit, pan, dan zoom untuk
+mengamati karakter serta environment dari berbagai arah.

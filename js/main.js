@@ -278,7 +278,10 @@ function setupCharacterShortcuts() {
         if (target && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))) return;
         const key = event.key.toLowerCase();
         if (key === 'z') {
-            if (!event.repeat) window.location.assign('trailer-player.html');
+            if (!event.repeat) {
+                if (window.CharacterFilm) window.CharacterFilm.toggle();
+                else window.location.assign('trailer-player.html');
+            }
             event.preventDefault();
             return;
         }
@@ -365,7 +368,7 @@ function applyWalkMovement(character, t, followerIndex = 0) {
     // Scaling is demonstrated by the eyelid blink in animateBlink().
     // Arbitrary-axis rotation: a gentle sway about the diagonal axis (1, 0, 1).
     character.animAxis = [1, 0, 1];
-    character.animAxisAngle = Math.sin(t * 4.5) * 0.09;
+    character.animAxisAngle = Math.sin(t * 4.5) * 0.09; // arbitary axis rotation
 }
 
 function renderLoop(timestamp) {
@@ -374,11 +377,17 @@ function renderLoop(timestamp) {
         requestAnimationFrame(renderLoop);
         return;
     }
-    const dt=lastTimestamp?Math.min(0.05,(timestamp-lastTimestamp)*0.001):0;
+    const elapsed=lastTimestamp?Math.max(0,(timestamp-lastTimestamp)*0.001):0;
+    const dt=Math.min(0.05,elapsed);
     lastTimestamp=timestamp;accumTime+=dt;
     const canvas=gl.canvas,ratio=Math.min(window.devicePixelRatio||1,1.5);
     const width=Math.round(canvas.clientWidth*ratio),height=Math.round(canvas.clientHeight*ratio);
     if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+    if (window.CharacterFilm && window.CharacterFilm.active) {
+        window.CharacterFilm.advance(elapsed);
+        requestAnimationFrame(renderLoop);
+        return;
+    }
     const poseMode = animMode === 'walk' ? 'combined' : animMode;
     const poseTime = animMode === 'idle' ? 1 : accumTime;
     yoshiNode.animate(poseTime,poseMode);toadNode.animate(poseTime,poseMode);bowserJrNode.animate(poseTime,poseMode);
@@ -461,8 +470,8 @@ function setLightingMode(mode) {
     });
 }
 
-// Sample the actual sole vertices through the complete hierarchy, including geometry transforms.
-function characterFootY(root) {
+// Sample sole vertices (or specified support meshes) through the complete hierarchy.
+function characterFootY(root, supportPattern = /sole|footellipsoid|brownshoe|boot|eggrollshell/i) {
     let lowest = Infinity;
     function visit(n, parent) {
         if (n !== root && !n.visible) return;
@@ -470,7 +479,7 @@ function characterFootY(root) {
         for (const [i, rotate] of [Mat4.rotateX,Mat4.rotateY,Mat4.rotateZ].entries()) m=rotate.call(Mat4,m,n.rotation[i]+n.animRot[i]);
         m=Mat4.rotateAxis(m,n.animAxis,n.animAxisAngle);
         m=Mat4.scale(m,...n.scale.map((v,i)=>v*n.animScale[i]));
-        if(n.mesh && /sole|footellipsoid|brownshoe|boot|eggrollshell/i.test(n.name)) {
+        if(n.mesh && supportPattern.test(n.name)) {
             let g=Mat4.translate(m,...n.geomOffset);
             g=Mat4.rotateX(g,n.geomRot[0]);g=Mat4.rotateY(g,n.geomRot[1]);g=Mat4.rotateZ(g,n.geomRot[2]);
             g=Mat4.scale(g,...n.geomScale);
